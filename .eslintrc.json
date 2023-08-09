@@ -28,22 +28,19 @@
   },
   "plugins": ["react", "@typescript-eslint", "prettier", "react-hooks"],
   "rules": {
-    "linebreak-style": 0,
-    "@typescript-eslint/indent": 0,
+    "linebreak-style": "off",
+    "@typescript-eslint/indent": "off",
     "no-debugger": "off",
-    "no-console": 0,
+    "no-console": "off",
     "class-methods-use-this": "off",
-    "@typescript-eslint/no-explicit-any": 2,
-    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-var-requires": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
       {
-        "": "never",
         "tsx": "never",
-        "ts": "never",
-        "jsx": "never",
-        "js": "never"
+        "ts": "never"
       }
     ],
     "lines-between-class-members": "off",
