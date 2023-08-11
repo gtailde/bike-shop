@@ -1,4 +1,5 @@
 import CommercetoolsAPI from "./CommercetoolsAPI";
+import { ICustomer, IErrors } from "types/types";
 
 class CustomersAPI extends CommercetoolsAPI {
   public async registerCustomer(
@@ -6,7 +7,7 @@ class CustomersAPI extends CommercetoolsAPI {
     firstName: string,
     lastName: string,
     password: string
-  ): Promise<any> {
+  ): Promise<ICustomer | IErrors> {
     try {
       const url = `${this.authUrl}/${this.projectKey}/customers`;
       const accessToken = await this.getAccessToken();
@@ -35,7 +36,7 @@ class CustomersAPI extends CommercetoolsAPI {
   public async login(
     email: string,
     password: string
-  ): Promise<any> {
+  ): Promise<ICustomer | IErrors> {
     try {
       const url = `${this.authUrl}/${this.projectKey}/login`;
       const accessToken = await this.getAccessToken();
