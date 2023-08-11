@@ -1,12 +1,11 @@
 class CommercetoolsAPI {
-  private clientId: string;
-  private clientSecret: string;
+  private readonly clientId: string;
+  private readonly clientSecret: string;
   public authUrl: string;
   public projectKey: string;
 
   constructor() {
-    this.authUrl =
-      'https://auth.europe-west1.gcp.commercetools.com/oauth/token';
+    this.authUrl = 'https://auth.europe-west1.gcp.commercetools.com/oauth/token';
     this.clientId = '3ljXP8YjRgV-DMfceZhEJJML';
     this.clientSecret = '2E8pMbfsOizJs8MqWz8Kssj8AuOMWOOa';
     this.projectKey = '82mcjsovqo';
@@ -35,9 +34,7 @@ class CommercetoolsAPI {
       });
 
       if (!tokenResponse.ok) {
-        throw new Error(
-          `Token request failed with status: ${tokenResponse.status}`
-        );
+        throw new Error(`Token request failed with status: ${tokenResponse.status}`);
       }
 
       const tokenData = await tokenResponse.json();

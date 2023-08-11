@@ -1,12 +1,12 @@
-import CommercetoolsAPI from "./CommercetoolsAPI";
-import { ICustomer, IErrors } from "types/types";
+import CommercetoolsAPI from './CommercetoolsAPI';
+import type { ICustomer, IErrors } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
   public async registerCustomer(
     email: string,
     firstName: string,
     lastName: string,
-    password: string
+    password: string,
   ): Promise<ICustomer | IErrors> {
     try {
       const url = `${this.authUrl}/${this.projectKey}/customers`;
@@ -33,10 +33,7 @@ class CustomersAPI extends CommercetoolsAPI {
     }
   }
 
-  public async login(
-    email: string,
-    password: string
-  ): Promise<ICustomer | IErrors> {
+  public async login(email: string, password: string): Promise<ICustomer | IErrors> {
     try {
       const url = `${this.authUrl}/${this.projectKey}/login`;
       const accessToken = await this.getAccessToken();
@@ -57,7 +54,8 @@ class CustomersAPI extends CommercetoolsAPI {
         body,
       });
 
-      return response.json();
+      const responseData = await response.json();
+      return responseData;
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;

@@ -1,4 +1,4 @@
-export type ICustomer = {
+export interface ICustomer {
   addresses: string[];
   authenticationMode: string;
   billingAddressIds: string[];
@@ -25,17 +25,18 @@ export type ICustomer = {
   stores: string[];
   version: number;
   versionModifiedAt: string;
-};
+}
 
-type IError = {
+interface IError {
   code: string;
   duplicateValue: string;
   field: string;
   message: string;
-};
+}
 
-export type IErrors = IError[] & {
+export interface IErrors {
+  [index: number]: IError;
   length: number;
   message: string;
   statusCode: number;
-};
+}
