@@ -1,8 +1,16 @@
 import React from 'react';
-import './style/App.css';
+import { BrowserRouter } from 'react-router-dom';
+import './styles/app.scss';
+import AppRouter from 'components/AppRouter';
 
 function App() {
-  return <div className="App"></div>;
+  return (
+    <React.StrictMode>
+      <BrowserRouter>
+        <AppRouter></AppRouter>
+      </BrowserRouter>
+    </React.StrictMode>
+  );
 }
 
 export default App;
