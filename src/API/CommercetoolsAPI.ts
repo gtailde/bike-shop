@@ -1,19 +1,24 @@
+import axios from 'axios';
+import { Buffer } from 'buffer';
+
 class CommercetoolsAPI {
   private readonly clientId: string;
   private readonly clientSecret: string;
-  public authUrl: string;
+  private readonly authUrl: string;
   public projectKey: string;
+  public apiUrl: string;
 
   constructor() {
+    this.apiUrl = 'https://api.europe-west1.gcp.commercetools.com';
     this.authUrl = 'https://auth.europe-west1.gcp.commercetools.com/oauth/token';
     this.clientId = '3ljXP8YjRgV-DMfceZhEJJML';
     this.clientSecret = '2E8pMbfsOizJs8MqWz8Kssj8AuOMWOOa';
     this.projectKey = '82mcjsovqo';
   }
 
-  private getBase64EncodedCredentials() {
+  private getBase64EncodedCredentials(): string {
     const credentials = `${this.clientId}:${this.clientSecret}`;
-    const encodedCredentials = btoa(credentials);
+    const encodedCredentials = Buffer.from(credentials).toString('base64');
     return encodedCredentials;
   }
 
@@ -23,23 +28,16 @@ class CommercetoolsAPI {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${this.getBase64EncodedCredentials()}`,
       };
+
       const authData = new URLSearchParams({
         grant_type: 'client_credentials',
       });
 
-      const tokenResponse = await fetch(this.authUrl, {
-        method: 'POST',
+      const tokenResponse = await axios.post(this.authUrl, authData.toString(), {
         headers: authHeaders,
-        body: authData.toString(),
       });
 
-      if (!tokenResponse.ok) {
-        throw new Error(`Token request failed with status: ${tokenResponse.status}`);
-      }
-
-      const tokenData = await tokenResponse.json();
-      const accessToken = tokenData.access_token;
-
+      const accessToken = tokenResponse.data.access_token;
       return accessToken;
     } catch (error) {
       console.error('Error fetching access token:', error);

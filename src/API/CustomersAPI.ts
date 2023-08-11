@@ -1,5 +1,6 @@
 import CommercetoolsAPI from './CommercetoolsAPI';
-import type { ICustomer, IErrors } from '../types/types';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { ICustomer, IErrors } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
   public async registerCustomer(
@@ -9,53 +10,52 @@ class CustomersAPI extends CommercetoolsAPI {
     password: string,
   ): Promise<ICustomer | IErrors> {
     try {
-      const url = `${this.authUrl}/${this.projectKey}/customers`;
+      const url = `${this.apiUrl}/${this.projectKey}/customers`;
       const accessToken = await this.getAccessToken();
 
-      const headers = {
+      const headers: AxiosRequestConfig['headers'] = {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       };
 
-      const body = JSON.stringify({ email, firstName, lastName, password });
+      const body = {
+        email,
+        firstName,
+        lastName,
+        password,
+      };
 
-      const response = await fetch(url, {
-        method: 'POST',
+      const response: AxiosResponse = await axios.post(url, body, {
         headers,
-        body,
       });
 
-      const responseData = await response.json();
-      return responseData;
+      return response.data;
     } catch (error) {
       console.error('Error registering:', error);
       throw error;
     }
   }
 
-  public async login(email: string, password: string): Promise<ICustomer | IErrors> {
+  public async loginCustomer(email: string, password: string): Promise<ICustomer | IErrors> {
     try {
-      const url = `${this.authUrl}/${this.projectKey}/login`;
+      const url = `${this.apiUrl}/${this.projectKey}/login`;
       const accessToken = await this.getAccessToken();
 
-      const headers = {
+      const headers: AxiosRequestConfig['headers'] = {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       };
 
-      const body = JSON.stringify({
+      const body = {
         email,
         password,
-      });
+      };
 
-      const response = await fetch(url, {
-        method: 'POST',
+      const response: AxiosResponse = await axios.post(url, body, {
         headers,
-        body,
       });
 
-      const responseData = await response.json();
-      return responseData;
+      return response.data;
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;
