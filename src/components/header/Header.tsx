@@ -16,10 +16,10 @@ export const Header: FC = () => {
           <img className="header-logo-text" src={headerLogoText} alt="header-icon" />
         </Link>
         <nav>
-          <Link to={pagePathnames.catalog} className="header-link">
+          <Link to={pagePathnames.catalog} className="link header-link">
             shop
           </Link>
-          <Link to={pagePathnames.about} className="header-link">
+          <Link to={pagePathnames.about} className="link header-link">
             about
           </Link>
         </nav>
