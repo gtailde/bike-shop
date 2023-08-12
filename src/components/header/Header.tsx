@@ -6,7 +6,6 @@ import userIcon from './assets/user-icon.svg';
 import basketIcon from './assets/basket.svg';
 import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router';
-import CustomLink from 'components/UI/custom-link/CustomLink';
 
 const Header: FC = () => {
   return (
@@ -17,16 +16,12 @@ const Header: FC = () => {
           <img className="header-logo-text" src={headerLogoText} alt="header-icon" />
         </Link>
         <nav>
-          <CustomLink
-            path={pagePathnames.CATALOG}
-            classNames={['header-link']}
-            textContent="shop"
-          ></CustomLink>
-          <CustomLink
-            path={pagePathnames.ABOUT}
-            classNames={['header-link']}
-            textContent="about"
-          ></CustomLink>
+          <Link to={pagePathnames.CATALOG} className="header-link">
+            shop
+          </Link>
+          <Link to={pagePathnames.ABOUT} className="header-link">
+            about
+          </Link>
         </nav>
       </div>
       <div className="user-links">
