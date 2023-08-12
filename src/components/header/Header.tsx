@@ -36,7 +36,7 @@ const Header: FC = () => {
         </Link>
         <div className="vertical-line"></div>
         <Link to={pagePathnames.BASKET} className="link">
-          <img src={basketIcon} alt="basket-icon logo-link" />
+          <img className="logo-link" src={basketIcon} alt="basket-icon" />
         </Link>
         <div className="barge">3</div>
       </div>
