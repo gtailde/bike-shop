@@ -5,32 +5,32 @@ import headerLogoText from './assets/logo-text.svg';
 import userIcon from './assets/user-icon.svg';
 import basketIcon from './assets/basket.svg';
 import { Link } from 'react-router-dom';
-import { pagePathnames } from 'router';
+import { pagePathnames } from 'router/pagePathnames';
 
 const Header: FC = () => {
   return (
     <header>
       <div className="links">
-        <Link to={pagePathnames.MAIN} className="logo-link">
+        <Link to={pagePathnames.main} className="logo-link">
           <img className="header-logo" src={headerLogo} alt="header-icon" />
           <img className="header-logo-text" src={headerLogoText} alt="header-icon" />
         </Link>
         <nav>
-          <Link to={pagePathnames.CATALOG} className="header-link">
+          <Link to={pagePathnames.catalog} className="header-link">
             shop
           </Link>
-          <Link to={pagePathnames.ABOUT} className="header-link">
+          <Link to={pagePathnames.about} className="header-link">
             about
           </Link>
         </nav>
       </div>
       <div className="user-links">
-        <Link to={pagePathnames.USER_PROFILE} className="user-link link">
+        <Link to={pagePathnames.user} className="user-link link">
           <img src={userIcon} alt="user-icon" />
           <p className="user-name"> user name</p>
         </Link>
         <div className="vertical-line"></div>
-        <Link to={pagePathnames.BASKET} className="link">
+        <Link to={pagePathnames.basket} className="link">
           <img className="logo-link" src={basketIcon} alt="basket-icon" />
         </Link>
         <div className="barge">3</div>

@@ -1,7 +1,7 @@
 import { useAuth } from 'hooks/useAuth';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pagePathnames } from 'router';
+import { pagePathnames } from 'router/pagePathnames';
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export const Login = () => {
   const loginUser = () => {
     if (signin !== undefined)
       signin('name', () => {
-        navigate(pagePathnames.MAIN, { replace: true });
+        navigate(pagePathnames.main, { replace: true });
       });
   };
 
