@@ -7,7 +7,7 @@ import basketIcon from './assets/basket.svg';
 import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 
-const Header: FC = () => {
+export const Header: FC = () => {
   return (
     <header>
       <div className="links">
@@ -38,5 +38,3 @@ const Header: FC = () => {
     </header>
   );
 };
-
-export default Header;
