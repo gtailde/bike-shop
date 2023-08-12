@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router';
 
-const Main = () => {
+export const Main = () => {
   const navigate = useNavigate();
   const { signout } = useAuth();
 
@@ -22,5 +22,3 @@ const Main = () => {
     </div>
   );
 };
-
-export default Main;

@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router';
 
-const Login = () => {
+export const Login = () => {
   const navigate = useNavigate();
   const { signin } = useAuth();
 
@@ -20,5 +20,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;
