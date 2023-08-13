@@ -132,3 +132,22 @@ header {
     display: none;
   }
 }
+
+@media (max-width: 390px) {
+  header {
+    padding: 12px 10px;
+  }
+
+  .header-logo {
+    margin-right: 10px;
+  }
+
+  .links nav,
+  .user-links {
+    gap: 5px;
+  }
+
+  .header-link {
+    font-size: 14px;
+  }
+}

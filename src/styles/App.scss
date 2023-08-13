@@ -1,2 +1,7 @@
 @import './nullstyle';
 @import './fonts';
+
+body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
