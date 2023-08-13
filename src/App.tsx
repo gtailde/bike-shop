@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './styles/App.scss';
 import AppRouter from 'router/AppRouter';
 import { Header } from 'components/header/Header';
+import { Footer } from 'components/footer/Footer';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <AppRouter />
+        <Footer />
       </BrowserRouter>
     </React.StrictMode>
   );
