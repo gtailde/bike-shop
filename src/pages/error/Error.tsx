@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import { CustomButton } from 'components/UI/custom-button/CustomButton';
+import { AccentButton } from 'components/UI/buttons/accent-button/AccentButton';
 import { pagePathnames } from 'router/pagePathnames';
 
 export const Error = () => {
@@ -10,7 +10,7 @@ export const Error = () => {
       <h1 className="error-header"> 404 Error </h1>
       <h3 className="error-text">The page you were looking for counldn&apos;t be found.</h3>
       <Link to={pagePathnames.main}>
-        <CustomButton className=""> Back to main page </CustomButton>
+        <AccentButton className=""> Back to main page </AccentButton>
       </Link>
     </section>
   );
