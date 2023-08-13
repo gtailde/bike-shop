@@ -1,16 +1,16 @@
 import { useAuth } from 'hooks/useAuth';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pagePathnames } from 'router';
+import { pagePathnames } from 'router/pagePathnames';
 
-const Login = () => {
+export const Login = () => {
   const navigate = useNavigate();
   const { signin } = useAuth();
 
   const loginUser = () => {
     if (signin !== undefined)
       signin('name', () => {
-        navigate(pagePathnames.MAIN, { replace: true });
+        navigate(pagePathnames.main, { replace: true });
       });
   };
 
@@ -20,5 +20,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;
