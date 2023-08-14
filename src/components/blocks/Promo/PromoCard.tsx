@@ -12,7 +12,7 @@ interface IDecorateVariant {
   decorativeBackground: string;
 }
 
-interface PromoCardProps {
+interface IPromoCardProps {
   promoCardData: IPromoCardData;
   variantIndex?: number;
 }
@@ -22,7 +22,7 @@ const decorateVariants: IDecorateVariant[] = [
   { decorativeIcon: decorativeIcon2, decorativeBackground: decorativeBackground2 },
 ];
 
-export function PromoCard({ promoCardData, variantIndex = 0 }: PromoCardProps) {
+export const PromoCard = ({ promoCardData, variantIndex = 0 }: IPromoCardProps) => {
   const { name, description, code } = promoCardData;
   const decorateSet = decorateVariants[variantIndex % decorateVariants.length];
 
@@ -43,4 +43,4 @@ export function PromoCard({ promoCardData, variantIndex = 0 }: PromoCardProps) {
       </Link>
     </article>
   );
-}
+};

@@ -2,7 +2,7 @@ import './style.scss';
 import React from 'react';
 import { type IContributor } from './types';
 import { Contributor } from './Contributor';
-import { AccentButton } from 'components/UI/buttons/accent-button/AccentButton';
+import { Button } from 'components/UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import contributor1 from './assets/507159169e041129e1cfa2df02ca7083.png';
@@ -33,17 +33,11 @@ const contributorsList: IContributor[] = [
   },
 ];
 
-export function About() {
+export const About = () => {
   const navigate = useNavigate();
   const handleShowMore = () => {
     navigate(pagePathnames.about);
   };
-
-  const contributors = contributorsList.map((contributorData, index) => (
-    <li className="about__contributors-item" key={index}>
-      <Contributor contributorData={contributorData} />
-    </li>
-  ));
 
   return (
     <section className="about">
@@ -54,9 +48,17 @@ export function About() {
           been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer
           took a galley of type and scrambled it to make a type specimen book.
         </p>
-        <ul className="about__contributors-list">{contributors}</ul>
-        <AccentButton onClick={handleShowMore}>More about us</AccentButton>
+        <ul className="about__contributors-list">
+          {contributorsList.map((data, index) => (
+            <li className="about__contributors-item" key={index}>
+              <Contributor {...data} />
+            </li>
+          ))}
+        </ul>
+        <Button accent onClick={handleShowMore}>
+          More about us
+        </Button>
       </div>
     </section>
   );
-}
+};

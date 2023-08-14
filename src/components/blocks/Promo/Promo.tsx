@@ -6,20 +6,22 @@ import { type IPromoCardData } from './types';
 // FETCHED DATA
 const promoCardData: IPromoCardData[] = [
   {
+    id: 1,
     name: "Holiday's Offer!",
     description: 'Sale 50% Off',
     code: 'Holi50',
   },
   {
+    id: 2,
     name: "Crosscheck's Offer!",
     description: 'Sale 35% Off',
     code: 'Check35',
   },
 ];
 
-export function Promo() {
+export const Promo = () => {
   const promoCardItems = promoCardData.map((data, index) => (
-    <li key={index} className="promo__card-item">
+    <li key={data.id} className="promo__card-item">
       <PromoCard promoCardData={data} variantIndex={index} />
     </li>
   ));
@@ -32,4 +34,4 @@ export function Promo() {
       </div>
     </section>
   );
-}
+};

@@ -1,10 +1,10 @@
 import './style.scss';
 import React from 'react';
-import { AccentButton } from 'components/UI/buttons/accent-button/AccentButton';
+import { Button } from 'components/UI/Button/Button';
 import { pagePathnames } from 'router/pagePathnames';
 import { useNavigate } from 'react-router-dom';
 
-export function FirstBuyOffer() {
+export const FirstBuyOffer = () => {
   const navigate = useNavigate();
   const handleGoShop = () => {
     navigate(pagePathnames.catalog);
@@ -22,8 +22,10 @@ export function FirstBuyOffer() {
           improve your bloodflow, build muscle strength, and lower your stresslevels. On top of
           that, it can also help you burn fat, torch calories, and lose weight.
         </p>
-        <AccentButton onClick={handleGoShop}>Shop Now</AccentButton>
+        <Button accent onClick={handleGoShop}>
+          Shop Now
+        </Button>
       </div>
     </section>
   );
-}
+};

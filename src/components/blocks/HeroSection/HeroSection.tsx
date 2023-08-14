@@ -1,10 +1,10 @@
 import './style.scss';
 import React from 'react';
-import { AccentButton } from 'components/UI/buttons/accent-button/AccentButton';
+import { Button } from 'components/UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 
-export function HeroSection() {
+export const HeroSection = () => {
   const navigate = useNavigate();
 
   const handleLogIn = () => {
@@ -25,10 +25,14 @@ export function HeroSection() {
           news, and exclusive offers.
         </p>
         <div className="hero-section__buttons-container">
-          <AccentButton onClick={handleLogIn}>Log In</AccentButton>
-          <AccentButton onClick={handleSignUp}>Sign Up</AccentButton>
+          <Button accent onClick={handleLogIn}>
+            Log In
+          </Button>
+          <Button accent onClick={handleSignUp}>
+            Sign Up
+          </Button>
         </div>
       </div>
     </section>
   );
-}
+};
