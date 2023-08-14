@@ -20,7 +20,7 @@
   &--accent {
     background-color: var(--accent-color-1-default);
     border-style: none;
-    color: #1d2228;
+    color: var(--main-color-3);
 
     &:hover {
       background-color: var(--accent-color-1-light);
