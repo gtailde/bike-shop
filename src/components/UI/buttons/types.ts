@@ -1,4 +1,5 @@
-export interface CustomButtonProps {
-  className?: string;
-  children: React.ReactNode;
+import { type ReactNode } from 'react';
+
+export interface Props extends Omit<Partial<HTMLButtonElement>, 'children'> {
+  children: ReactNode | undefined;
 }
