@@ -1,24 +1,16 @@
-import { useAuth } from 'hooks/useAuth';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { pagePathnames } from 'router/pagePathnames';
+import { HeroSection } from 'components/blocks/HeroSection/HeroSection';
+import { FirstBuyOffer } from 'components/blocks/FirstBuyOffer/FirstBuyOffer';
+import { Promo } from 'components/blocks/Promo/Promo';
+import { About } from '../../components/blocks/About/About';
 
 export const Main = () => {
-  const navigate = useNavigate();
-  const { signout } = useAuth();
-
-  const logoutUser = () => {
-    if (signout !== undefined)
-      signout(() => {
-        navigate(pagePathnames.login, { replace: true });
-      });
-  };
-
   return (
-    <div>
-      <h1> Main </h1>
-      <Link to={pagePathnames.login}> LOGIN </Link>
-      <button onClick={logoutUser}> LOGOUT </button>
-    </div>
+    <main className="page-content">
+      <HeroSection />
+      <FirstBuyOffer />
+      <Promo />
+      <About />
+    </main>
   );
 };
