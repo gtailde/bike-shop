@@ -1,7 +1,6 @@
 @import './nullstyle';
+@import './variables.scss';
+@import './mixins.scss';
+@import './global.scss';
+@import './layout.scss';
 @import './fonts';
-
-body {
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
