@@ -22,6 +22,7 @@ header {
 .link {
   color: #c2cad6;
   transition: all 0.2s ease 0s;
+  cursor: pointer;
   &:hover {
     color: white;
   }
@@ -46,7 +47,6 @@ header {
   &:hover {
     opacity: 1;
   }
-
   &:active {
     opacity: 1;
   }
@@ -57,7 +57,7 @@ header {
 }
 
 .header-link {
-  font-size: 16px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
@@ -81,15 +81,18 @@ header {
   }
 }
 
-.user-link {
+.user-links-list {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 2px;
   color: #c2cad6;
+  cursor: pointer;
 }
 
 .user-name {
-  font-size: 16px;
+  display: inline;
+  font-size: 18px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
@@ -116,6 +119,11 @@ header {
 @media (max-width: 768px) {
   header {
     padding: 12px 24px;
+  }
+
+  .header-link,
+  .user-name {
+    font-size: 16px;
   }
 }
 
