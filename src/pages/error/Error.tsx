@@ -1,17 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import { AccentButton } from 'components/UI/buttons/accent-button/AccentButton';
+import { Button } from 'components/UI/Button/Button';
 import { pagePathnames } from 'router/pagePathnames';
 
 export const Error = () => {
+  const navigate = useNavigate();
+
+  const toMain = () => {
+    navigate(pagePathnames.main);
+  };
+
   return (
     <section className="error-section">
       <h1 className="error-header"> 404 Error </h1>
       <h3 className="error-text">The page you were looking for counldn&apos;t be found.</h3>
-      <Link to={pagePathnames.main}>
-        <AccentButton> Back to main page </AccentButton>
-      </Link>
+      <Button accent onClick={toMain}>
+        Back to main page
+      </Button>
     </section>
   );
 };
