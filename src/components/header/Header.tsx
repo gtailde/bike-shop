@@ -20,7 +20,7 @@ export const Header = () => {
   };
 
   return (
-    <header>
+    <header className="page-header">
       <div className="links">
         <Link to={pagePathnames.main} className="logo-link">
           <img className="header-logo" src={headerLogo} alt="header-icon" />
