@@ -1,4 +1,4 @@
-header {
+.page-header {
   width: 100vw;
   height: 64px;
   display: flex;
@@ -117,7 +117,7 @@ header {
 }
 
 @media (max-width: 768px) {
-  header {
+  .page-header {
     padding: 12px 24px;
   }
 
@@ -128,7 +128,7 @@ header {
 }
 
 @media (max-width: 600px) {
-  header {
+  .page-header {
     padding: 12px 20px;
   }
 
@@ -142,7 +142,7 @@ header {
 }
 
 @media (max-width: 390px) {
-  header {
+  .page-header {
     padding: 12px 10px;
   }
 

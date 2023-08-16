@@ -4,7 +4,7 @@ import { AuthProvider } from 'hocs/AuthProvider';
 import { CheckAuth } from 'hocs/CheckAuth';
 import { pagePathnames } from 'router/pagePathnames';
 import { Main } from 'pages/main/Main';
-import { Login } from 'pages/login/Login';
+import { LoginPage } from 'pages/login/LoginPage';
 import { Registration } from 'pages/registration/Registration';
 import { Error } from 'pages/error/Error';
 import { About } from 'pages/about/About';
@@ -22,17 +22,17 @@ const AppRouter = () => {
         <Route
           path={pagePathnames.login}
           element={
-            <CheckAuth>
-              <Login />
-            </CheckAuth>
+            // <CheckAuth>
+            <LoginPage />
+            // </CheckAuth>
           }
         />
         <Route
           path={pagePathnames.registration}
           element={
-            <CheckAuth>
-              <Registration />
-            </CheckAuth>
+            // <CheckAuth>
+            <Registration />
+            // </CheckAuth>
           }
         />
         <Route
