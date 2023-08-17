@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Icon } from '../Icon/Icon';
 import { type ITextFieldProps } from './types';
 
@@ -17,6 +17,7 @@ export const TextField = ({
   const [isActiveOption, setIsActiveOption] = useState(false);
   let hasOption = false;
   let fieldIcon = null;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   switch (type) {
     case 'password':
@@ -24,6 +25,16 @@ export const TextField = ({
       type = isActiveOption ? 'text' : 'password';
       hasOption = true;
       break;
+    case 'date':
+      fieldIcon = (
+        <Icon
+          onClick={() => {
+            inputRef.current?.showPicker();
+          }}
+          variant="CALENDAR"
+        />
+      );
+      hasOption = true;
   }
 
   return (
@@ -31,6 +42,7 @@ export const TextField = ({
       <div className="text-field__container">
         <input
           {...props}
+          ref={inputRef}
           onChange={(evt) => {
             onChange(evt.target.value);
           }}
