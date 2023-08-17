@@ -3,6 +3,7 @@ import { Button } from 'components/UI/Button/Button';
 import { AddressRecord } from '../AddressRecord/AddressRecord';
 import { type IAddressData } from '../types';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
+import { mergeAddressData } from '../helpers';
 
 interface IAddressProps extends React.ComponentProps<'fieldset'> {
   label: string;
@@ -10,6 +11,7 @@ interface IAddressProps extends React.ComponentProps<'fieldset'> {
   isSameAddress: boolean;
   onEdit: (data: IAddressData[]) => void;
   onSetSame: (value: boolean) => void;
+  onSetDefault: (data: IAddressData[]) => void;
 }
 
 export const Address = ({
@@ -18,6 +20,7 @@ export const Address = ({
   label,
   onEdit,
   onSetSame,
+  onSetDefault,
 }: IAddressProps) => {
   const addressListClone = addressList.map(({ isDefault, source, ...address }) => ({
     ...address,
@@ -36,10 +39,7 @@ export const Address = ({
   };
   const [controlIsDefaultList, setControlIsDefaultList] = useState(addressListClone);
 
-  const mergedWithStateAddressList = addressListClone.map((address) => {
-    const match = controlIsDefaultList.find((item) => item.id === address.id);
-    return match ?? address;
-  });
+  const mergedWithStateAddressList = mergeAddressData(addressListClone, controlIsDefaultList);
   const addressListToShow = isSameAddress
     ? mergedWithStateAddressList
     : mergedWithStateAddressList.filter((address) => address.source === label);
@@ -72,6 +72,7 @@ export const Address = ({
       newAddressData[index].isDefault = isDefault;
     }
     setControlIsDefaultList(newAddressData);
+    onSetDefault(newAddressData);
   };
 
   return (

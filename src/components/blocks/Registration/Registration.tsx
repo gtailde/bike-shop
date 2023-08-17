@@ -6,6 +6,7 @@ import { type IAddressData, type IProfileInfo } from './types';
 import { Button } from 'components/UI/Button/Button';
 import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
+import { getAddressesForPost } from './helpers';
 
 // const mockBillingData: IAddressData[] = [
 //   {
@@ -52,14 +53,28 @@ export const Registration = () => {
   const [profileInfo, setProfileInfo] = useState({});
   const [addressInfo, setAddressInfo] = useState([] as IAddressData[]);
   const [isSameAddress, setIsSameAddress] = useState(false);
+  const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState(
+    [] as IAddressData[],
+  );
+  const [shippingIsDefaultControlList, setShippingIsDefaultControlList] = useState(
+    [] as IAddressData[],
+  );
 
   const handleSubmit = () => {
-    const billingInfo = addressInfo.filter(
-      (address) => address.source === AddressSectionName.BILLING,
+    const billingInfo = getAddressesForPost(
+      addressInfo,
+      billingIsDefaultControlList,
+      isSameAddress,
+      AddressSectionName.BILLING,
     );
-    const shippingInfo = addressInfo.filter(
-      (address) => address.source === AddressSectionName.SHIPPTING,
+
+    const shippingInfo = getAddressesForPost(
+      addressInfo,
+      shippingIsDefaultControlList,
+      isSameAddress,
+      AddressSectionName.SHIPPTING,
     );
+
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
   };
   const handleProfileInfoInput = (data: IProfileInfo) => {
@@ -70,6 +85,13 @@ export const Registration = () => {
   };
   const handleIsSame = (value: boolean) => {
     setIsSameAddress(value);
+  };
+
+  const handleSetDefault = (
+    setter: React.Dispatch<React.SetStateAction<IAddressData[]>>,
+    addressList: IAddressData[],
+  ) => {
+    setter(addressList);
   };
 
   return (
@@ -86,16 +108,15 @@ export const Registration = () => {
             label={AddressSectionName.BILLING}
             onEdit={handleChangeAddress}
             onSetSame={handleIsSame}
+            onSetDefault={handleSetDefault.bind(this, setBillingIsDefaultControlList)}
             isSameAddress={isSameAddress}
             addressList={addressInfo}
-            onSubmit={() => {
-              console.log('submit!');
-            }}
           />
           <Address
             label={AddressSectionName.SHIPPTING}
             onEdit={handleChangeAddress}
             onSetSame={handleIsSame}
+            onSetDefault={handleSetDefault.bind(this, setShippingIsDefaultControlList)}
             isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
