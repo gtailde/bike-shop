@@ -1,49 +1,65 @@
 import './style.scss';
-import React, { useState } from 'react';
+import React, { type BaseSyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
 import { TextField } from 'components/UI/TextField/TextField';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
 import { pagePathnames } from 'router/pagePathnames';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { type ITextFieldProps } from 'components/UI/TextField/types';
 
+const schema = yup.object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const form = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: yupResolver(schema),
+    mode: 'all',
+  });
+
+  const { register, handleSubmit, formState } = form;
+  const { errors } = formState;
   const [isRemember, setIsRemember] = useState(false);
-  const formInputsData = { email, password, isRemember };
 
   const handleRememberCheck = (value: boolean) => {
     setIsRemember(value);
   };
 
-  const handleSubmit = () => {
-    console.log('post login data: ', formInputsData);
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
+
+  const onBlur = (e: BaseSyntheticEvent) => {
+    console.log(e.target.name);
+    console.log(e.target.value);
   };
 
   const formFields: ITextFieldProps[] = [
     {
       id: '1',
-      type: 'email',
       label: 'Email address',
-      value: email,
-      helpText: 'email help text here',
-      isTextShows: true,
-      isValid: false,
-      onChange: (value: string) => {
-        setEmail(value);
-      },
+      name: 'email',
+      isValid: !errors.email?.message,
+      helpText: errors.email?.message,
+      isTextShows: !!errors.email?.message,
     },
     {
       id: '2',
-      type: 'password',
       label: 'Password',
-      value: password,
-      helpText: 'email help text here',
-      onChange: (value: string) => {
-        setPassword(value);
-      },
+      name: 'password',
+      isValid: !errors.password?.message,
+      helpText: errors.password?.message,
+      isTextShows: !!errors.password?.message,
     },
   ];
 
@@ -55,12 +71,17 @@ export const Login = () => {
           <p className="login__title">Welcome back</p>
           <p className="login__description">Please sign in below to continue</p>
         </header>
-        <Form className="login__form" action="">
-          {formFields.map(({ id, ...data }, index) => (
-            <TextField {...data} key={id} id={`input-${index}`} />
+        <Form className="login__form" action="" onSubmit={onSubmit}>
+          {formFields.map(({ id, name, ...data }, index) => (
+            <TextField
+              {...data}
+              key={id}
+              id={`input-${index}`}
+              {...register(name as keyof typeof Form, { onBlur })}
+            />
           ))}
           <ControlLabel checked={isRemember} label="Remember me" onChange={handleRememberCheck} />
-          <Button accent className="form__button" onClick={handleSubmit}>
+          <Button accent className="form__button" type="submit">
             Sign in
           </Button>
           <p className="form__note">
