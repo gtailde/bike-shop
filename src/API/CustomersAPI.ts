@@ -1,7 +1,7 @@
 import CommercetoolsAPI from './CommercetoolsAPI';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import type { ICustomer, IErrors } from '../types/types';
+import type { ICustomer, IErrorResponse } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
   private async getRequestHeaders(): Promise<AxiosRequestConfig['headers']> {
@@ -12,12 +12,12 @@ class CustomersAPI extends CommercetoolsAPI {
     };
   }
 
-  private handleAxiosError(axiosError: AxiosError<IErrors>): IErrors {
+  private handleAxiosError(axiosError: AxiosError<IErrorResponse>): IErrorResponse {
     const errorData = axiosError.response?.data;
     if (errorData) {
       return errorData;
     }
-    console.log(`An error occurred: ${axiosError}`);
+    console.error('An error occurred:', axiosError);
     throw axiosError;
   }
 
@@ -26,7 +26,7 @@ class CustomersAPI extends CommercetoolsAPI {
     firstName: string,
     lastName: string,
     password: string,
-  ): Promise<ICustomer | IErrors> {
+  ): Promise<ICustomer | IErrorResponse> {
     try {
       const url = `${this.apiUrl}/${this.projectKey}/customers`;
       const headers = await this.getRequestHeaders();
@@ -40,7 +40,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data;
       return responseData.customer;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         return this.handleAxiosError(error);
       } else {
         console.error('An unexpected error occurred:', error);
@@ -49,7 +49,7 @@ class CustomersAPI extends CommercetoolsAPI {
     }
   }
 
-  public async loginCustomer(email: string, password: string): Promise<ICustomer | IErrors> {
+  public async loginCustomer(email: string, password: string): Promise<ICustomer | IErrorResponse> {
     try {
       const url = `${this.apiUrl}/${this.projectKey}/login`;
       const headers = await this.getRequestHeaders();
@@ -61,7 +61,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data;
       return responseData.customer;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         return this.handleAxiosError(error);
       } else {
         console.error('An unexpected error occurred:', error);

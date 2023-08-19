@@ -9,11 +9,11 @@ class CommercetoolsAPI {
   public apiUrl: string;
 
   constructor() {
-    this.apiUrl = 'https://api.europe-west1.gcp.commercetools.com';
-    this.authUrl = 'https://auth.europe-west1.gcp.commercetools.com/oauth/token';
     this.clientId = '3ljXP8YjRgV-DMfceZhEJJML';
     this.clientSecret = '2E8pMbfsOizJs8MqWz8Kssj8AuOMWOOa';
+    this.authUrl = 'https://auth.europe-west1.gcp.commercetools.com/oauth/token';
     this.projectKey = '82mcjsovqo';
+    this.apiUrl = 'https://api.europe-west1.gcp.commercetools.com';
   }
 
   private getBase64EncodedCredentials(): string {
