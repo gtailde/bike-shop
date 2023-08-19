@@ -4,7 +4,8 @@ import { ProfileInfo } from './ProfileInfo/ProfileInfo';
 import { Address } from './Address/Address';
 import { type IAddressData, type IProfileInfo } from './types';
 import { Button } from 'components/UI/Button/Button';
-import { Form, Link } from 'react-router-dom';
+import { Form } from 'components/UI/Form/Form';
+import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { getAddressesForPost } from './helpers';
 
