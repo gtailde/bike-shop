@@ -4,7 +4,8 @@ import { ProfileInfo } from './ProfileInfo/ProfileInfo';
 import { Address } from './Address/Address';
 import { type IAddressData, type IProfileInfo } from './types';
 import { Button } from 'components/UI/Button/Button';
-import { Form, Link } from 'react-router-dom';
+import { Form } from 'components/UI/Form/Form';
+import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { getAddressesForPost } from './helpers';
 
@@ -46,7 +47,7 @@ import { getAddressesForPost } from './helpers';
 
 const AddressSectionName = {
   BILLING: 'Billing Address',
-  SHIPPTING: 'Shipping Address',
+  SHIPPING: 'Shipping Address',
 };
 
 export const Registration = () => {
@@ -72,7 +73,7 @@ export const Registration = () => {
       addressInfo,
       shippingIsDefaultControlList,
       isSameAddress,
-      AddressSectionName.SHIPPTING,
+      AddressSectionName.SHIPPING,
     );
 
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
@@ -113,7 +114,7 @@ export const Registration = () => {
             addressList={addressInfo}
           />
           <Address
-            label={AddressSectionName.SHIPPTING}
+            label={AddressSectionName.SHIPPING}
             onEdit={handleChangeAddress}
             onSetSame={handleIsSame}
             onSetDefault={handleSetDefault.bind(this, setShippingIsDefaultControlList)}
