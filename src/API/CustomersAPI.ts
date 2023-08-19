@@ -14,9 +14,7 @@ class CustomersAPI extends CommercetoolsAPI {
 
   private handleAxiosError(axiosError: AxiosError<IErrorResponse>): IErrorResponse {
     const errorData = axiosError.response?.data;
-    if (errorData) {
-      return errorData;
-    }
+    if (errorData) return errorData;
     console.error('An error occurred:', axiosError);
     throw axiosError;
   }
@@ -40,12 +38,9 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data;
       return responseData.customer;
     } catch (error) {
-      if (isAxiosError(error)) {
-        return this.handleAxiosError(error);
-      } else {
-        console.error('An unexpected error occurred:', error);
-        throw error;
-      }
+      if (axios.isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw error;
     }
   }
 
@@ -61,12 +56,9 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data;
       return responseData.customer;
     } catch (error) {
-      if (isAxiosError(error)) {
-        return this.handleAxiosError(error);
-      } else {
-        console.error('An unexpected error occurred:', error);
-        throw error;
-      }
+      if (axios.isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw error;
     }
   }
 }
