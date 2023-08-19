@@ -1,40 +1,10 @@
+import { SvgIcons } from './SvgIcons';
 import './style.scss';
-import React from 'react';
+import React, { type ComponentProps } from 'react';
 
-const SvgIcons = {
-  EDIT: (
-    <svg viewBox="0 0 24 24" className="icon">
-      <path
-        id="edit-icon"
-        d="M3 17.5v3.03c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15l10.92-10.9-3.75-3.76L3.15 17.13a.5.5 0 0 0-.15.36ZM20.71 7.06a1 1 0 0 0 0-1.4l-2.34-2.35a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"
-      />
-    </svg>
-  ),
-  DELETE: (
-    <svg viewBox="0 0 24 24" className="icon">
-      <path
-        id="delete-icon"
-        d="M6 19.033c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-12H6v12Zm3.17-6.41a.996.996 0 1 1 1.41-1.41l1.42 1.41 1.41-1.41a.996.996 0 1 1 1.41 1.41l-1.41 1.41 1.41 1.41a.996.996 0 1 1-1.41 1.41L12 15.443l-1.41 1.41a.996.996 0 1 1-1.41-1.41l1.41-1.41-1.42-1.41ZM18 4.033h-2.5l-.71-.71c-.18-.18-.44-.29-.7-.29H9.91c-.26 0-.52.11-.7.29l-.71.71H6c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1Z"
-      />
-    </svg>
-  ),
-  CHECK: (
-    <svg viewBox="0 0 12 12" className="icon">
-      <path id="check-icon" d="m4 10.4-4-4L1.4 5 4 7.6 10.6 1 12 2.4l-8 8Z" />
-    </svg>
-  ),
-  OPENED_EYE: (
-    <svg viewBox="0 0 24 24" className="icon">
-      <path d="M12 4.5C7 4.5 2.73 7.61 1 12a11.83 11.83 0 0 0 22 0c-1.73-4.39-6-7.5-11-7.5ZM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
-    </svg>
-  ),
-  CLOSED_EYE: (
-    <svg viewBox="0 0 24 24" className="icon">
-      <path d="M12 7a5 5 0 0 1 4.64 6.83l2.92 2.92A11.82 11.82 0 0 0 22.99 12 11.83 11.83 0 0 0 8.01 5.2l2.16 2.16A4.85 4.85 0 0 1 12 7ZM2 4.27l2.28 2.28.46.46A11.8 11.8 0 0 0 1 12a11.83 11.83 0 0 0 15.38 6.66l.42.42L19.73 22 21 20.73 3.27 3 2 4.27ZM7.53 9.8l1.55 1.55a3 3 0 0 0 3.57 3.57l1.55 1.55A4.96 4.96 0 0 1 7.53 9.8Zm4.31-.78 3.15 3.15.02-.16a3 3 0 0 0-3-3l-.17.01Z" />
-    </svg>
-  ),
-};
-
-export const Icon = ({ variant }: { variant: keyof typeof SvgIcons }) => {
-  return SvgIcons[variant];
+export const Icon = ({
+  variant,
+  ...props
+}: ComponentProps<'span'> & { variant: keyof typeof SvgIcons }) => {
+  return <span {...props}>{SvgIcons[variant]}</span>;
 };
