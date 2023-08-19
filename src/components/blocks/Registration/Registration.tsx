@@ -4,7 +4,7 @@ import { ProfileInfo } from './ProfileInfo/ProfileInfo';
 import { Address } from './Address/Address';
 import { type IAddressData, type IProfileInfo } from './types';
 import { Button } from 'components/UI/Button/Button';
-import { Link } from 'react-router-dom';
+import { Form, Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { getAddressesForPost } from './helpers';
 
@@ -102,7 +102,7 @@ export const Registration = () => {
           <p className="registration__title">Sign up</p>
           <p className="registration__description">Please sign up below</p>
         </header>
-        <form action="" className="registration__form form" id="443">
+        <Form className="registration__form form">
           <ProfileInfo onChange={handleProfileInfoInput} />
           <Address
             label={AddressSectionName.BILLING}
@@ -120,7 +120,7 @@ export const Registration = () => {
             isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
-        </form>
+        </Form>
         <Button type="submit" accent onClick={handleSubmit}>
           Sign Up
         </Button>
