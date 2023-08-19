@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Buffer } from 'buffer';
 
 class CommercetoolsAPI {
   private readonly clientId: string;
@@ -18,7 +17,7 @@ class CommercetoolsAPI {
 
   private getBase64EncodedCredentials(): string {
     const credentials = `${this.clientId}:${this.clientSecret}`;
-    const encodedCredentials = Buffer.from(credentials).toString('base64');
+    const encodedCredentials = btoa(credentials);
     return encodedCredentials;
   }
 

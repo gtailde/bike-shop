@@ -38,7 +38,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data;
       return responseData.customer;
     } catch (error) {
-      if (axios.isAxiosError(error)) return this.handleAxiosError(error);
+      if (isAxiosError(error)) return this.handleAxiosError(error);
       console.error('An unexpected error occurred:', error);
       throw error;
     }
@@ -56,7 +56,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data;
       return responseData.customer;
     } catch (error) {
-      if (axios.isAxiosError(error)) return this.handleAxiosError(error);
+      if (isAxiosError(error)) return this.handleAxiosError(error);
       console.error('An unexpected error occurred:', error);
       throw error;
     }
