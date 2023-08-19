@@ -1,9 +1,26 @@
 import CommercetoolsAPI from './CommercetoolsAPI';
 import axios from 'axios';
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import type { ICustomer, IErrors } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
+  private async getRequestHeaders(): Promise<AxiosRequestConfig['headers']> {
+    const accessToken = await this.getAccessToken();
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    };
+  }
+
+  private handleAxiosError(axiosError: AxiosError<IErrors>): IErrors {
+    const errorData = axiosError.response?.data;
+    if (errorData) {
+      return errorData;
+    }
+    console.log(`An error occurred: ${axiosError}`);
+    throw axiosError;
+  }
+
   public async registerCustomer(
     email: string,
     firstName: string,
@@ -12,54 +29,44 @@ class CustomersAPI extends CommercetoolsAPI {
   ): Promise<ICustomer | IErrors> {
     try {
       const url = `${this.apiUrl}/${this.projectKey}/customers`;
-      const accessToken = await this.getAccessToken();
-
-      const headers: AxiosRequestConfig['headers'] = {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      };
-
+      const headers = await this.getRequestHeaders();
       const body = {
         email,
         firstName,
         lastName,
         password,
       };
-
-      const response: AxiosResponse = await axios.post(url, body, {
-        headers,
-      });
-
-      return response.data;
+      const response: AxiosResponse = await axios.post(url, body, { headers });
+      const responseData = response.data;
+      return responseData.customer;
     } catch (error) {
-      console.error('Error registering:', error);
-      throw error;
+      if (axios.isAxiosError(error)) {
+        return this.handleAxiosError(error);
+      } else {
+        console.error('An unexpected error occurred:', error);
+        throw error;
+      }
     }
   }
 
   public async loginCustomer(email: string, password: string): Promise<ICustomer | IErrors> {
     try {
       const url = `${this.apiUrl}/${this.projectKey}/login`;
-      const accessToken = await this.getAccessToken();
-
-      const headers: AxiosRequestConfig['headers'] = {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      };
-
+      const headers = await this.getRequestHeaders();
       const body = {
         email,
         password,
       };
-
-      const response: AxiosResponse = await axios.post(url, body, {
-        headers,
-      });
-
-      return response.data;
+      const response: AxiosResponse = await axios.post(url, body, { headers });
+      const responseData = response.data;
+      return responseData.customer;
     } catch (error) {
-      console.error('Error logging in:', error);
-      throw error;
+      if (axios.isAxiosError(error)) {
+        return this.handleAxiosError(error);
+      } else {
+        console.error('An unexpected error occurred:', error);
+        throw error;
+      }
     }
   }
 }
