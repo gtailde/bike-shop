@@ -47,7 +47,7 @@ import { getAddressesForPost } from './helpers';
 
 const AddressSectionName = {
   BILLING: 'Billing Address',
-  SHIPPTING: 'Shipping Address',
+  SHIPPING: 'Shipping Address',
 };
 
 export const Registration = () => {
@@ -73,7 +73,7 @@ export const Registration = () => {
       addressInfo,
       shippingIsDefaultControlList,
       isSameAddress,
-      AddressSectionName.SHIPPTING,
+      AddressSectionName.SHIPPING,
     );
 
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
@@ -114,7 +114,7 @@ export const Registration = () => {
             addressList={addressInfo}
           />
           <Address
-            label={AddressSectionName.SHIPPTING}
+            label={AddressSectionName.SHIPPING}
             onEdit={handleChangeAddress}
             onSetSame={handleIsSame}
             onSetDefault={handleSetDefault.bind(this, setShippingIsDefaultControlList)}
