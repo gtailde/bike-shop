@@ -28,6 +28,9 @@ export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
         type = isActiveOption ? 'text' : 'password';
         hasOption = true;
         break;
+      case 'date':
+        fieldIcon = (<Icon variant="CALENDAR" />);
+        hasOption = true;
     }
 
     return (
