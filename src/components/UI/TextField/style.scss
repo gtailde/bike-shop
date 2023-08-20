@@ -45,7 +45,15 @@
     }
 
     &::-webkit-calendar-picker-indicator {
-      display: none;
+      position: absolute;
+      right: 12px;
+      top: 0;
+      bottom: 0;
+      z-index: 1;
+      margin: auto 0;
+      width: 24px;
+      height: 24px;
+      opacity: 0;
     }
   }
 

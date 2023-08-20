@@ -1,7 +1,8 @@
-@use "../styles/variables.scss" as *;
 @use "../styles/mixins.scss" as *;
 
 body {
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
@@ -10,6 +11,19 @@ html {
   background-color: var(--main-color-3);
   @include font-text-regular;
   color: var(--main-color-2-default);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
 }
 
 .visually-hidden {
@@ -23,4 +37,9 @@ html {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+}
+
+.icon {
+  fill: currentColor;
+  transition: fill 0.2s ease;
 }
