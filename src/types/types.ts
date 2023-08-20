@@ -27,16 +27,13 @@ export interface ICustomer {
   versionModifiedAt: string;
 }
 
-interface IError {
+interface ErrorDetail {
   code: string;
-  duplicateValue: string;
-  field: string;
   message: string;
 }
 
-export interface IErrors {
-  [index: number]: IError;
-  length: number;
-  message: string;
+export interface IErrorResponse {
   statusCode: number;
+  message: string;
+  errors: ErrorDetail[];
 }
