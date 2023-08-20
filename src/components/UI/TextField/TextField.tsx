@@ -1,17 +1,17 @@
 import './style.scss';
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Icon } from '../Icon/Icon';
 import { type ITextFieldProps } from './types';
 
-export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFieldProps>(
+export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
   (
     {
       id,
       type = 'text',
       label,
-      isValid = true,
+      isValid,
       helpText,
-      isTextShows = false,
+      isTextShows,
       className,
       onChange,
       ...props
@@ -21,8 +21,6 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
     const [isActiveOption, setIsActiveOption] = useState(false);
     let hasOption = false;
     let fieldIcon = null;
-    const inputRef = useRef<HTMLInputElement>(null);
-    useImperativeHandle(ref, () => inputRef);
 
     switch (type) {
       case 'password':
@@ -31,14 +29,7 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
         hasOption = true;
         break;
       case 'date':
-        fieldIcon = (
-          <Icon
-            onClick={() => {
-              inputRef.current?.showPicker();
-            }}
-            variant="CALENDAR"
-          />
-        );
+        fieldIcon = (<Icon variant="CALENDAR" />);
         hasOption = true;
     }
 
@@ -47,10 +38,8 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
         <div className="text-field__container">
           <input
             {...props}
-            ref={inputRef}
-            onChange={(evt) => {
-              onChange(evt.target.value);
-            }}
+            ref={ref}
+            onChange={onChange}
             className="text-field__input"
             id={id}
             placeholder=""
@@ -80,5 +69,3 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
     );
   },
 );
-
-TextField.displayName = 'TextField';
