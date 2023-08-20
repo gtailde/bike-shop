@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './style.scss';
 import { type IAddressData } from '../types';
 import { Button } from 'components/UI/Button/Button';
-import { Icon } from 'components/UI/Icon/Icon';
+import { ReactComponent as EditIcon } from './assets/edit-icon.svg';
+import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
 import { AddressRecordEdit } from './AddressRecordEdit';
 
@@ -48,14 +49,14 @@ export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddress
             onClick={handleEditAddress}
             aria-label="Edit"
           >
-            <Icon variant="EDIT" />
+            <EditIcon className="icon" />
           </Button>
           <Button
             className="address-record__button button--icon-only"
             onClick={handleDeleteAddress}
             aria-label="Delete"
           >
-            <Icon variant="DELETE" />
+            <DeleteIcon className="icon" />
           </Button>
         </span>
       </p>

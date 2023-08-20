@@ -1,6 +1,8 @@
 import './style.scss';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { Icon } from '../Icon/Icon';
+import { ReactComponent as ClosedEyeIcon } from './assets/closed-eye-icon.svg';
+import { ReactComponent as OpenedEyeIcon } from './assets/opened-eye-icon.svg';
+import { ReactComponent as CalendarIcon } from './assets/calendar-icon.svg';
 import { type ITextFieldProps } from './types';
 
 export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFieldProps>(
@@ -19,27 +21,24 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
     ref,
   ) => {
     const [isActiveOption, setIsActiveOption] = useState(false);
-    let hasOption = false;
+    let isInteractive = false;
     let fieldIcon = null;
     const inputRef = useRef<HTMLInputElement>(null);
     useImperativeHandle(ref, () => inputRef);
 
     switch (type) {
       case 'password':
-        fieldIcon = isActiveOption ? <Icon variant="CLOSED_EYE" /> : <Icon variant="OPENED_EYE" />;
+        fieldIcon = isActiveOption ? (
+          <ClosedEyeIcon className="icon" />
+        ) : (
+          <OpenedEyeIcon className="icon" />
+        );
         type = isActiveOption ? 'text' : 'password';
-        hasOption = true;
+        isInteractive = true;
         break;
       case 'date':
-        fieldIcon = (
-          <Icon
-            onClick={() => {
-              inputRef.current?.showPicker();
-            }}
-            variant="CALENDAR"
-          />
-        );
-        hasOption = true;
+        fieldIcon = <CalendarIcon className="icon" />;
+        isInteractive = true;
     }
 
     return (
@@ -67,7 +66,7 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
           </fieldset>
           <div
             className="text-field__icon-container"
-            style={{ pointerEvents: hasOption ? 'auto' : 'none' }}
+            style={{ pointerEvents: isInteractive ? 'auto' : 'none' }}
             onClick={() => {
               setIsActiveOption(!isActiveOption);
             }}

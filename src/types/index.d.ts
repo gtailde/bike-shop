@@ -1,6 +1,7 @@
 declare module '*.svg' {
-  const path: string;
-  export default path;
+  export const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;
+  const src: string;
+  export default src;
 }
 
 declare module '*.png' {
