@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { type ITextFieldProps } from 'components/UI/TextField/types';
+import React from 'react';
 import { TextField } from 'components/UI/TextField/TextField';
 import { Button } from 'components/UI/Button/Button';
+import { type Form } from 'components/UI/Form/Form';
 import { type IAddressData } from '../types';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { addressFormFields } from '../formFields';
+import { addressFormSchema } from '../schemes';
 
 interface IAddressRecordEditProps extends IAddressData {
   onCancel: () => void;
@@ -10,84 +14,51 @@ interface IAddressRecordEditProps extends IAddressData {
 }
 
 export const AddressRecordEdit = (props: IAddressRecordEditProps) => {
-  const [title, setTitle] = useState(props.title);
-  const [country, setCountry] = useState(props.country);
-  const [city, setCity] = useState(props.city);
-  const [street, setStreet] = useState(props.street);
-  const [postalCode, setPostalCode] = useState(props.postalCode);
+  const form = useForm({
+    defaultValues: {
+      title: '',
+      city: '',
+      street: '',
+    },
+    resolver: yupResolver(addressFormSchema),
+    mode: 'all',
+  });
+
+  const { register, handleSubmit, formState } = form;
+  const { errors } = formState;
+
   const addressRecordData: IAddressData = {
     id: props.id,
     source: props.source,
     isDefault: props.isDefault,
-    title,
-    country,
-    city,
-    street,
-    postalCode,
+    title: '',
+    country: '',
+    city: '',
+    street: '',
+    postalCode: '',
   };
-
-  const formFields: ITextFieldProps[] = [
-    {
-      id: '1',
-      type: 'text',
-      label: 'Title',
-      value: title,
-      onChange: (value: string) => {
-        setTitle(value);
-      },
-    },
-    {
-      id: '2',
-      type: 'text',
-      label: 'Country',
-      value: country,
-      onChange: (value: string) => {
-        setCountry(value);
-      },
-    },
-    {
-      id: '3',
-      type: 'text',
-      label: 'City',
-      value: city,
-      onChange: (value: string) => {
-        setCity(value);
-      },
-    },
-    {
-      id: '4',
-      type: 'text',
-      label: 'Street',
-      value: street,
-      onChange: (value: string) => {
-        setStreet(value);
-      },
-    },
-    {
-      id: '5',
-      type: 'text',
-      label: 'Postal Code',
-      value: postalCode,
-      onChange: (value: string) => {
-        setPostalCode(value);
-      },
-    },
-  ];
 
   return (
     <div className="form__address-record address-record address-record--edit">
       <p className="address-record__title">Edit Address</p>
       <div className="address-record__content">
-        {formFields.map(({ id, ...data }) => (
-          <TextField key={id} {...data} />
+        {addressFormFields.map(({ id, name, ...data }) => (
+          <TextField
+            {...data}
+            key={id}
+            isValid={!errors[name as keyof typeof errors]?.message}
+            helpText={errors[name as keyof typeof errors]?.message}
+            isTextShows={!!errors[name as keyof typeof errors]?.message}
+            {...register(name as keyof typeof Form)}
+          />
         ))}
       </div>
       <div className="address-record__controls">
         <Button
           accent
-          onClick={() => {
-            props.onSave(addressRecordData);
-          }}
+          onClick={handleSubmit((data) => {
+            props.onSave({ ...addressRecordData, ...data });
+          })}
         >
           Save
         </Button>
