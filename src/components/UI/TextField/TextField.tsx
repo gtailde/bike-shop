@@ -29,7 +29,7 @@ export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
         hasOption = true;
         break;
       case 'date':
-        fieldIcon = (<Icon variant="CALENDAR" />);
+        fieldIcon = <Icon variant="CALENDAR" />;
         hasOption = true;
     }
 
