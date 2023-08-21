@@ -115,41 +115,42 @@
     margin-left: 12px;
   }
 
-  &--invalid &__fieldset {
-    border-color: var(--status-color-error);
-  }
-
-  &--invalid &__label {
-    color: var(--status-color-error);
-  }
-
-  &--invalid &__text-helper {
-    display: block;
-    color: var(--status-color-error);
-  }
-
-  &:hover fieldset {
+  &:hover &__fieldset {
     border-color: var(--main-color-1);
   }
 
-  &:focus-within {
-    .text-field__fieldset {
+  &:focus-within &__fieldset {
       border-color: var(--accent-color-1-default);
     }
 
-    .text-field__label {
-      left: 5px;
-      font-size: 0.75em;
-      transform: translate(14px, -9px);
-      color:  var(--main-color-2-default);
-    }
+  &:focus-within &__label {
+    left: 5px;
+    font-size: 0.75em;
+    transform: translate(14px, -9px);
+    color:  var(--main-color-2-default);
+  }
   
-    .text-field__legend {
-      max-width: 100%;
-    }
+  &:focus-within &__legend {
+    max-width: 100%;
   }
 
   &--invalid:focus-within &__fieldset {
-    border-color: var(--status-color-error);
+      border-color: var(--status-color-error);
+    }
+
+  &--invalid:focus-within &__label {
+    color:  var(--status-color-error);
+  }
+
+  &--invalid &__fieldset {
+      border-color: var(--status-color-error);
+    }
+
+  &--invalid  &__label {
+    color:  var(--status-color-error);
+  }
+
+  &--invalid &__text-helper {
+    color:  var(--status-color-error);
   }
 }
