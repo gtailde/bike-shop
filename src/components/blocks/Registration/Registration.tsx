@@ -13,42 +13,6 @@ import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { profileFormSchema } from './schemes';
 
-// const mockBillingData: IAddressData[] = [
-//   {
-//     id: 0,
-//     source: 'Billing Address',
-//     isDefault: true,
-//     title: 'Home',
-//     country: 'Random-country',
-//     city: 'Random-City',
-//     street: 'Random-street',
-//     postalCode: '156788',
-//   },
-//   {
-//     id: 2,
-//     source: 'Billing Address',
-//     isDefault: false,
-//     title: 'Office',
-//     country: 'Random-country',
-//     city: 'Random-City',
-//     street: 'Random-street',
-//     postalCode: '156788',
-//   },
-// ];
-
-// const mockShippingData: IAddressData[] = [
-//   {
-//     id: 1,
-//     source: 'Shipping Address',
-//     isDefault: true,
-//     title: 'Work',
-//     country: 'Random-country',
-//     city: 'Random-City',
-//     street: 'Random-street',
-//     postalCode: '156788',
-//   },
-// ];
-
 const AddressSectionName = {
   BILLING: 'Billing Address',
   SHIPPING: 'Shipping Address',
@@ -56,12 +20,6 @@ const AddressSectionName = {
 
 export const Registration = () => {
   const profileForm = useForm({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-    },
     resolver: yupResolver(profileFormSchema),
     mode: 'all',
   });
@@ -69,7 +27,7 @@ export const Registration = () => {
   const { register, handleSubmit, formState } = profileForm;
   const { errors } = formState;
 
-  const [addressInfo, setAddressInfo] = useState([] as IAddressData[]);
+  const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const [isSameAddress, setIsSameAddress] = useState(false);
   const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState(
     [] as IAddressData[],
@@ -78,9 +36,7 @@ export const Registration = () => {
     [] as IAddressData[],
   );
 
-  const onSubmit = handleSubmit((data) => {
-    const profileInfo = data;
-
+  const onSubmit = handleSubmit((profileInfo) => {
     const billingInfo = getAddressesForPost(
       addressInfo,
       billingIsDefaultControlList,
@@ -126,13 +82,13 @@ export const Registration = () => {
               <legend className="form__legend">Profile Info</legend>
             </p>
             <div className="form__fieldset-content">
-              {profileFormFields.map(({ id, name, ...data }) => (
+              {profileFormFields.map(({ name, ...data }) => (
                 <TextField
                   {...data}
-                  key={id}
-                  isValid={!errors[name as keyof typeof errors]?.message}
-                  helpText={errors[name as keyof typeof errors]?.message}
-                  {...register(name as keyof typeof Form)}
+                  key={name}
+                  isValid={!errors[name]}
+                  helpText={errors[name]?.message}
+                  {...register(name)}
                 />
               ))}
             </div>
