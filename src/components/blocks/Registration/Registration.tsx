@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { profileFormSchema } from './schemes';
+import customersApi from 'API/CustomersAPI';
 
 const AddressSectionName = {
   BILLING: 'Billing Address',
@@ -36,7 +37,7 @@ export const Registration = () => {
     [] as IAddressData[],
   );
 
-  const onSubmit = handleSubmit((profileInfo) => {
+  const onSubmit = handleSubmit(async (profileInfo) => {
     const billingInfo = getAddressesForPost(
       addressInfo,
       billingIsDefaultControlList,
@@ -50,6 +51,14 @@ export const Registration = () => {
       isSameAddress,
       AddressSectionName.SHIPPING,
     );
+
+    const response = await customersApi.registerCustomer(
+      profileInfo.email,
+      profileInfo.firstName,
+      profileInfo.lastName,
+      profileInfo.password,
+    );
+    console.log(response);
 
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
   });

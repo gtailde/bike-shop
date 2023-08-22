@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { formFields } from './formFields';
+import customersApi from 'API/CustomersAPI';
 
 const schema = yup.object({
   email: emailSchema,
@@ -31,8 +32,9 @@ export const Login = () => {
     setIsRemember(value);
   };
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    const response = await customersApi.loginCustomer(data.email, data.password);
+    console.log(response);
   });
 
   const onBlur = (e: BaseSyntheticEvent) => {
