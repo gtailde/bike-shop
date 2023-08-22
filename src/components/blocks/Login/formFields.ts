@@ -7,7 +7,7 @@ export const formFields = [
   },
   {
     id: '2',
-    type: 'text',
+    type: 'password',
     label: 'Password',
     name: 'password',
   },
