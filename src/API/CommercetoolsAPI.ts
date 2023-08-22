@@ -179,4 +179,6 @@ class CommercetoolsAPI {
   }
 }
 
-export default CommercetoolsAPI;
+const commercetoolsAPI = new CommercetoolsAPI();
+
+export { commercetoolsAPI, CommercetoolsAPI };

@@ -1,4 +1,4 @@
-import CommercetoolsAPI from './CommercetoolsAPI';
+import { CommercetoolsAPI } from './CommercetoolsAPI';
 import axios, { isAxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
@@ -23,7 +23,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data.customer;
       const loginData = await this.loginCustomer(email, password);
 
-      if (!('access_token' in loginData)) throw new Error('Failed to login');
+      if (!('id' in loginData)) throw new Error('Failed to login');
       return responseData;
     } catch (error) {
       if (isAxiosError(error)) return this.handleAxiosError(error);
