@@ -1,20 +1,20 @@
 import * as yup from 'yup';
 import {
-  // dateSchema,
+  userNameSchema,
+  dateSchema,
   emailSchema,
   passwordSchema,
-  userNameSchema,
   titleSchema,
   countrySchema,
   citySchema,
   streetSchema,
-  // postalCodeSchema,
+  postalCodeSchema,
 } from 'validations/validationSchemes';
 
 export const profileFormSchema = yup.object({
   firstName: userNameSchema,
   lastName: userNameSchema,
-  // birthDate: dateSchema, // TODO
+  birthDate: dateSchema,
   email: emailSchema,
   password: passwordSchema,
 });
@@ -24,5 +24,5 @@ export const addressFormSchema = yup.object({
   country: countrySchema,
   city: citySchema,
   street: streetSchema,
-  // postalCode: postalCodeSchema, // TODO
+  postalCode: postalCodeSchema,
 });

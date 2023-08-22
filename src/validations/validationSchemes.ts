@@ -58,15 +58,7 @@ const onlyCharactersSchema = yup
     excludeEmptyString: true,
   });
 
-export const dateSchema = yup
-  .string()
-  .matches(
-    /^(((0[1-9]|[12][0-9]|30)[-/]?(0[13-9]|1[012])|31[-/]?(0[13578]|1[02])|(0[1-9]|1[0-9]|2[0-8])[-/]?02)[-/]?[0-9]{4}|29[-/]?02[-/]?([0-9]{2}(([2468][048]|[02468][48])|[13579][26])|([13579][26]|[02468][048]|0[0-9]|1[0-6])00))$/,
-    {
-      message: 'Date format must be dd.mm.yyyy',
-      excludeEmptyString: true,
-    },
-  );
+export const dateSchema = yup.string().required('Date is required');
 
 export const userNameSchema = onlyCharactersSchema;
 export const titleSchema = yup.string().required();
@@ -74,4 +66,13 @@ export const citySchema = onlyCharactersSchema;
 export const streetSchema = characterSchema;
 export const countrySchema = yup
   .mixed((inputText: string): inputText is CountryName => countriesNames.includes(inputText))
-  .required();
+  .required('Country is required');
+
+export const postalCodeSchema = yup
+  .string()
+  .strict()
+  .required('Postal code is required')
+  .matches(/^(?=.*[0-9]).*$/, {
+    message: 'Postal code must contain at least one digit',
+    excludeEmptyString: true,
+  });
