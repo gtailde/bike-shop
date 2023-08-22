@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { type IPromoCardData } from './types';
-import decorativeIcon1 from './assets/promo-decorative-1.svg';
-import decorativeIcon2 from './assets/promo-decorative-2.svg';
+import { ReactComponent as DecorativeIcon1 } from './assets/promo-decorative-1.svg';
+import { ReactComponent as DecorativeIcon2 } from './assets/promo-decorative-2.svg';
 import decorativeBackground1 from './assets/promo-background-1.png';
 import decorativeBackground2 from './assets/promo-background-2.png';
 
 interface IDecorateVariant {
-  decorativeIcon: string;
+  decorativeIcon: ReactElement;
   decorativeBackground: string;
 }
 
@@ -18,8 +18,11 @@ interface IPromoCardProps {
 }
 
 const decorateVariants: IDecorateVariant[] = [
-  { decorativeIcon: decorativeIcon1, decorativeBackground: decorativeBackground1 },
-  { decorativeIcon: decorativeIcon2, decorativeBackground: decorativeBackground2 },
+  {
+    decorativeIcon: <DecorativeIcon1 />,
+    decorativeBackground: decorativeBackground1,
+  },
+  { decorativeIcon: <DecorativeIcon2 />, decorativeBackground: decorativeBackground2 },
 ];
 
 export const PromoCard = ({ promoCardData, variantIndex = 0 }: IPromoCardProps) => {
@@ -32,7 +35,7 @@ export const PromoCard = ({ promoCardData, variantIndex = 0 }: IPromoCardProps) 
       style={{ backgroundImage: `url(${decorateSet.decorativeBackground})` }}
     >
       <h1 className="visually-hidden">Promo-card</h1>
-      <img className="promo-card__decorative-img" src={decorateSet.decorativeIcon} alt="" />
+      {decorateSet.decorativeIcon}
       <div className="promo-card__description">
         <p className="promo-card__discount-name">{name}</p>
         <p className="promo-card__discount-description">{description}</p>

@@ -12,12 +12,18 @@ export const Error = () => {
   };
 
   return (
-    <section className="error-section">
-      <h1 className="error-header"> 404 Error </h1>
-      <h3 className="error-text">The page you were looking for counldn&apos;t be found.</h3>
-      <Button accent onClick={toMain}>
-        Back to main page
-      </Button>
-    </section>
+    <main className="page-content">
+      <section className="error-section">
+        <div className="error-section__content page-wrapper">
+          <h2 className="error-section__header"> 404 Error </h2>
+          <p className="error-section__text">
+            The page you were looking for counldn&apos;t be found.
+          </p>
+          <Button accent className="error-section__button" onClick={toMain}>
+            Back to main page
+          </Button>
+        </div>
+      </section>
+    </main>
   );
 };
