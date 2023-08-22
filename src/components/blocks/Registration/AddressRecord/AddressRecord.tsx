@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './style.scss';
-import { type IAddressData } from '../types';
+import { type IAddressFormData, type IAddressData } from '../types';
 import { Button } from 'components/UI/Button/Button';
 import { ReactComponent as EditIcon } from './assets/edit-icon.svg';
 import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
@@ -29,9 +29,12 @@ export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddress
   const handleEditCancel = () => {
     setIsEditMode(false);
   };
-  const handleEditSave = (editedData: IAddressData) => {
+  const handleEditSave = (editedData: IAddressFormData) => {
     setIsEditMode(false);
-    onSave(editedData);
+    onSave({
+      ...data,
+      ...editedData,
+    });
   };
 
   const getTextContent = ({ id, source, isDefault, title, ...descriptionProps }: IAddressData) =>

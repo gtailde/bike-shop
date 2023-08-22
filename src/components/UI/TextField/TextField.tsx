@@ -7,17 +7,7 @@ import { type ITextFieldProps } from './types';
 
 export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
   (
-    {
-      id,
-      type = 'text',
-      label,
-      isValid,
-      helpText,
-      isTextShows,
-      className,
-      onChange,
-      ...props
-    }: ITextFieldProps,
+    { id, type = 'text', label, isValid, helpText, className, onChange, ...props }: ITextFieldProps,
     ref,
   ) => {
     const [isActiveOption, setIsActiveOption] = useState(false);
@@ -70,7 +60,7 @@ export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
             {fieldIcon}
           </div>
         </div>
-        <p className="text-field__text-helper">{isTextShows && helpText}</p>
+        <p className="text-field__text-helper">{helpText ?? ''}</p>
       </div>
     );
   },

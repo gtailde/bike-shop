@@ -1,49 +1,17 @@
 import './style.scss';
 import React, { useState } from 'react';
-import { ProfileInfo } from './ProfileInfo/ProfileInfo';
 import { Address } from './Address/Address';
-import { type IAddressData, type IProfileInfo } from './types';
+import { type IAddressData } from './types';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
 import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { getAddressesForPost } from './helpers';
-
-// const mockBillingData: IAddressData[] = [
-//   {
-//     id: 0,
-//     source: 'Billing Address',
-//     isDefault: true,
-//     title: 'Home',
-//     country: 'Random-country',
-//     city: 'Random-City',
-//     street: 'Random-street',
-//     postalCode: '156788',
-//   },
-//   {
-//     id: 2,
-//     source: 'Billing Address',
-//     isDefault: false,
-//     title: 'Office',
-//     country: 'Random-country',
-//     city: 'Random-City',
-//     street: 'Random-street',
-//     postalCode: '156788',
-//   },
-// ];
-
-// const mockShippingData: IAddressData[] = [
-//   {
-//     id: 1,
-//     source: 'Shipping Address',
-//     isDefault: true,
-//     title: 'Work',
-//     country: 'Random-country',
-//     city: 'Random-City',
-//     street: 'Random-street',
-//     postalCode: '156788',
-//   },
-// ];
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { profileFormFields } from './formFields';
+import { TextField } from 'components/UI/TextField/TextField';
+import { profileFormSchema } from './schemes';
 
 const AddressSectionName = {
   BILLING: 'Billing Address',
@@ -51,8 +19,15 @@ const AddressSectionName = {
 };
 
 export const Registration = () => {
-  const [profileInfo, setProfileInfo] = useState({});
-  const [addressInfo, setAddressInfo] = useState([] as IAddressData[]);
+  const profileForm = useForm({
+    resolver: yupResolver(profileFormSchema),
+    mode: 'all',
+  });
+
+  const { register, handleSubmit, formState } = profileForm;
+  const { errors } = formState;
+
+  const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const [isSameAddress, setIsSameAddress] = useState(false);
   const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState(
     [] as IAddressData[],
@@ -61,7 +36,7 @@ export const Registration = () => {
     [] as IAddressData[],
   );
 
-  const handleSubmit = () => {
+  const onSubmit = handleSubmit((profileInfo) => {
     const billingInfo = getAddressesForPost(
       addressInfo,
       billingIsDefaultControlList,
@@ -77,10 +52,8 @@ export const Registration = () => {
     );
 
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
-  };
-  const handleProfileInfoInput = (data: IProfileInfo) => {
-    setProfileInfo(data);
-  };
+  });
+
   const handleChangeAddress = (addressList: IAddressData[]) => {
     setAddressInfo(addressList);
   };
@@ -103,8 +76,23 @@ export const Registration = () => {
           <p className="registration__title">Sign up</p>
           <p className="registration__description">Please sign up below</p>
         </header>
-        <Form className="registration__form form">
-          <ProfileInfo onChange={handleProfileInfoInput} />
+        <Form className="registration__form form" id="RegistrationForm" onSubmit={onSubmit}>
+          <fieldset className="form__fieldset">
+            <p className="form__fieldset-headline">
+              <legend className="form__legend">Profile Info</legend>
+            </p>
+            <div className="form__fieldset-content">
+              {profileFormFields.map(({ name, ...data }) => (
+                <TextField
+                  {...data}
+                  key={name}
+                  isValid={!errors[name]}
+                  helpText={errors[name]?.message}
+                  {...register(name)}
+                />
+              ))}
+            </div>
+          </fieldset>
           <Address
             label={AddressSectionName.BILLING}
             onEdit={handleChangeAddress}
@@ -122,7 +110,7 @@ export const Registration = () => {
             addressList={addressInfo}
           />
         </Form>
-        <Button type="submit" accent onClick={handleSubmit}>
+        <Button type="submit" form="RegistrationForm" accent>
           Sign Up
         </Button>
         <p className="registration__note">

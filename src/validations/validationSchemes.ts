@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { type CountryName, countriesNames } from './countriesList';
 
 export const emailSchema = yup
   .string()
@@ -34,5 +35,44 @@ export const passwordSchema = yup
   })
   .matches(/^.{8,24}$/, {
     message: 'Password must be 8-24 characters Long',
+    excludeEmptyString: true,
+  });
+
+const characterSchema = yup
+  .string()
+  .required()
+  .matches(/^(?=.*[a-zA-Z]).*$/, {
+    message: 'Must contain at least one character',
+    excludeEmptyString: true,
+  });
+
+const onlyCharactersSchema = yup
+  .string()
+  .required()
+  .matches(/^(?=.*[a-zA-Z]).*$/, {
+    message: 'Must contain at least one character',
+    excludeEmptyString: true,
+  })
+  .matches(/^(?!.*\d)[^!@#$%^&*]+$/, {
+    message: 'Must contain no special characters or numbers',
+    excludeEmptyString: true,
+  });
+
+export const dateSchema = yup.string().required('Date is required');
+
+export const userNameSchema = onlyCharactersSchema;
+export const titleSchema = yup.string().required();
+export const citySchema = onlyCharactersSchema;
+export const streetSchema = characterSchema;
+export const countrySchema = yup
+  .mixed((inputText: string): inputText is CountryName => countriesNames.includes(inputText))
+  .required('Country is required');
+
+export const postalCodeSchema = yup
+  .string()
+  .strict()
+  .required('Postal code is required')
+  .matches(/^(?=.*[0-9]).*$/, {
+    message: 'Postal code must contain at least one digit',
     excludeEmptyString: true,
   });

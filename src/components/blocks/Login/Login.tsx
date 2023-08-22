@@ -10,7 +10,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { emailSchema, passwordSchema } from 'validations/validationSchemes';
-import { type ITextFieldProps } from 'components/UI/TextField/types';
+import { formFields } from './formFields';
 
 const schema = yup.object({
   email: emailSchema,
@@ -19,10 +19,6 @@ const schema = yup.object({
 
 export const Login = () => {
   const form = useForm({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
     resolver: yupResolver(schema),
     mode: 'all',
   });
@@ -44,25 +40,6 @@ export const Login = () => {
     console.log(e.target.value);
   };
 
-  const formFields: ITextFieldProps[] = [
-    {
-      id: '1',
-      label: 'Email address',
-      name: 'email',
-      isValid: !errors.email?.message,
-      helpText: errors.email?.message,
-      isTextShows: !!errors.email?.message,
-    },
-    {
-      id: '2',
-      label: 'Password',
-      name: 'password',
-      isValid: !errors.password?.message,
-      helpText: errors.password?.message,
-      isTextShows: !!errors.password?.message,
-    },
-  ];
-
   return (
     <section className="login">
       <div className="login__container page-wrapper">
@@ -72,12 +49,14 @@ export const Login = () => {
           <p className="login__description">Please sign in below to continue</p>
         </header>
         <Form className="login__form" action="" onSubmit={onSubmit}>
-          {formFields.map(({ id, name, ...data }, index) => (
+          {formFields.map(({ name, ...data }, index) => (
             <TextField
               {...data}
-              key={id}
+              key={name}
               id={`input-${index}`}
-              {...register(name as keyof typeof Form, { onBlur })}
+              isValid={!errors[name]}
+              helpText={errors[name]?.message}
+              {...register(name, { onBlur })}
             />
           ))}
           <ControlLabel checked={isRemember} label="Remember me" onChange={handleRememberCheck} />
