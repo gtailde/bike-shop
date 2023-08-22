@@ -1,6 +1,4 @@
-import { type ITextFieldProps } from 'components/UI/TextField/types';
-
-export const profileFormFields: ITextFieldProps[] = [
+export const profileFormFields = [
   {
     id: '1',
     type: 'text',
@@ -31,9 +29,9 @@ export const profileFormFields: ITextFieldProps[] = [
     label: 'Password',
     name: 'password',
   },
-];
+] as const;
 
-export const addressFormFields: ITextFieldProps[] = [
+export const addressFormFields = [
   {
     id: '1',
     type: 'text',
@@ -64,4 +62,4 @@ export const addressFormFields: ITextFieldProps[] = [
     label: 'Postal Code',
     name: 'postalCode',
   },
-];
+] as const;
