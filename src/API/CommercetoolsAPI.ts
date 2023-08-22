@@ -80,9 +80,7 @@ class CommercetoolsAPI {
       const url = `${this.authUrl}/oauth/introspect`;
       const authHeaders = this.getAuthHeaders();
 
-      const authData = new URLSearchParams({
-        token: token,
-      });
+      const authData = new URLSearchParams({ token });
 
       const response = await axios.post(url, authData.toString(), {
         headers: authHeaders,
@@ -119,19 +117,18 @@ class CommercetoolsAPI {
   protected async revokeToken(
     token: string,
     tokenTypeHint: 'access_token' | 'refresh_token',
-  ): Promise<IErrorResponse | void> {
+  ): Promise<void> {
     try {
       const url = `${this.authUrl}/oauth/token/revoke`;
       const headers = this.getAuthHeaders();
 
       const data = new URLSearchParams({
-        token: token,
+        token,
         token_type_hint: tokenTypeHint,
       });
 
       await axios.post(url, data.toString(), { headers });
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
       console.error('Error revoking token:', error);
       throw new Error('Failed to revoke token');
     }
@@ -176,7 +173,6 @@ class CommercetoolsAPI {
 
       const newAnonymToken = await this.getAnonymousToken();
       localStorage.setItem('anonym_token', JSON.stringify(newAnonymToken));
-      return;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
       throw new Error('Failed to start');

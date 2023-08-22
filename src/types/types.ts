@@ -23,10 +23,10 @@ export interface ICustomer {
   shippingAddressIds: string[];
   billingAddressIds: string[];
   isEmailVerified: boolean;
-  stores: {
+  stores: Array<{
     typeId: string;
     key: string;
-  }[];
+  }>;
   authenticationMode: string;
 }
 
