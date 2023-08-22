@@ -1,24 +1,9 @@
 import CommercetoolsAPI from './CommercetoolsAPI';
 import axios, { isAxiosError } from 'axios';
-import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import type { ICustomer, IErrorResponse } from '../types/types';
+import type { AxiosResponse } from 'axios';
+import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
-  private async getRequestHeaders(): Promise<AxiosRequestConfig['headers']> {
-    const accessToken = await this.getAccessToken();
-    return {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
-
-  private handleAxiosError(axiosError: AxiosError<IErrorResponse>): IErrorResponse {
-    const errorData = axiosError.response?.data;
-    if (errorData) return errorData;
-    console.error('An error occurred:', axiosError);
-    throw axiosError;
-  }
-
   public async registerCustomer(
     email: string,
     firstName: string,
@@ -26,43 +11,75 @@ class CustomersAPI extends CommercetoolsAPI {
     password: string,
   ): Promise<ICustomer | IErrorResponse> {
     try {
-      const url = `${this.apiUrl}/${this.projectKey}/customers`;
-      const headers = await this.getRequestHeaders();
-      const body = {
-        email,
-        firstName,
-        lastName,
-        password,
-      };
+      const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me/signup`;
+      const getToken = localStorage.getItem('anonym_token');
+      if (!getToken) throw new Error('Token error');
+
+      const token: IAccessToken = JSON.parse(getToken);
+      const headers = this.getTokenHeaders(token.access_token);
+      const body = { email, firstName, lastName, password };
+
       const response: AxiosResponse = await axios.post(url, body, { headers });
-      const responseData = response.data;
-      return responseData.customer;
+      const responseData = response.data.customer;
+      const loginData = await this.loginCustomer(email, password);
+
+      if (!('access_token' in loginData)) throw new Error('Failed to login');
+      return responseData;
     } catch (error) {
       if (isAxiosError(error)) return this.handleAxiosError(error);
       console.error('An unexpected error occurred:', error);
-      throw error;
+      throw new Error('Failed to register customer');
     }
   }
 
   public async loginCustomer(email: string, password: string): Promise<ICustomer | IErrorResponse> {
     try {
-      const url = `${this.apiUrl}/${this.projectKey}/login`;
-      const headers = await this.getRequestHeaders();
-      const body = {
-        email,
-        password,
-      };
-      const response: AxiosResponse = await axios.post(url, body, { headers });
-      const responseData = response.data;
-      return responseData.customer;
+      const url = `${this.authUrl}/oauth/${this.projectKey}/in-store/key=${this.storeKey}/customers/token`;
+      const scope = `manage_project:${this.projectKey} manage_api_clients:${this.projectKey}`;
+
+      const body = new URLSearchParams();
+      body.append('grant_type', 'password');
+      body.append('username', email);
+      body.append('password', password);
+      body.append('scope', scope);
+
+      const headers = this.getAuthHeaders();
+
+      const response = await axios.post(url, body, { headers });
+      const responseData: IAccessToken = response.data;
+      if (!responseData) throw new Error('Login error');
+
+      const getAnonymToken = localStorage.getItem('anonym_token');
+      if (getAnonymToken) {
+        const token: IAccessToken = JSON.parse(getAnonymToken);
+        await this.revokeToken(token.access_token, 'access_token');
+        if (token.refresh_token) await this.revokeToken(token.refresh_token, 'refresh_token');
+      }
+      localStorage.removeItem('anonym_token');
+      localStorage.setItem('access_token', JSON.stringify(responseData));
+
+      const customer = await this.getCustomer(responseData.access_token);
+      return customer;
     } catch (error) {
       if (isAxiosError(error)) return this.handleAxiosError(error);
       console.error('An unexpected error occurred:', error);
-      throw error;
+      throw new Error('Failed to log in customer');
+    }
+  }
+
+  public async getCustomer(token: string): Promise<ICustomer | IErrorResponse> {
+    try {
+      const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me`;
+      const tokenHeaders = this.getTokenHeaders(token);
+      const response = await axios.get(url, { headers: tokenHeaders });
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Failed to get customer');
     }
   }
 }
-
 const customersApi = new CustomersAPI();
 
 export default customersApi;
