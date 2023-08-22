@@ -66,7 +66,6 @@ class CommercetoolsAPI {
 
       const responseData = response.data;
       localStorage.setItem('anonym_token', JSON.stringify(responseData));
-
       return responseData;
     } catch (error) {
       if (isAxiosError(error)) return this.handleAxiosError(error);

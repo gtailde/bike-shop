@@ -35,7 +35,7 @@ class CustomersAPI extends CommercetoolsAPI {
   public async loginCustomer(email: string, password: string): Promise<ICustomer | IErrorResponse> {
     try {
       const url = `${this.authUrl}/oauth/${this.projectKey}/in-store/key=${this.storeKey}/customers/token`;
-      const scope = 'manage_project:82mcjsovqo manage_api_clients:82mcjsovqo';
+      const scope = `manage_project:${this.projectKey} manage_api_clients:${this.projectKey}`;
 
       const body = new URLSearchParams();
       body.append('grant_type', 'password');
@@ -68,9 +68,9 @@ class CustomersAPI extends CommercetoolsAPI {
   }
 
   public async getCustomer(token: string): Promise<ICustomer | IErrorResponse> {
-    const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me`;
-    const tokenHeaders = this.getTokenHeaders(token);
     try {
+      const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me`;
+      const tokenHeaders = this.getTokenHeaders(token);
       const response = await axios.get(url, { headers: tokenHeaders });
       return response.data;
     } catch (error) {
