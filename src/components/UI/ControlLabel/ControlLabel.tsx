@@ -1,6 +1,6 @@
 import './style.scss';
 import React, { type ComponentProps } from 'react';
-import { Icon } from '../Icon/Icon';
+import { ReactComponent as CheckIcon } from './assets/check-icon.svg';
 
 interface IControlLabelProps extends Omit<ComponentProps<'input'>, 'onChange'> {
   label: string;
@@ -19,7 +19,7 @@ export const ControlLabel = ({ className, label, onChange, ...props }: IControlL
         }}
       />
       <span className="checkbox-field__checker">
-        <Icon variant="CHECK" />
+        <CheckIcon className="icon" />
       </span>
       <span className="checkbox-field__label">{label}</span>
     </label>

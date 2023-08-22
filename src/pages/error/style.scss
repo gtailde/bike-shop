@@ -1,67 +1,41 @@
+@use '../../styles/mixins.scss' as *;
+
 .error-section {
-  width: 100vw;
-  height: calc(100vh - 64px - 40px);
-  min-height: 400px;
-  background-color: #1d2228;
-  padding-left: 36px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  .button {
-    width: fit-content;
-  }
-}
-
-.error-header,
-.error-text {
-  font-style: normal;
-  text-transform: uppercase;
-}
-
-.error-header {
-  font-family: 'Teko', sans-serif;
-  font-size: 120px;
-  font-weight: 700;
-  line-height: 100%;
-  letter-spacing: 3.6px;
-  color: #1d2228;
-  -webkit-text-stroke: 3px #88b234;
-  margin-bottom: 30px;
-}
-
-.error-text {
-  font-family: 'Poppins', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 18px;
-  color: #c2cad6;
-  margin-bottom: 64px;
-}
-
-@media (max-width: 600px) {
-  .error-section {
-    padding: 0px 20px;
-    text-align: center;
+  &__content {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+
+    @media (min-width: 768px) {
+      align-items: start;
+    }
   }
 
-  .error-header {
-    font-size: 88px;
-    letter-spacing: 2.4px;
+  &__header,
+  &__text {
+    align-items: stretch;
+    text-align: center;
+
+    @media (min-width: 768px) {
+      text-align: start;
+    }
   }
 
-  .error-text {
-    max-width: 400px;
-  }
-}
+  &__header {
+    @include font-display;
+    margin-bottom: 24px;
 
-@media (max-width: 390px) {
-  .error-header {
-    font-size: 80px;
-    letter-spacing: 2.4px;
+    @media (min-width: 768px) {
+      margin-bottom: 0px;
+    }
   }
 
-  .error-text {
-    font-size: 16px;
+  &__text {
+    @include font-text-accent;
+    margin-bottom: 64px;
+  }
+
+  @media (min-width: 768px) {
+    align-items: start;
   }
 }

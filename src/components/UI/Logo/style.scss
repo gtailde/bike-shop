@@ -1,0 +1,40 @@
+.logo {
+  display: flex;
+  
+  &__rss, &__text {
+    display: none;
+  }
+
+  &__image,
+  &__rss {
+    fill: var(--accent-color-1-default);
+  }
+
+  &__text {
+    fill: var(--main-color-2-default);
+  }
+
+  &:hover &__image,
+  &:hover &__rss {
+    fill: var(--accent-color-1-light);
+  }
+
+  &:hover &__text {
+    fill: var(--main-color-1);
+  }
+
+  &:active &__image,
+  &:active &__rss {
+    fill: var(--accent-color-1-shadow-1);
+  }
+
+  &:active &__text {
+    fill: var(--main-color-2-shadow-1);
+  }
+
+  @media (min-width: 768px) {
+    &__rss, &__text {
+      display: inline;
+    }
+  }
+}

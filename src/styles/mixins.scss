@@ -97,6 +97,7 @@
   @include font-display-mobile;
   color: transparent;
   -webkit-text-stroke: 2px var(--accent-color-1-default);
+  text-transform: uppercase;
 
   @media (min-width: 768px) {
     @include font-display-tablet;
