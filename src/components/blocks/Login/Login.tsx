@@ -51,7 +51,6 @@ export const Login = () => {
       name: 'email',
       isValid: !errors.email?.message,
       helpText: errors.email?.message,
-      isTextShows: !!errors.email?.message,
     },
     {
       id: '2',
@@ -59,7 +58,6 @@ export const Login = () => {
       name: 'password',
       isValid: !errors.password?.message,
       helpText: errors.password?.message,
-      isTextShows: !!errors.password?.message,
     },
   ];
 

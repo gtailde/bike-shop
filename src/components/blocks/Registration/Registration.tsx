@@ -132,7 +132,6 @@ export const Registration = () => {
                   key={id}
                   isValid={!errors[name as keyof typeof errors]?.message}
                   helpText={errors[name as keyof typeof errors]?.message}
-                  isTextShows={!!errors[name as keyof typeof errors]?.message}
                   {...register(name as keyof typeof Form)}
                 />
               ))}
