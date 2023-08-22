@@ -1,19 +1,19 @@
 import './style.scss';
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { ReactComponent as ClosedEyeIcon } from './assets/closed-eye-icon.svg';
 import { ReactComponent as OpenedEyeIcon } from './assets/opened-eye-icon.svg';
 import { ReactComponent as CalendarIcon } from './assets/calendar-icon.svg';
 import { type ITextFieldProps } from './types';
 
-export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFieldProps>(
+export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
   (
     {
       id,
       type = 'text',
       label,
-      isValid = true,
+      isValid,
       helpText,
-      isTextShows = false,
+      isTextShows,
       className,
       onChange,
       ...props
@@ -23,8 +23,6 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
     const [isActiveOption, setIsActiveOption] = useState(false);
     let isInteractive = false;
     let fieldIcon = null;
-    const inputRef = useRef<HTMLInputElement>(null);
-    useImperativeHandle(ref, () => inputRef);
 
     switch (type) {
       case 'password':
@@ -46,10 +44,8 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
         <div className="text-field__container">
           <input
             {...props}
-            ref={inputRef}
-            onChange={(evt) => {
-              onChange(evt.target.value);
-            }}
+            ref={ref}
+            onChange={onChange}
             className="text-field__input"
             id={id}
             placeholder=""
@@ -79,5 +75,3 @@ export const TextField = forwardRef<React.RefObject<HTMLInputElement>, ITextFiel
     );
   },
 );
-
-TextField.displayName = 'TextField';
