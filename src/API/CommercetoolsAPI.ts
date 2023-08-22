@@ -1,4 +1,6 @@
-import type { IErrorResponse } from '../types/types';
+import axios, { isAxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import type { IErrorResponse, IAccessToken, ITokenData } from '../types/types';
 
 class CommercetoolsAPI {
   protected readonly clientId: string;

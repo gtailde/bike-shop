@@ -1,7 +1,7 @@
 import CommercetoolsAPI from './CommercetoolsAPI';
 import axios, { isAxiosError } from 'axios';
-import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import type { ICustomer, IErrorResponse } from '../types/types';
+import type { AxiosResponse } from 'axios';
+import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
   public async registerCustomer(
