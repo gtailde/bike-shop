@@ -1,12 +1,18 @@
 import * as yup from 'yup';
-import { type CountryName, countriesNames } from './countriesList';
+import { countryRegex } from './countriesList';
 
 export const emailSchema = yup
   .string()
   .strict()
   .trim()
-  .email('Email format is not valid')
-  .required('Email is required');
+  .required('Email is required')
+  .matches(
+    /^((([0-9A-Za-z]{1}[-0-9A-z.]{1,}[0-9A-Za-z]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/,
+    {
+      message: 'Email format is not valid',
+      excludeEmptyString: true,
+    },
+  );
 
 export const passwordSchema = yup
   .string()
@@ -65,7 +71,11 @@ export const titleSchema = yup.string().required();
 export const citySchema = onlyCharactersSchema;
 export const streetSchema = characterSchema;
 export const countrySchema = yup
-  .mixed((inputText: string): inputText is CountryName => countriesNames.includes(inputText))
+  .string()
+  .matches(countryRegex, {
+    message: 'Invalid country code, e.g. DE, US or AU',
+    excludeEmptyString: true,
+  })
   .required('Country is required');
 
 export const postalCodeSchema = yup

@@ -1,6 +1,6 @@
 import './style.scss';
 import React, { type BaseSyntheticEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
 import { TextField } from 'components/UI/TextField/TextField';
@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { formFields } from './formFields';
 import customersApi from 'API/CustomersAPI';
+import { type ICustomer, type IErrorResponse } from 'types/types';
 
 const schema = yup.object({
   email: emailSchema,
@@ -27,6 +28,7 @@ export const Login = () => {
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
   const [isRemember, setIsRemember] = useState(false);
+  const navigate = useNavigate();
 
   const handleRememberCheck = (value: boolean) => {
     setIsRemember(value);
@@ -34,7 +36,12 @@ export const Login = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     const response = await customersApi.loginCustomer(data.email, data.password);
-    console.log(response);
+    if ((response as ICustomer).id) {
+      navigate(pagePathnames.main, { replace: true });
+      console.log(response);
+    } else {
+      console.error((response as IErrorResponse).message);
+    }
   });
 
   const onBlur = (e: BaseSyntheticEvent) => {
