@@ -4,7 +4,7 @@ import { Address } from './Address/Address';
 import { type IAddressData } from './types';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { getAddressesForPost } from './helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +13,7 @@ import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { profileFormSchema } from './schemes';
 import customersApi from 'API/CustomersAPI';
+import { type ICustomer, type IErrorResponse } from 'types/types';
 
 const AddressSectionName = {
   BILLING: 'Billing Address',
@@ -27,6 +28,8 @@ export const Registration = () => {
 
   const { register, handleSubmit, formState } = profileForm;
   const { errors } = formState;
+
+  const navigate = useNavigate();
 
   const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const [isSameAddress, setIsSameAddress] = useState(false);
@@ -58,7 +61,13 @@ export const Registration = () => {
       profileInfo.lastName,
       profileInfo.password,
     );
-    console.log(response);
+
+    if ((response as ICustomer).id) {
+      navigate(pagePathnames.main, { replace: true });
+      console.log(response);
+    } else {
+      console.error((response as IErrorResponse).message);
+    }
 
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
   });
