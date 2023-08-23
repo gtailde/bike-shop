@@ -18,10 +18,8 @@ class CustomersAPI extends CommercetoolsAPI {
   ): Promise<ICustomer | IErrorResponse> {
     try {
       const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me/signup`;
-      const getToken = localStorage.getItem('anonym_token');
-      if (!getToken) throw new Error('Token error');
+      const token = this.getToken('anonym_token');
 
-      const token: IAccessToken = JSON.parse(getToken);
       const headers = this.getTokenHeaders(token.access_token);
       const body = { email, firstName, lastName, password };
 
