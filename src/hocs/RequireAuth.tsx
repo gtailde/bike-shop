@@ -1,13 +1,12 @@
 import React, { type FC } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import { type ChildrenProps } from './types';
 import { pagePathnames } from 'router/pagePathnames';
 
 const RequireAuth: FC<ChildrenProps> = ({ children }) => {
-  const { user } = useAuth();
+  const user = localStorage.getItem('access_token');
 
-  if (user === null) {
+  if (!user) {
     return <Navigate to={pagePathnames.login} />;
   }
 
