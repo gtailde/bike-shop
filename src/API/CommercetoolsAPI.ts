@@ -150,6 +150,8 @@ class CommercetoolsAPI {
         if (token.refresh_token) {
           const refreshToken = await this.refreshToken(token.refresh_token);
           if ('access_token' in refreshToken) {
+            const tokenData = { ...refreshToken, refresh_token: token.refresh_token };
+            localStorage.setItem('access_token', JSON.stringify(tokenData));
             localStorage.removeItem('anonym_token');
             return;
           }
@@ -166,11 +168,16 @@ class CommercetoolsAPI {
 
         if (token.refresh_token) {
           const refreshToken = await this.refreshToken(token.refresh_token);
-          if ('access_token' in refreshToken) return;
+          if ('access_token' in refreshToken) {
+            const tokenData = { ...refreshToken, refresh_token: token.refresh_token };
+            localStorage.setItem('anonym_token', JSON.stringify(tokenData));
+            return;
+          }
         }
       }
 
       const newAnonymToken = await this.getAnonymousToken();
+      if (!('access_token' in newAnonymToken)) throw new Error(newAnonymToken.message);
       localStorage.setItem('anonym_token', JSON.stringify(newAnonymToken));
     } catch (error) {
       console.error('An unexpected error occurred:', error);

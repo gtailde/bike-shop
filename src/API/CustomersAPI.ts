@@ -4,6 +4,12 @@ import type { AxiosResponse } from 'axios';
 import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
+  protected getToken(tokenType: 'access_token' | 'anonym_token'): IAccessToken {
+    const getToken = localStorage.getItem(tokenType);
+    if (!getToken) throw new Error('Token not found');
+    return JSON.parse(getToken);
+  }
+
   public async registerCustomer(
     email: string,
     firstName: string,
@@ -12,10 +18,8 @@ class CustomersAPI extends CommercetoolsAPI {
   ): Promise<ICustomer | IErrorResponse> {
     try {
       const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me/signup`;
-      const getToken = localStorage.getItem('anonym_token');
-      if (!getToken) throw new Error('Token error');
+      const token = this.getToken('anonym_token');
 
-      const token: IAccessToken = JSON.parse(getToken);
       const headers = this.getTokenHeaders(token.access_token);
       const body = { email, firstName, lastName, password };
 
@@ -23,7 +27,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const responseData = response.data.customer;
       const loginData = await this.loginCustomer(email, password);
 
-      if (!('id' in loginData)) throw new Error('Failed to login');
+      if (!('id' in loginData)) throw new Error(loginData.message);
       return responseData;
     } catch (error) {
       if (isAxiosError(error)) return this.handleAxiosError(error);
@@ -48,17 +52,9 @@ class CustomersAPI extends CommercetoolsAPI {
       const response = await axios.post(url, body, { headers });
       const responseData: IAccessToken = response.data;
       if (!responseData) throw new Error('Login error');
-
-      const getAnonymToken = localStorage.getItem('anonym_token');
-      if (getAnonymToken) {
-        const token: IAccessToken = JSON.parse(getAnonymToken);
-        await this.revokeToken(token.access_token, 'access_token');
-        if (token.refresh_token) await this.revokeToken(token.refresh_token, 'refresh_token');
-      }
-      localStorage.removeItem('anonym_token');
+      await this.logoutCustomer('anonym_token');
       localStorage.setItem('access_token', JSON.stringify(responseData));
-
-      const customer = await this.getCustomer(responseData.access_token);
+      const customer = await this.getCustomer();
       return customer;
     } catch (error) {
       if (isAxiosError(error)) return this.handleAxiosError(error);
@@ -67,16 +63,35 @@ class CustomersAPI extends CommercetoolsAPI {
     }
   }
 
-  public async getCustomer(token: string): Promise<ICustomer | IErrorResponse> {
+  public async getCustomer(): Promise<ICustomer | IErrorResponse> {
     try {
       const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me`;
-      const tokenHeaders = this.getTokenHeaders(token);
+      const token = this.getToken('access_token');
+      const tokenHeaders = this.getTokenHeaders(token.access_token);
       const response = await axios.get(url, { headers: tokenHeaders });
       return response.data;
     } catch (error) {
       if (isAxiosError(error)) return this.handleAxiosError(error);
       console.error('An unexpected error occurred:', error);
       throw new Error('Failed to get customer');
+    }
+  }
+
+  public async logoutCustomer(tokenType: 'anonym_token' | 'access_token'): Promise<void> {
+    try {
+      const token = this.getToken(tokenType);
+      await this.revokeToken(token.access_token, 'access_token');
+      if (token.refresh_token) await this.revokeToken(token.refresh_token, 'refresh_token');
+      localStorage.removeItem(tokenType);
+
+      if (tokenType === 'access_token') {
+        const getAnonymToken = await this.getAnonymousToken();
+        if (!('access_token' in getAnonymToken)) throw new Error(getAnonymToken.message);
+        localStorage.setItem('anonym_token', JSON.stringify(getAnonymToken));
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Failed to logout customer');
     }
   }
 }
