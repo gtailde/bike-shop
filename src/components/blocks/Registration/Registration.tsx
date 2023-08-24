@@ -14,7 +14,7 @@ import { TextField } from 'components/UI/TextField/TextField';
 import { profileFormSchema } from './schemes';
 import customersApi from 'API/CustomersAPI';
 import { type ICustomer, type IErrorResponse } from 'types/types';
-import { toast } from 'react-toastify';
+import { toast, type ToastContent } from 'react-toastify';
 
 const AddressSectionName = {
   BILLING: 'Billing Address',
@@ -56,24 +56,28 @@ export const Registration = () => {
       AddressSectionName.SHIPPING,
     );
 
-    const response = await customersApi.registerCustomer(
-      profileInfo.email,
-      profileInfo.firstName,
-      profileInfo.lastName,
-      profileInfo.password,
-    );
+    try {
+      const response = await customersApi.registerCustomer(
+        profileInfo.email,
+        profileInfo.firstName,
+        profileInfo.lastName,
+        profileInfo.password,
+      );
 
-    if ((response as ICustomer).id) {
-      toast.success(`You have successfully registered as ${(response as ICustomer).firstName}!`, {
+      if ((response as ICustomer).id) {
+        toast.success(`You have successfully registered as ${(response as ICustomer).firstName}!`, {
+          theme: 'dark',
+        });
+        navigate(pagePathnames.main, { replace: true });
+      } else {
+        toast.error((response as IErrorResponse).message, {
+          theme: 'dark',
+        });
+      }
+    } catch (error) {
+      toast.error(error as ToastContent<unknown>, {
         theme: 'dark',
       });
-      navigate(pagePathnames.main, { replace: true });
-      console.log(response);
-    } else {
-      toast.error((response as IErrorResponse).message, {
-        theme: 'dark',
-      });
-      console.error((response as IErrorResponse).message);
     }
 
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });

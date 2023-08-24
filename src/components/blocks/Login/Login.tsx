@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { type BaseSyntheticEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
@@ -13,7 +13,7 @@ import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { formFields } from './formFields';
 import customersApi from 'API/CustomersAPI';
 import { type ICustomer, type IErrorResponse } from 'types/types';
-import { toast } from 'react-toastify';
+import { toast, type ToastContent } from 'react-toastify';
 
 const schema = yup.object({
   email: emailSchema,
@@ -36,25 +36,24 @@ export const Login = () => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    const response = await customersApi.loginCustomer(data.email, data.password);
-    if ((response as ICustomer).id) {
-      toast.success('You have successfully logged in!', {
+    try {
+      const response = await customersApi.loginCustomer(data.email, data.password);
+      if ((response as ICustomer).id) {
+        toast.success('You have successfully logged in!', {
+          theme: 'dark',
+        });
+        navigate(pagePathnames.main, { replace: true });
+      } else {
+        toast.error((response as IErrorResponse).message, {
+          theme: 'dark',
+        });
+      }
+    } catch (error) {
+      toast.error(error as ToastContent<unknown>, {
         theme: 'dark',
       });
-      navigate(pagePathnames.main, { replace: true });
-      console.log(response);
-    } else {
-      toast.error((response as IErrorResponse).message, {
-        theme: 'dark',
-      });
-      console.error((response as IErrorResponse).message);
     }
   });
-
-  const onBlur = (e: BaseSyntheticEvent) => {
-    console.log(e.target.name);
-    console.log(e.target.value);
-  };
 
   return (
     <section className="login">
@@ -72,7 +71,7 @@ export const Login = () => {
               id={`input-${index}`}
               isValid={!errors[name]}
               helpText={errors[name]?.message}
-              {...register(name, { onBlur })}
+              {...register(name)}
             />
           ))}
           <ControlLabel checked={isRemember} label="Remember me" onChange={handleRememberCheck} />
