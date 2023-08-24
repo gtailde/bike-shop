@@ -1,10 +1,10 @@
 import './style.scss';
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Address } from './Address/Address';
 import { type IAddressData } from './types';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
-import { Link, useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { getAddressesForPost } from './helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,6 +14,7 @@ import { TextField } from 'components/UI/TextField/TextField';
 import { profileFormSchema } from './schemes';
 import customersApi from 'API/CustomersAPI';
 import { type ICustomer, type IErrorResponse } from 'types/types';
+import { toast } from 'react-toastify';
 
 const AddressSectionName = {
   BILLING: 'Billing Address',
@@ -63,9 +64,15 @@ export const Registration = () => {
     );
 
     if ((response as ICustomer).id) {
+      toast.success(`You have successfully registered as ${(response as ICustomer).firstName}!`, {
+        theme: 'dark',
+      });
       navigate(pagePathnames.main, { replace: true });
       console.log(response);
     } else {
+      toast.error((response as IErrorResponse).message, {
+        theme: 'dark',
+      });
       console.error((response as IErrorResponse).message);
     }
 

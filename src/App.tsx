@@ -4,6 +4,7 @@ import './styles/App.scss';
 import AppRouter from 'router/AppRouter';
 import { Header } from 'components/header/Header';
 import { Footer } from 'components/footer/Footer';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <AppRouter />
+        <ToastContainer />
         <Footer />
       </BrowserRouter>
     </React.StrictMode>

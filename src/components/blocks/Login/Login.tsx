@@ -13,6 +13,7 @@ import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { formFields } from './formFields';
 import customersApi from 'API/CustomersAPI';
 import { type ICustomer, type IErrorResponse } from 'types/types';
+import { toast } from 'react-toastify';
 
 const schema = yup.object({
   email: emailSchema,
@@ -37,9 +38,15 @@ export const Login = () => {
   const onSubmit = handleSubmit(async (data) => {
     const response = await customersApi.loginCustomer(data.email, data.password);
     if ((response as ICustomer).id) {
+      toast.success('You have successfully logged in!', {
+        theme: 'dark',
+      });
       navigate(pagePathnames.main, { replace: true });
       console.log(response);
     } else {
+      toast.error((response as IErrorResponse).message, {
+        theme: 'dark',
+      });
       console.error((response as IErrorResponse).message);
     }
   });
