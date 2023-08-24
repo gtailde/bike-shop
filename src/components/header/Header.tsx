@@ -2,20 +2,36 @@ import React, { useState } from 'react';
 import './style.scss';
 import { ReactComponent as UserIcon } from './assets/user-icon.svg';
 import { ReactComponent as BasketIcon } from './assets/basket.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { NavPopup } from 'components/popup/NavPopup';
 import { Logo } from 'components/UI/Logo/Logo';
+import customersApi from 'API/CustomersAPI';
+import { toast } from 'react-toastify';
 
 export const Header = () => {
   const [isNavPopupActive, setIsNavPopupActive] = useState(false);
-
+  const navigate = useNavigate();
   const openPopup = () => {
     setIsNavPopupActive(true);
   };
 
   const closePopup = () => {
     setIsNavPopupActive(false);
+  };
+
+  const logout = async (tokenType: 'access_token') => {
+    try {
+      await customersApi.logoutCustomer(tokenType);
+      toast.success('You have successfully logged out!', {
+        theme: 'dark',
+      });
+      navigate(pagePathnames.login);
+    } catch (error) {
+      toast.error('You are already logged out!', {
+        theme: 'dark',
+      });
+    }
   };
 
   return (
@@ -44,7 +60,14 @@ export const Header = () => {
             <Link to={pagePathnames.login} className="nav-popup__link" onClick={closePopup}>
               Log in
             </Link>
-            <Link to={pagePathnames.login} className="nav-popup__link" onClick={closePopup}>
+            <Link
+              to={pagePathnames.login}
+              className="nav-popup__link"
+              onClick={async () => {
+                closePopup();
+                await logout('access_token');
+              }}
+            >
               Log out
             </Link>
             <Link to={pagePathnames.registration} className="nav-popup__link" onClick={closePopup}>
