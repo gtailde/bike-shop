@@ -1,0 +1,93 @@
+@use "../../../../styles/mixins.scss" as *;
+
+.filter {
+  display: none;
+  padding: 24px 12px;
+  background-color: var(--main-color-4);
+  border-radius: 4px;
+
+  &__content {
+    position: sticky;
+    top: 24px;
+  }
+
+  &__headline {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--accent-color-1-default);
+  }
+
+  &__title {
+    @include font-text-accent;
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--accent-color-1-default);
+  }
+
+  &__expand-icon {
+    color: var(--accent-color-1-default);
+  }
+
+  &__group--expanded &__expand-icon {
+    transition: 0.2s transform ease;
+    transform: rotate(180deg);
+  }
+
+  &__group-wrapper {
+    position: relative;
+    height: 0px;
+    overflow: hidden;
+    width: 100%;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+  }
+  
+  &__group-content {
+    position: absolute;
+    padding-top: 16px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  &__group-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @include font-text-accent;
+  }
+
+  &__group-inputs-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__group-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 8px;
+  }
+
+  &__button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: start;
+    gap: 16px;
+    padding-top: 12px;
+
+    .form__button:first-child {
+      justify-self: end;
+    }
+  }
+
+  &--show {
+    display: block;
+  }
+}
