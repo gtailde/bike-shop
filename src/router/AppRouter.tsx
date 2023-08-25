@@ -7,7 +7,7 @@ import { LoginPage } from 'pages/login/LoginPage';
 import { RegistrationPage } from 'pages/registration/Registration';
 import { Error } from 'pages/error/Error';
 import { About } from 'pages/about/About';
-import { Catalog } from 'pages/catalog/Catalog';
+import { CatalogPage } from 'pages/catalog/Catalog';
 import { UserProfile } from 'pages/user-profile/UserProfile';
 import { Basket } from 'pages/basket/Basket';
 import { RequireAuth } from 'hocs/RequireAuth';
@@ -17,7 +17,7 @@ const AppRouter = () => {
     <Routes>
       <Route path={pagePathnames.main} element={<Main />} />
       <Route path={pagePathnames.about} element={<About />} />
-      <Route path={pagePathnames.catalog} element={<Catalog />} />
+      <Route path={pagePathnames.catalog} element={<CatalogPage />} />
       <Route
         path={pagePathnames.login}
         element={
