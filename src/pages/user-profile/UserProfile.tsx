@@ -1,5 +1,10 @@
+import { UserProfile } from 'components/blocks/UserProfile/UserProfile';
 import React from 'react';
 
-export const UserProfile = () => {
-  return <div></div>;
+export const UserProfilePage = () => {
+  return (
+    <main className="page-content">
+      <UserProfile />
+    </main>
+  );
 };
