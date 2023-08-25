@@ -1,0 +1,68 @@
+@use "../../../styles/mixins.scss" as *;
+
+.first-buy-offer {
+  margin: 32px 0;
+  position: relative;
+  background-color: black;
+  background-image: url("./assets/Paper-background-texture.jpg");
+  background-position:  bottom center;
+  background-repeat: no-repeat;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    content: "";
+    display: block;
+    width: 100%;
+    height: 50px;
+    background-image: url("./assets/tire-track.svg");
+    background-size: contain;
+    transform: rotate(0.5deg) translateY(-10px);
+  }
+
+  &::after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    display: block;
+    width: 100%;
+    height: 50px;
+    background-image: url("./assets/tire-track.svg");
+    background-size: contain;
+    transform: rotate(-0.8deg) translateY(15px);
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+    padding: 32px 0;
+    background-image: url("./assets/GranSassoPNG-flip.png");
+    background-repeat: no-repeat;
+    background-size: 150%;
+  }
+
+  &__title {
+    @include font-title;
+    max-width: 500px;
+    text-align: left;
+  }
+
+  &__title--decorative {
+    @include font-display;
+    max-width: 500px;
+  }
+
+  &__lead {
+    @include font-lead;
+    max-width: 500px;
+  }
+
+  &__description {
+    max-width: 500px;
+    padding-left: 8px;
+    border-left: 2px solid var(--accent-color-1-default);
+    color: var(--main-color-2-default);
+  }
+}

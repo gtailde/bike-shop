@@ -1,8 +1,22 @@
 import React from 'react';
-import './style/App.css';
+import { BrowserRouter } from 'react-router-dom';
+import './styles/App.scss';
+import AppRouter from 'router/AppRouter';
+import { Header } from 'components/header/Header';
+import { Footer } from 'components/footer/Footer';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
-  return <div className="App"></div>;
+  return (
+    <React.StrictMode>
+      <BrowserRouter>
+        <Header />
+        <AppRouter />
+        <ToastContainer autoClose={2000} />
+        <Footer />
+      </BrowserRouter>
+    </React.StrictMode>
+  );
 }
 
 export default App;

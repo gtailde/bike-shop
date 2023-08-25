@@ -1,0 +1,54 @@
+@use "../../../styles/mixins.scss" as *;
+
+.about {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 0;
+  }
+
+  &__title {
+    @include font-title;
+  }
+
+  &__description {
+    max-width: 720px;
+    text-align: center;
+  }
+
+  &__contributors-list {
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    gap: 16px;
+
+    @media (min-width: 768px) {
+      grid-template-rows: auto;
+      grid-template-columns: repeat(3, auto);
+    }
+  }
+}
+
+.contributor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: 2px solid var(--accent-color-1-default);
+  border-radius: 4px;
+
+  &__image {
+    margin-bottom: 16px;
+    width: 128px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+    background-color: var(--accent-color-1-default)
+  }
+
+  &__name {
+    @include font-text-accent;
+  }
+}
