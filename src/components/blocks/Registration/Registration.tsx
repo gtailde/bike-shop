@@ -1,8 +1,8 @@
 import './style.scss';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Address } from './Address/Address';
-import { type IAddressData } from './types';
+import { Address } from '../../blocks/Address/Address';
+import { type IAddressData } from '../../blocks/Address/types';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
 import { pagePathnames } from 'router/pagePathnames';

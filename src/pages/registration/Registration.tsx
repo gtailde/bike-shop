@@ -1,5 +1,5 @@
 import React from 'react';
-import { Registration } from 'components/blocks/Registration/Registration';
+import { Registration } from '../../components/blocks/Registration/Registration';
 
 export const RegistrationPage = () => {
   return (

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
-import { AddressRecord } from '../AddressRecord/AddressRecord';
-import { type IAddressData } from '../types';
+import { AddressRecord } from './AddressRecord/AddressRecord';
+import { type IAddressData } from './types';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
-import { mergeAddressData } from '../helpers';
+import { mergeAddressData } from './helpers';
 
 interface IAddressProps extends React.ComponentProps<'fieldset'> {
   label: string;

@@ -4,11 +4,6 @@ import {
   dateSchema,
   emailSchema,
   passwordSchema,
-  titleSchema,
-  countrySchema,
-  citySchema,
-  streetSchema,
-  postalCodeSchema,
 } from 'validations/validationSchemes';
 
 export const profileFormSchema = yup.object({
@@ -17,12 +12,4 @@ export const profileFormSchema = yup.object({
   birthDate: dateSchema,
   email: emailSchema,
   password: passwordSchema,
-});
-
-export const addressFormSchema = yup.object({
-  title: titleSchema,
-  country: countrySchema,
-  city: citySchema,
-  street: streetSchema,
-  postalCode: postalCodeSchema,
 });
