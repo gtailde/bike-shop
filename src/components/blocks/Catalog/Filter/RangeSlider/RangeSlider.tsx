@@ -1,7 +1,6 @@
 import './style.scss';
-import React, { type ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { TextField } from 'components/UI/TextField/TextField';
-import useDebounce from 'hooks/useDebounce';
 
 export interface IRangeSliderProps {
   className?: string;
@@ -13,34 +12,33 @@ export interface IRangeSliderProps {
 const GAP = 10; // percent
 
 export const RangeSlider = ({ className, minLimit, maxLimit, onChange }: IRangeSliderProps) => {
+  const [minPriceValue, setMinPriceValue] = useState(minLimit);
+  const [maxPriceValue, setMaxPriceValue] = useState(maxLimit);
   const [rangeValue, setRangeValue] = useState({ min: minLimit, max: maxLimit });
   const barMax = ((maxLimit - rangeValue.max) / (maxLimit - minLimit)) * 100;
   const barMin = ((rangeValue.min - minLimit) / (maxLimit - minLimit)) * 100;
 
-  const calculateValidMinValue = (value: string) => {
+  const calculateValidMinValue = (value: number) => {
     const numberValue = Number(value);
     const limit = rangeValue.max - ((maxLimit - minLimit) / 100) * GAP;
     return numberValue < minLimit ? minLimit : numberValue > limit ? limit : numberValue;
   };
 
-  const calculateValidMaxValue = (value: string) => {
+  const calculateValidMaxValue = (value: number) => {
     const numberValue = Number(value);
     const limit = rangeValue.min + ((maxLimit - minLimit) / 100) * GAP;
     return numberValue > maxLimit ? maxLimit : numberValue < limit ? limit : numberValue;
   };
 
-  const debounceMin = useDebounce((evt: ChangeEvent<HTMLInputElement>) => {
-    const value = calculateValidMinValue(evt.target.value);
-    const valueSet = { ...rangeValue, min: value };
-    onChange(valueSet);
+  const inputOnBlur = () => {
+    const valueSet = {
+      min: calculateValidMinValue(minPriceValue),
+      max: calculateValidMaxValue(maxPriceValue),
+    };
+    setMinPriceValue(valueSet.min);
+    setMaxPriceValue(valueSet.max);
     setRangeValue(valueSet);
-  }, 200);
-
-  const debounceMax = useDebounce((evt: ChangeEvent<HTMLInputElement>) => {
-    const value = calculateValidMaxValue(evt.target.value);
-    const valueSet = { ...rangeValue, max: value };
-    setRangeValue(valueSet);
-  }, 200);
+  };
 
   return (
     <div className={`${className ?? ''} range-slider`}>
@@ -52,12 +50,11 @@ export const RangeSlider = ({ className, minLimit, maxLimit, onChange }: IRangeS
           name="min"
           min={minLimit}
           max={maxLimit}
-          value={rangeValue.min}
+          value={minPriceValue}
           onChange={(evt) => {
-            const valueSet = { ...rangeValue, min: Number(evt.target.value) };
-            setRangeValue(valueSet);
-            debounceMin(evt);
+            setMinPriceValue(Number(evt.target.value));
           }}
+          onBlur={inputOnBlur}
         />
         <TextField
           className="range-slider__input-field"
@@ -66,13 +63,11 @@ export const RangeSlider = ({ className, minLimit, maxLimit, onChange }: IRangeS
           name="max"
           min={minLimit}
           max={maxLimit}
-          value={rangeValue.max}
+          value={maxPriceValue}
           onChange={(evt) => {
-            const valueSet = { ...rangeValue, max: Number(evt.target.value) };
-            onChange(valueSet);
-            setRangeValue(valueSet);
-            debounceMax(evt);
+            setMaxPriceValue(Number(evt.target.value));
           }}
+          onBlur={inputOnBlur}
         />
       </div>
       <div className="range-slider__rail">
@@ -89,8 +84,9 @@ export const RangeSlider = ({ className, minLimit, maxLimit, onChange }: IRangeS
           max={maxLimit}
           value={rangeValue.min}
           onChange={(evt) => {
-            const value = calculateValidMinValue(evt.target.value);
-            const valueSet = { ...rangeValue, min: value };
+            const computedMinPrice = calculateValidMinValue(Number(evt.target.value));
+            const valueSet = { min: computedMinPrice, max: maxPriceValue };
+            setMinPriceValue(computedMinPrice);
             onChange(valueSet);
             setRangeValue(valueSet);
           }}
@@ -103,8 +99,9 @@ export const RangeSlider = ({ className, minLimit, maxLimit, onChange }: IRangeS
           max={maxLimit}
           value={rangeValue.max}
           onChange={(evt) => {
-            const value = calculateValidMaxValue(evt.target.value);
-            const valueSet = { ...rangeValue, max: value };
+            const computedMaxPrice = calculateValidMaxValue(Number(evt.target.value));
+            const valueSet = { min: minPriceValue, max: computedMaxPrice };
+            setMaxPriceValue(computedMaxPrice);
             onChange(valueSet);
             setRangeValue(valueSet);
           }}
