@@ -8,21 +8,13 @@ import { Button } from 'components/UI/Button/Button';
 import { type IUserInfoProps } from './UserInfo';
 
 export const UserInfoEdit = ({
-  firstName,
-  lastName,
-  email,
-  birthDate,
   onBack,
   onSave,
+  ...defaultValues
 }: IUserInfoProps & { onBack: () => void; onSave: () => void }) => {
   const form = useForm({
-    defaultValues: {
-      firstName,
-      lastName,
-      email,
-      birthDate,
-    },
-    resolver: yupResolver(profileFormSchema),
+    defaultValues,
+    resolver: yupResolver<typeof defaultValues>(profileFormSchema),
     mode: 'all',
   });
 

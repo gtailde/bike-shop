@@ -25,11 +25,11 @@ export const UserProfile = () => {
   const [isSameAddress, setIsSameAddress] = useState(false);
   const { id: userId } = useParams();
 
-  const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState(
-    [] as IAddressData[],
+  const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState<IAddressData[]>(
+    [],
   );
-  const [shippingIsDefaultControlList, setShippingIsDefaultControlList] = useState(
-    [] as IAddressData[],
+  const [shippingIsDefaultControlList, setShippingIsDefaultControlList] = useState<IAddressData[]>(
+    [],
   );
 
   const handleChangeAddress = (addressList: IAddressData[]) => {
