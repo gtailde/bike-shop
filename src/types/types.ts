@@ -19,7 +19,7 @@ export interface ICustomer {
   firstName: string;
   lastName: string;
   password: string;
-  addresses: string[];
+  addresses: IBaseAddress[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
   isEmailVerified: boolean;
@@ -28,6 +28,38 @@ export interface ICustomer {
     key: string;
   }>;
   authenticationMode: string;
+  defaultBillingAddressId: string;
+  defaultShippingAddressId: string;
+}
+
+export interface IBaseAddress {
+  id: string;
+  key: string;
+  // ...
+  country: string;
+  streetName: string;
+  postalCode: string;
+  city: string;
+  // ...
+  additionalAddressInfo: string;
+}
+
+type IUpdateAction =
+  | 'changeEmail'
+  | 'setFirstName'
+  | 'setLastName'
+  | 'addAddress'
+  | 'changeAddress'
+  | 'removeAddress'
+  | 'setDefaultShippingAddress'
+  | 'addShippingAddressId'
+  | 'removeShippingAddressId'
+  | 'setDefaultBillingAddress'
+  | 'addBillingAddressId'
+  | 'removeBillingAddressId';
+
+export interface IAction {
+  action: IUpdateAction;
 }
 
 interface ErrorDetail {
