@@ -27,17 +27,20 @@ export const Address = ({
     source,
     isDefault: source === label ? isDefault : false,
   }));
-  const newAddressRecordData: IAddressData = {
-    id: +new Date(),
-    source: label,
-    isDefault: false,
-    title: 'New address',
-    country: '',
-    city: '',
-    street: '',
-    postalCode: '',
+
+  const getNewAddressRecordData = () => {
+    return {
+      key: `addressRecord_${Date.now()}`,
+      source: label,
+      isDefault: false,
+      title: 'New address',
+      country: '',
+      city: '',
+      street: '',
+      postalCode: '',
+    };
   };
-  const [controlIsDefaultList, setControlIsDefaultList] = useState(addressListClone);
+  const [controlIsDefaultList, setControlIsDefaultList] = useState<IAddressData[]>([]);
 
   const mergedWithStateAddressList = mergeAddressData(addressListClone, controlIsDefaultList);
   const addressListToShow = isSameAddress
@@ -45,11 +48,11 @@ export const Address = ({
     : mergedWithStateAddressList.filter((address) => address.source === label);
 
   const handleAddAddress = () => {
-    const newAddressData = [...addressListClone, newAddressRecordData];
+    const newAddressData = [...addressListClone, getNewAddressRecordData()];
     onEdit(newAddressData);
   };
   const handleSaveAddress = (editedAddress: IAddressData) => {
-    const index = addressListClone.findIndex((data) => data.id === editedAddress.id);
+    const index = addressListClone.findIndex((data) => data.key === editedAddress.key);
     const newAddressData = [
       ...addressListClone.slice(0, index),
       editedAddress,
@@ -58,17 +61,17 @@ export const Address = ({
     onEdit(newAddressData);
   };
   const handleDeleteAddress = (editedAddress: IAddressData) => {
-    const index = addressListClone.findIndex((data) => data.id === editedAddress.id);
+    const index = addressListClone.findIndex((data) => data.key === editedAddress.key);
     const newAddressData = [
       ...addressListClone.slice(0, index),
       ...addressListClone.slice(index + 1),
     ];
     onEdit(newAddressData);
   };
-  const handleSetDefaultAddress = (isDefault: boolean, addressId: number) => {
+  const handleSetDefaultAddress = (isDefault: boolean, addressKey: string) => {
     const newAddressData = addressListClone.map((address) => ({ ...address, isDefault: false }));
     if (isDefault) {
-      const index = addressListClone.findIndex((address) => address.id === addressId);
+      const index = addressListClone.findIndex((address) => address.key === addressKey);
       newAddressData[index].isDefault = isDefault;
     }
     setControlIsDefaultList(newAddressData);
@@ -84,7 +87,7 @@ export const Address = ({
       </p>
       {addressListToShow.map((data) => (
         <AddressRecord
-          key={data.id}
+          key={data.key}
           data={data}
           onSave={handleSaveAddress}
           onDelete={handleDeleteAddress}

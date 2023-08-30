@@ -11,7 +11,7 @@ interface IAddressRecordProps {
   data: IAddressData;
   onSave: (data: IAddressData) => void;
   onDelete: (data: IAddressData) => void;
-  onSetDefault: (isDefault: boolean, addressId: number) => void;
+  onSetDefault: (isDefault: boolean, addressKey: string) => void;
 }
 
 export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddressRecordProps) => {
@@ -24,7 +24,7 @@ export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddress
     onDelete(data);
   };
   const handleIsDefault = (value: boolean) => {
-    onSetDefault(value, data.id);
+    onSetDefault(value, data.key);
   };
   const handleEditCancel = () => {
     setIsEditMode(false);
@@ -37,8 +37,14 @@ export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddress
     });
   };
 
-  const getTextContent = ({ id, source, isDefault, title, ...descriptionProps }: IAddressData) =>
-    Object.values(descriptionProps).join(' ');
+  const getTextContent = ({
+    id,
+    key,
+    source,
+    isDefault,
+    title,
+    ...descriptionProps
+  }: IAddressData) => Object.values(descriptionProps).join(' ');
 
   return isEditMode ? (
     <AddressRecordEdit onCancel={handleEditCancel} onSave={handleEditSave} {...data} />
