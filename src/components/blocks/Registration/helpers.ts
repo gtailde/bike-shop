@@ -13,3 +13,20 @@ export const getAddressesForPost = (
         (address) => address.source === addressSection,
       );
 };
+
+export const disableAddressListControls = (addressList: IAddressData[]) => {
+  return addressList.map((address) => ({ ...address, isDefault: false }));
+};
+
+export const changeAddressListItem = (
+  addressList: IAddressData[],
+  addressItem: IAddressData,
+): IAddressData[] => {
+  const index = addressList.findIndex((data) => data.key === addressItem.key);
+  const newAddressData = [
+    ...addressList.slice(0, index),
+    addressItem,
+    ...addressList.slice(index + 1),
+  ];
+  return newAddressData;
+};
