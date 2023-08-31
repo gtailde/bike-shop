@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { Button } from 'components/UI/Button/Button';
-import { type IUserInfoProps } from './UserInfo';
+import { type ICustomer } from 'types/types';
 
 export const UserInfoEdit = ({
   firstName,
@@ -14,7 +14,7 @@ export const UserInfoEdit = ({
   birthDate,
   onBack,
   onSave,
-}: IUserInfoProps & { onBack: () => void; onSave: () => void }) => {
+}: Partial<ICustomer & { birthDate: string; onBack: () => void; onSave: () => void }>) => {
   const form = useForm({
     defaultValues: {
       firstName,

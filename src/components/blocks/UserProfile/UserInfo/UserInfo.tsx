@@ -3,12 +3,7 @@ import { UserInfoView } from './UserInfoView';
 import { UserInfoEdit } from './UserInfoEdit';
 import { type ICustomer } from 'types/types';
 
-export interface IUserInfoProps
-  extends Partial<Pick<ICustomer, 'firstName' | 'lastName' | 'email'>> {
-  birthDate: string; // как дела с датой?
-}
-
-export const UserInfo = ({ ...props }: IUserInfoProps) => {
+export const UserInfo = ({ ...props }: Partial<ICustomer & { birthDate: string }>) => {
   const [isEditMode, setIsEditMode] = useState(false);
   return isEditMode ? (
     <UserInfoEdit

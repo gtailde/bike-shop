@@ -44,7 +44,7 @@ export interface IBaseAddress {
   additionalAddressInfo: string;
 }
 
-type IUpdateAction =
+export type IUpdateAction =
   | 'changeEmail'
   | 'setFirstName'
   | 'setLastName'

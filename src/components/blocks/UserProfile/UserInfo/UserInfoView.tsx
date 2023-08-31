@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'components/UI/Button/Button';
-import { type IUserInfoProps } from './UserInfo';
+import { type ICustomer } from 'types/types';
 
 export const UserInfoView = ({
   firstName,
@@ -8,7 +8,7 @@ export const UserInfoView = ({
   email,
   birthDate,
   onEdit,
-}: IUserInfoProps & { onEdit: () => void }) => {
+}: Partial<ICustomer & { birthDate: string; onEdit: () => void }>) => {
   return (
     <fieldset className="form__fieldset">
       <p className="form__fieldset-headline">

@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Address } from '../Address/Address';
 import { type IAddressData } from '../Address/types';
 import { UserInfo } from './UserInfo/UserInfo';
@@ -7,90 +7,93 @@ import { Form } from 'components/UI/Form/Form';
 import { useParams } from 'react-router-dom';
 import { getAddressInfo } from './helpers';
 import { AddressSectionName } from './const';
-import { type ICustomer } from 'types/types';
-
-interface IMockCustomer
-  extends Pick<
-    ICustomer,
-    | 'firstName'
-    | 'lastName'
-    | 'email'
-    | 'addresses'
-    | 'billingAddressIds'
-    | 'shippingAddressIds'
-    | 'defaultBillingAddressId'
-    | 'defaultShippingAddressId'
-  > {
-  birthDate: string;
-}
-
-const customerInfo: IMockCustomer = {
-  firstName: 'John',
-  lastName: 'Doe',
-  billingAddressIds: ['10001', '10547'],
-  shippingAddressIds: ['10777'],
-  defaultBillingAddressId: '10001',
-  defaultShippingAddressId: '10777',
-  email: 'john-doe@mail.com',
-  birthDate: '2003-08-25T10:23:03Z',
-  addresses: [
-    {
-      id: '10001',
-      key: '478949584758',
-      country: 'DE',
-      streetName: 'Random-street',
-      postalCode: '156788',
-      city: 'Random-City',
-      additionalAddressInfo: 'Home',
-    },
-    {
-      id: '10547',
-      key: '428948784798',
-      country: 'AU',
-      streetName: 'Random-street',
-      postalCode: '165798',
-      city: 'Random-City',
-      additionalAddressInfo: 'Office',
-    },
-    {
-      id: '10777',
-      key: '478238784798',
-      country: 'US',
-      streetName: 'Random-street',
-      postalCode: '454378',
-      city: 'Random-City',
-      additionalAddressInfo: 'Work',
-    },
-  ],
-};
-
-const customerAddresses = getAddressInfo(customerInfo);
+import { type IAction, type IBaseAddress, type ICustomer } from 'types/types';
+import { customerInfo } from './mock';
 
 export const UserProfile = () => {
-  const [addressInfo, setAddressInfo] = useState<IAddressData[]>(customerAddresses);
+  const [profileInfo, setProfileInfo] = useState<ICustomer & { birthDate: string }>();
+  const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const [isSameAddress, setIsSameAddress] = useState(false);
   const { id: userId } = useParams();
 
-  const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState<IAddressData[]>(
-    [],
-  );
-  const [shippingIsDefaultControlList, setShippingIsDefaultControlList] = useState<IAddressData[]>(
-    [],
-  );
+  const getCustomerData = () => {
+    // fetching customer data...
+    setTimeout(() => {
+      setProfileInfo(customerInfo);
 
-  const handleChangeAddress = (addressList: IAddressData[]) => {
-    setAddressInfo(addressList);
+      const customerAddresses = getAddressInfo(customerInfo);
+      setAddressInfo(customerAddresses);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    getCustomerData();
+  }, []);
+
+  const handleChangeAddress = (addressObject: IAddressData) => {
+    const actionObject: IAction & { address: Omit<IBaseAddress, 'id'>; addressId: string } = {
+      action: 'changeAddress',
+      addressId: addressObject.id ?? '',
+      address: {
+        key: addressObject.key,
+        country: addressObject.country,
+        streetName: addressObject.street,
+        postalCode: addressObject.postalCode,
+        city: addressObject.city,
+        additionalAddressInfo: addressObject.title,
+        // ... other props
+      },
+    };
+    console.log('post change address data', actionObject); // await
+    getCustomerData();
+  };
+
+  const handleAddAddress = (addressObject: IAddressData) => {
+    const actionObject: IAction & { address: Omit<IBaseAddress, 'id'> } = {
+      action: 'addAddress',
+      address: {
+        key: addressObject.key,
+        country: addressObject.country,
+        streetName: addressObject.street,
+        postalCode: addressObject.postalCode,
+        city: addressObject.city,
+        additionalAddressInfo: addressObject.title,
+        // ... other props
+      },
+    };
+    console.log('post add address data', actionObject); // await
+    getCustomerData();
+  };
+
+  const handleDeleteAddress = (addressObject: IAddressData) => {
+    const actionObject: IAction & { addressId: string } = {
+      action: 'removeAddress',
+      addressId: addressObject.id ?? '-1',
+    };
+    console.log('post remove address data', actionObject); // await
+    getCustomerData();
   };
 
   const handleIsSame = (value: boolean) => {
     setIsSameAddress(value);
   };
 
-  const handleSetDefault = (
-    setter: React.Dispatch<React.SetStateAction<IAddressData[]>>,
-    addressList: IAddressData[],
-  ) => {
-    setter(addressList);
+  const handleSetDefaultBilling = (addressObject: IAddressData) => {
+    const actionObject: IAction & { addressId: string } = {
+      action: 'setDefaultBillingAddress',
+      addressId: addressObject.id ?? '',
+    };
+    console.log('post change default billing address data', actionObject); // await
+    getCustomerData();
+  };
+
+  const handleSetDefaultShipping = (addressObject: IAddressData) => {
+    const actionObject: IAction & { addressId: string } = {
+      action: 'setDefaultShippingAddress',
+      addressId: addressObject.id ?? '',
+    };
+    console.log('post change default shipping address data', actionObject); // await
+    getCustomerData();
   };
 
   return (
@@ -101,20 +104,24 @@ export const UserProfile = () => {
           {'dinamic-address-params-user-id: ' + JSON.stringify(userId)}
         </p>
         <Form>
-          <UserInfo {...customerInfo} />
+          <UserInfo {...profileInfo} />
           <Address
             label={AddressSectionName.BILLING}
             onEdit={handleChangeAddress}
+            onAdd={handleAddAddress}
+            onDelete={handleDeleteAddress}
             onSetSame={handleIsSame}
-            onSetDefault={handleSetDefault.bind(this, setBillingIsDefaultControlList)}
+            onSetDefault={handleSetDefaultBilling}
             isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
           <Address
             label={AddressSectionName.SHIPPING}
             onEdit={handleChangeAddress}
+            onAdd={handleAddAddress}
+            onDelete={handleDeleteAddress}
             onSetSame={handleIsSame}
-            onSetDefault={handleSetDefault.bind(this, setShippingIsDefaultControlList)}
+            onSetDefault={handleSetDefaultShipping}
             isSameAddress={isSameAddress}
             addressList={addressInfo}
           />

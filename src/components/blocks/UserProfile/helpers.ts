@@ -7,14 +7,7 @@ export const getAddressInfo = ({
   shippingAddressIds,
   defaultBillingAddressId,
   defaultShippingAddressId,
-}: Pick<
-  ICustomer,
-  | 'addresses'
-  | 'billingAddressIds'
-  | 'shippingAddressIds'
-  | 'defaultBillingAddressId'
-  | 'defaultShippingAddressId'
->) => {
+}: ICustomer) => {
   const addressInfo = addresses.map((address) => {
     const addressSectionTag = billingAddressIds.includes(address.id)
       ? AddressSectionName.BILLING
