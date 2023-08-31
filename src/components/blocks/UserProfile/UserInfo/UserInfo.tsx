@@ -5,23 +5,14 @@ import { type ICustomer } from 'types/types';
 
 export const UserInfo = ({ ...props }: Partial<ICustomer & { birthDate: string }>) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  return isEditMode ? (
-    <UserInfoEdit
-      onBack={() => {
-        setIsEditMode(false);
-      }}
-      onSave={() => {
-        setIsEditMode(false);
-        console.log('not implemented');
-      }}
-      {...props}
-    />
-  ) : (
-    <UserInfoView
-      {...props}
-      onEdit={() => {
-        setIsEditMode(true);
-      }}
-    />
-  );
+  if (isEditMode) {
+    return (
+      <UserInfoEdit
+        onBack={() => setIsEditMode(false)}
+        onSave={() => setIsEditMode(false)}
+        {...props}
+      />
+    );
+  }
+  return <UserInfoView {...props} onEdit={() => setIsEditMode(true)} />;
 };
