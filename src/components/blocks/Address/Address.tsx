@@ -9,9 +9,11 @@ interface IAddressProps extends React.ComponentProps<'fieldset'> {
   label: string;
   addressList: IAddressData[];
   isSameAddress: boolean;
-  onEdit: (data: IAddressData[]) => void;
+  onEdit: (data: IAddressData) => void;
+  onAdd: (data: IAddressData) => void;
+  onDelete: (data: IAddressData) => void;
   onSetSame: (value: boolean) => void;
-  onSetDefault: (data: IAddressData[]) => void;
+  onSetDefault: (data: IAddressData) => void;
 }
 
 export const Address = ({
@@ -19,6 +21,8 @@ export const Address = ({
   addressList,
   label,
   onEdit,
+  onAdd,
+  onDelete,
   onSetSame,
   onSetDefault,
 }: IAddressProps) => {
@@ -48,34 +52,21 @@ export const Address = ({
     : mergedWithStateAddressList.filter((address) => address.source === label);
 
   const handleAddAddress = () => {
-    const newAddressData = [...addressListClone, getNewAddressRecordData()];
-    onEdit(newAddressData);
+    onAdd(getNewAddressRecordData());
   };
   const handleSaveAddress = (editedAddress: IAddressData) => {
-    const index = addressListClone.findIndex((data) => data.key === editedAddress.key);
-    const newAddressData = [
-      ...addressListClone.slice(0, index),
-      editedAddress,
-      ...addressListClone.slice(index + 1),
-    ];
-    onEdit(newAddressData);
+    onEdit(editedAddress);
   };
   const handleDeleteAddress = (editedAddress: IAddressData) => {
-    const index = addressListClone.findIndex((data) => data.key === editedAddress.key);
-    const newAddressData = [
-      ...addressListClone.slice(0, index),
-      ...addressListClone.slice(index + 1),
-    ];
-    onEdit(newAddressData);
+    onDelete(editedAddress);
   };
   const handleSetDefaultAddress = (isDefault: boolean, addressKey: string) => {
     const newAddressData = addressListClone.map((address) => ({ ...address, isDefault: false }));
-    if (isDefault) {
-      const index = addressListClone.findIndex((address) => address.key === addressKey);
-      newAddressData[index].isDefault = isDefault;
-    }
+    const index = addressListClone.findIndex((address) => address.key === addressKey);
+    const switchDefaultAddress = newAddressData[index];
+    switchDefaultAddress.isDefault = isDefault;
     setControlIsDefaultList(newAddressData);
-    onSetDefault(newAddressData);
+    onSetDefault(switchDefaultAddress);
   };
 
   return (
