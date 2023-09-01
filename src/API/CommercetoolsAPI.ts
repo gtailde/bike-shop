@@ -137,9 +137,7 @@ class CommercetoolsAPI {
     const tokenNames = tokenType ? [tokenType] : ['access_token', 'anonym_token'];
     for (const tokenName of tokenNames) {
       const token = localStorage.getItem(tokenName);
-      if (token) {
-        return JSON.parse(token);
-      }
+      if (token) return JSON.parse(token);
     }
     throw new Error('Token not found');
   }
