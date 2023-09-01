@@ -4,12 +4,6 @@ import type { AxiosResponse } from 'axios';
 import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
 
 class CustomersAPI extends CommercetoolsAPI {
-  protected getToken(tokenType: 'access_token' | 'anonym_token'): IAccessToken {
-    const getToken = localStorage.getItem(tokenType);
-    if (!getToken) throw new Error('Token not found');
-    return JSON.parse(getToken);
-  }
-
   public async registerCustomer(
     email: string,
     firstName: string,
