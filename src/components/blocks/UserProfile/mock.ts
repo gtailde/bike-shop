@@ -1,6 +1,6 @@
 import { type ICustomer } from 'types/types';
 
-export const customerInfo: ICustomer & { birthDate: string } = {
+export const customerInfo: ICustomer & { birthDate: Date } = {
   id: 'b93ebd2a-3f3d-4ce8-9898-1d465c13c7e5',
   version: 1,
   versionModifiedAt: '2023-08-25T18:29:27.725Z',
@@ -62,5 +62,5 @@ export const customerInfo: ICustomer & { birthDate: string } = {
   authenticationMode: 'Password',
   defaultBillingAddressId: '10001',
   defaultShippingAddressId: '10777',
-  birthDate: '2003-08-25T10:23:03Z', // чего там по днями рождения?
+  birthDate: new Date('2003-08-25T10:23:03Z'), // чего там по днями рождения?
 };

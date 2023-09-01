@@ -11,7 +11,7 @@ import { type IAction, type IBaseAddress, type ICustomer } from 'types/types';
 import { customerInfo } from './mock';
 
 export const UserProfile = () => {
-  const [profileInfo, setProfileInfo] = useState<ICustomer & { birthDate: string }>();
+  const [profileInfo, setProfileInfo] = useState<ICustomer & { birthDate: Date }>();
   const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const [isSameAddress, setIsSameAddress] = useState(false);
   const { id: userId } = useParams();

@@ -8,7 +8,7 @@ export const UserInfoView = ({
   email,
   birthDate,
   onEdit,
-}: Partial<ICustomer & { birthDate: string; onEdit: () => void }>) => {
+}: Partial<ICustomer & { birthDate: Date; onEdit: () => void }>) => {
   return (
     <fieldset className="form__fieldset">
       <p className="form__fieldset-headline">
@@ -26,7 +26,7 @@ export const UserInfoView = ({
         </div>
         <div className="form__fieldset-item">
           <dt>Birth date</dt>
-          <dd>{birthDate}</dd>
+          <dd>{birthDate?.toDateString()}</dd>
         </div>
         <div className="form__fieldset-item">
           <dt>Email address</dt>

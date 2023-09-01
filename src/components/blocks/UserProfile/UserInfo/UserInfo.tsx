@@ -3,7 +3,7 @@ import { UserInfoView } from './UserInfoView';
 import { UserInfoEdit } from './UserInfoEdit';
 import { type ICustomer } from 'types/types';
 
-export const UserInfo = ({ ...props }: Partial<ICustomer & { birthDate: string }>) => {
+export const UserInfo = ({ ...props }: Partial<ICustomer & { birthDate: Date }>) => {
   const [isEditMode, setIsEditMode] = useState(false);
   if (isEditMode) {
     return (

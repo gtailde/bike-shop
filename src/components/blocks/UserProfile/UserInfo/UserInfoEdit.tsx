@@ -14,7 +14,7 @@ export const UserInfoEdit = ({
   birthDate,
   onBack,
   onSave,
-}: Partial<ICustomer & { birthDate: string; onBack: () => void; onSave: () => void }>) => {
+}: Partial<ICustomer & { birthDate: Date; onBack: () => void; onSave: () => void }>) => {
   const form = useForm({
     defaultValues: {
       firstName,
