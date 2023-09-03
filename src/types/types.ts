@@ -91,3 +91,43 @@ export interface ITokenData {
 }
 
 export type IFilters = Record<string, string>;
+
+export interface ICategory {
+  id: string;
+  typeId: string;
+  assets: string[];
+  createdAt: string;
+  createdBy: {
+    isPlatformClient: boolean;
+    user: {
+      id: string;
+      typeId: string;
+    };
+  };
+  description: {
+    'en-US': string;
+  };
+  key: string;
+  lastMessageSequenceNumber: number;
+  lastModifiedAt: string;
+  lastModifiedBy: {
+    isPlatformClient: boolean;
+    user: {
+      id: string;
+      typeId: string;
+    };
+  };
+  name: {
+    'en-US': string;
+  };
+  orderHint: string;
+  parent: {
+    id: string;
+    typeId: string;
+  };
+  slug: {
+    'en-US': string;
+  };
+  version: number;
+  versionModifiedAt: string;
+}

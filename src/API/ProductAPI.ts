@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import type { IFilters } from 'types/types';
+import type { ICategory, IFilters } from 'types/types';
 
 class ProductAPI extends CommercetoolsAPI {
-  public async getCategories(): Promise<string> {
+  public async getCategories(): Promise<ICategory[]> {
     try {
       const token = this.getToken();
       const url = `${this.apiUrl}/${this.projectKey}/categories`;
       const headers = this.getTokenHeaders(token.access_token);
       const response = await axios.get(url, { headers });
-      return response.data;
+      return response.data.results;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
       throw new Error(`Error fetching categories data`);
