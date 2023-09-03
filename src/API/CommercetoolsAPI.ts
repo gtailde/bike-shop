@@ -133,6 +133,15 @@ class CommercetoolsAPI {
     }
   }
 
+  protected getToken(tokenType?: 'access_token' | 'anonym_token'): IAccessToken {
+    const tokenNames = tokenType ? [tokenType] : ['access_token', 'anonym_token'];
+    for (const tokenName of tokenNames) {
+      const token = localStorage.getItem(tokenName);
+      if (token) return JSON.parse(token);
+    }
+    throw new Error('Token not found');
+  }
+
   public async startAPI(): Promise<void> {
     try {
       const accessToken = localStorage.getItem('access_token');
@@ -140,7 +149,7 @@ class CommercetoolsAPI {
 
       if (accessToken) {
         const token: IAccessToken = JSON.parse(accessToken);
-        const isAccessTokenValid = await this.refreshToken(token.access_token);
+        const isAccessTokenValid = await this.checkAccessToken(token.access_token);
 
         if (isAccessTokenValid) {
           localStorage.removeItem('anonym_token');
