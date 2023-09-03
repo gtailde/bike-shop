@@ -5,16 +5,8 @@ export interface ICustomer {
   lastMessageSequenceNumber: number;
   createdAt: string;
   lastModifiedAt: string;
-  lastModifiedBy: {
-    clientId: string;
-    isPlatformClient: boolean;
-    anonymousId: string;
-  };
-  createdBy: {
-    clientId: string;
-    isPlatformClient: boolean;
-    anonymousId: string;
-  };
+  lastModifiedBy: IClientInfo;
+  createdBy: IClientInfo;
   email: string;
   firstName: string;
   lastName: string;
@@ -23,10 +15,7 @@ export interface ICustomer {
   shippingAddressIds: string[];
   billingAddressIds: string[];
   isEmailVerified: boolean;
-  stores: Array<{
-    typeId: string;
-    key: string;
-  }>;
+  stores: IStore[];
   authenticationMode: string;
   defaultBillingAddressId: string;
   defaultShippingAddressId: string;
@@ -97,37 +86,16 @@ export interface ICategory {
   typeId: string;
   assets: string[];
   createdAt: string;
-  createdBy: {
-    isPlatformClient: boolean;
-    user: {
-      id: string;
-      typeId: string;
-    };
-  };
-  description: {
-    'en-US': string;
-  };
+  createdBy: IClientInfo;
+  description: Record<'en-US', string>;
   key: string;
   lastMessageSequenceNumber: number;
   lastModifiedAt: string;
-  lastModifiedBy: {
-    isPlatformClient: boolean;
-    user: {
-      id: string;
-      typeId: string;
-    };
-  };
-  name: {
-    'en-US': string;
-  };
+  lastModifiedBy: IClientInfo;
+  name: Record<'en-US', string>;
   orderHint: string;
-  parent: {
-    id: string;
-    typeId: string;
-  };
-  slug: {
-    'en-US': string;
-  };
+  parent: ICategoryReference;
+  slug: Record<'en-US', string>;
   version: number;
   versionModifiedAt: string;
 }
@@ -135,30 +103,17 @@ export interface ICategory {
 export interface IProduct {
   id: string;
   version: number;
-  productType: {
-    typeId: string;
-    id: string;
-  };
-  name: {
-    'en-US': string;
-  };
-  description: {
-    'en-US': string;
-  };
+  productType: IProductTypeReference;
+  name: Record<'en-US', string>;
+  description: Record<'en-US', string>;
   categories: string[];
-  categoryOrderHints: { [key: string]: string };
-  slug: {
-    'en-US': string;
-  };
-  metaTitle: {
-    'en-US': string;
-  };
-  metaDescription: {
-    'en-US': string;
-  };
-  masterVariant: ProductVariant;
-  variants: ProductVariant[];
-  searchKeywords: { [key: string]: any };
+  categoryOrderHints: Record<string, string>;
+  slug: Record<'en-US', string>;
+  metaTitle: Record<'en-US', string>;
+  metaDescription: Record<'en-US', string>;
+  masterVariant: IProductVariant;
+  variants: IProductVariant[];
+  searchKeywords: Record<string, unknown>;
   hasStagedChanges: boolean;
   published: boolean;
   priceMode: string;
@@ -166,17 +121,37 @@ export interface IProduct {
   lastModifiedAt: string;
 }
 
-interface ProductVariant {
-  id: number;
-  sku: string;
-  prices: Price[];
-  images: ProductImage[];
-  attributes: Attribute[];
-  assets: string[];
-  availability: Availability | AvailabilityChannel;
+interface IClientInfo {
+  isPlatformClient: boolean;
+  user: IClientUser;
 }
 
-interface Price {
+interface IClientUser {
+  id: string;
+  typeId: string;
+}
+
+interface ICategoryReference {
+  id: string;
+  typeId: string;
+}
+
+interface IProductTypeReference {
+  typeId: string;
+  id: string;
+}
+
+interface IProductVariant {
+  id: number;
+  sku: string;
+  prices: IPrice[];
+  images: IProductImage[];
+  attributes: IAttribute[];
+  assets: string[];
+  availability: IAvailability | IAvailabilityChannel;
+}
+
+interface IPrice {
   id: string;
   value: {
     type: string;
@@ -186,7 +161,7 @@ interface Price {
   };
 }
 
-interface ProductImage {
+interface IProductImage {
   url: string;
   dimensions: {
     w: number;
@@ -194,23 +169,28 @@ interface ProductImage {
   };
 }
 
-interface Attribute {
+interface IAttribute {
   name: string;
-  value: string | AttributeValue;
+  value: string | IAttributeValue;
 }
 
-interface AttributeValue {
+interface IAttributeValue {
   key: string;
   label: string;
 }
 
-interface Availability {
+interface IAvailability {
   isOnStock: boolean;
   availableQuantity: number;
   version: number;
   id: string;
 }
 
-interface AvailabilityChannel {
-  channels: { [key: string]: Availability };
+interface IAvailabilityChannel {
+  channels: Record<string, IAvailability>;
+}
+
+interface IStore {
+  typeId: string;
+  key: string;
 }
