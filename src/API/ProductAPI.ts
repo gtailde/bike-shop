@@ -16,7 +16,7 @@ class ProductAPI extends CommercetoolsAPI {
     }
   }
 
-  public async searchProduct(searchText: string, limit = 10, offset = 0): Promise<IProduct[]> {
+  public async searchProduct(searchText: string, limit = 20, offset = 0): Promise<IProduct[]> {
     try {
       const token = this.getToken();
       const url = `${this.apiUrl}/${this.projectKey}/product-projections/search`;
