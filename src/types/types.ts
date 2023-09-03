@@ -131,3 +131,86 @@ export interface ICategory {
   version: number;
   versionModifiedAt: string;
 }
+
+export interface IProduct {
+  id: string;
+  version: number;
+  productType: {
+    typeId: string;
+    id: string;
+  };
+  name: {
+    'en-US': string;
+  };
+  description: {
+    'en-US': string;
+  };
+  categories: string[];
+  categoryOrderHints: { [key: string]: string };
+  slug: {
+    'en-US': string;
+  };
+  metaTitle: {
+    'en-US': string;
+  };
+  metaDescription: {
+    'en-US': string;
+  };
+  masterVariant: ProductVariant;
+  variants: ProductVariant[];
+  searchKeywords: { [key: string]: any };
+  hasStagedChanges: boolean;
+  published: boolean;
+  priceMode: string;
+  createdAt: string;
+  lastModifiedAt: string;
+}
+
+interface ProductVariant {
+  id: number;
+  sku: string;
+  prices: Price[];
+  images: ProductImage[];
+  attributes: Attribute[];
+  assets: string[];
+  availability: Availability | AvailabilityChannel;
+}
+
+interface Price {
+  id: string;
+  value: {
+    type: string;
+    currencyCode: string;
+    centAmount: number;
+    fractionDigits: number;
+  };
+}
+
+interface ProductImage {
+  url: string;
+  dimensions: {
+    w: number;
+    h: number;
+  };
+}
+
+interface Attribute {
+  name: string;
+  value: string | AttributeValue;
+}
+
+interface AttributeValue {
+  key: string;
+  label: string;
+}
+
+interface Availability {
+  isOnStock: boolean;
+  availableQuantity: number;
+  version: number;
+  id: string;
+}
+
+interface AvailabilityChannel {
+  channels: { [key: string]: Availability };
+}

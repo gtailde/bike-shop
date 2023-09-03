@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import type { ICategory, IFilters } from 'types/types';
+import type { ICategory, IFilters, IProduct } from 'types/types';
 
 class ProductAPI extends CommercetoolsAPI {
   public async getCategories(): Promise<ICategory[]> {
@@ -16,7 +16,7 @@ class ProductAPI extends CommercetoolsAPI {
     }
   }
 
-  public async searchProduct(searchText: string, limit = 10, offset = 0): Promise<string> {
+  public async searchProduct(searchText: string, limit = 10, offset = 0): Promise<IProduct[]> {
     try {
       const token = this.getToken();
       const url = `${this.apiUrl}/${this.projectKey}/product-projections/search`;
@@ -29,7 +29,7 @@ class ProductAPI extends CommercetoolsAPI {
 
       const headers = this.getTokenHeaders(token.access_token);
       const response = await axios.get(`${url}?${queryParams}`, { headers });
-      return response.data;
+      return response.data.results;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
       throw new Error('Error searching product projections by text');
@@ -39,7 +39,7 @@ class ProductAPI extends CommercetoolsAPI {
   public async getProducts(
     filters: IFilters = { brand: '', color: '' },
     sorting = 'name.en-US asc',
-  ): Promise<string> {
+  ): Promise<IProduct[]> {
     try {
       const token = this.getToken();
       const queryParams = Object.entries(filters)
