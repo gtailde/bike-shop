@@ -89,3 +89,5 @@ export interface ITokenData {
   exp?: number;
   scope?: string;
 }
+
+export type IFilters = Record<string, string>;

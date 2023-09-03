@@ -1,26 +1,19 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
+import type { IFilters } from 'types/types';
 
 class ProductAPI extends CommercetoolsAPI {
-  private async performGetRequest(endpoint: string): Promise<string> {
+  public async getCategories(): Promise<string> {
     try {
       const token = this.getToken();
-      const url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
+      const url = `${this.apiUrl}/${this.projectKey}/categories`;
       const headers = this.getTokenHeaders(token.access_token);
       const response = await axios.get(url, { headers });
       return response.data;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      throw new Error(`Error fetching ${endpoint} data`);
+      throw new Error(`Error fetching categories data`);
     }
-  }
-
-  public async getCategories() {
-    return await this.performGetRequest('categories');
-  }
-
-  public async getProducts() {
-    return await this.performGetRequest('products');
   }
 
   public async searchProduct(searchText: string, limit = 10, offset = 0): Promise<string> {
@@ -40,6 +33,27 @@ class ProductAPI extends CommercetoolsAPI {
     } catch (error) {
       console.error('An unexpected error occurred:', error);
       throw new Error('Error searching product projections by text');
+    }
+  }
+
+  public async getProducts(
+    filters: IFilters = { brand: '', color: '' },
+    sorting = 'name.en-US asc',
+  ): Promise<string> {
+    try {
+      const token = this.getToken();
+      const queryParams = Object.entries(filters)
+        .map(([key, value]) => `${key}="${value}"`)
+        .join('&');
+      const url = `${this.apiUrl}/${this.projectKey}/product-projections?where=${queryParams}&sort=${sorting}`;
+      const headers = {
+        Authorization: `Bearer ${token.access_token}`,
+      };
+      const response = await axios.get(url, { headers });
+      return response.data.results;
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Error get product projections');
     }
   }
 }
