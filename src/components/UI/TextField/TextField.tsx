@@ -3,11 +3,21 @@ import React, { useState, forwardRef } from 'react';
 import { ReactComponent as ClosedEyeIcon } from './assets/closed-eye-icon.svg';
 import { ReactComponent as OpenedEyeIcon } from './assets/opened-eye-icon.svg';
 import { ReactComponent as CalendarIcon } from './assets/calendar-icon.svg';
+import { ReactComponent as SearchIcon } from './assets/search-icon.svg';
 import { type ITextFieldProps } from './types';
 
 export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
   (
-    { id, type = 'text', label, isValid, helpText, className, onChange, ...props }: ITextFieldProps,
+    {
+      id,
+      type = 'text',
+      label,
+      isValid = true,
+      helpText,
+      className,
+      onChange,
+      ...props
+    }: ITextFieldProps,
     ref,
   ) => {
     const [isActiveOption, setIsActiveOption] = useState(false);
@@ -27,6 +37,10 @@ export const TextField = forwardRef<HTMLInputElement, ITextFieldProps>(
       case 'date':
         fieldIcon = <CalendarIcon className="icon" />;
         isInteractive = true;
+        break;
+      case 'search':
+        fieldIcon = <SearchIcon className="icon" />;
+        break;
     }
 
     return (
