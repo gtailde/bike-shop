@@ -15,7 +15,8 @@ export interface IAddressFormData {
 }
 
 export interface IAddressData extends IAddressFormData {
-  id: number;
+  id?: string;
+  key: string;
   source: string;
   isDefault: boolean;
 }

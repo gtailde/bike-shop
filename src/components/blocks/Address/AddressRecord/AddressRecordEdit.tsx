@@ -5,8 +5,7 @@ import { type IAddressFormData, type IAddressData } from '../types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { addressFormFields } from '../formFields';
-import { addressFormSchema } from '../schemes';
-import { type CountryName } from 'validations/countriesList';
+import { addressFormSchema } from 'validations/validationSchemes';
 
 interface IAddressRecordEditProps extends IAddressData {
   onCancel: () => void;
@@ -17,7 +16,7 @@ export const AddressRecordEdit = (props: IAddressRecordEditProps) => {
   const form = useForm({
     defaultValues: {
       title: props.title,
-      country: props.country as CountryName,
+      country: props.country,
       city: props.city,
       street: props.street,
       postalCode: props.postalCode,

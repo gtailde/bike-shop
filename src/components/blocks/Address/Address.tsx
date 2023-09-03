@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
-import { AddressRecord } from '../AddressRecord/AddressRecord';
-import { type IAddressData } from '../types';
+import { AddressRecord } from './AddressRecord/AddressRecord';
+import { type IAddressData } from './types';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
-import { mergeAddressData } from '../helpers';
+import { mergeAddressData } from './helpers';
 
 interface IAddressProps extends React.ComponentProps<'fieldset'> {
   label: string;
   addressList: IAddressData[];
   isSameAddress: boolean;
-  onEdit: (data: IAddressData[]) => void;
+  onEdit: (data: IAddressData) => void;
+  onAdd: (data: IAddressData) => void;
+  onDelete: (data: IAddressData) => void;
   onSetSame: (value: boolean) => void;
-  onSetDefault: (data: IAddressData[]) => void;
+  onSetDefault: (data: IAddressData) => void;
 }
 
 export const Address = ({
@@ -19,6 +21,8 @@ export const Address = ({
   addressList,
   label,
   onEdit,
+  onAdd,
+  onDelete,
   onSetSame,
   onSetDefault,
 }: IAddressProps) => {
@@ -27,17 +31,20 @@ export const Address = ({
     source,
     isDefault: source === label ? isDefault : false,
   }));
-  const newAddressRecordData: IAddressData = {
-    id: +new Date(),
-    source: label,
-    isDefault: false,
-    title: 'New address',
-    country: '',
-    city: '',
-    street: '',
-    postalCode: '',
+
+  const getNewAddressRecordData = () => {
+    return {
+      key: `addressRecord_${Date.now()}`,
+      source: label,
+      isDefault: false,
+      title: 'New address',
+      country: '',
+      city: '',
+      street: '',
+      postalCode: '',
+    };
   };
-  const [controlIsDefaultList, setControlIsDefaultList] = useState(addressListClone);
+  const [controlIsDefaultList, setControlIsDefaultList] = useState<IAddressData[]>([]);
 
   const mergedWithStateAddressList = mergeAddressData(addressListClone, controlIsDefaultList);
   const addressListToShow = isSameAddress
@@ -45,34 +52,21 @@ export const Address = ({
     : mergedWithStateAddressList.filter((address) => address.source === label);
 
   const handleAddAddress = () => {
-    const newAddressData = [...addressListClone, newAddressRecordData];
-    onEdit(newAddressData);
+    onAdd(getNewAddressRecordData());
   };
   const handleSaveAddress = (editedAddress: IAddressData) => {
-    const index = addressListClone.findIndex((data) => data.id === editedAddress.id);
-    const newAddressData = [
-      ...addressListClone.slice(0, index),
-      editedAddress,
-      ...addressListClone.slice(index + 1),
-    ];
-    onEdit(newAddressData);
+    onEdit(editedAddress);
   };
   const handleDeleteAddress = (editedAddress: IAddressData) => {
-    const index = addressListClone.findIndex((data) => data.id === editedAddress.id);
-    const newAddressData = [
-      ...addressListClone.slice(0, index),
-      ...addressListClone.slice(index + 1),
-    ];
-    onEdit(newAddressData);
+    onDelete(editedAddress);
   };
-  const handleSetDefaultAddress = (isDefault: boolean, addressId: number) => {
+  const handleSetDefaultAddress = (isDefault: boolean, addressKey: string) => {
     const newAddressData = addressListClone.map((address) => ({ ...address, isDefault: false }));
-    if (isDefault) {
-      const index = addressListClone.findIndex((address) => address.id === addressId);
-      newAddressData[index].isDefault = isDefault;
-    }
+    const index = addressListClone.findIndex((address) => address.key === addressKey);
+    const switchDefaultAddress = newAddressData[index];
+    switchDefaultAddress.isDefault = isDefault;
     setControlIsDefaultList(newAddressData);
-    onSetDefault(newAddressData);
+    onSetDefault(switchDefaultAddress);
   };
 
   return (
@@ -84,7 +78,7 @@ export const Address = ({
       </p>
       {addressListToShow.map((data) => (
         <AddressRecord
-          key={data.id}
+          key={data.key}
           data={data}
           onSave={handleSaveAddress}
           onDelete={handleDeleteAddress}

@@ -7,8 +7,8 @@ import { LoginPage } from 'pages/login/LoginPage';
 import { RegistrationPage } from 'pages/registration/Registration';
 import { Error } from 'pages/error/Error';
 import { About } from 'pages/about/About';
-import { CatalogPage } from 'pages/catalog/Catalog';
-import { UserProfile } from 'pages/user-profile/UserProfile';
+import { Catalog } from 'pages/catalog/Catalog';
+import { UserProfilePage } from 'pages/user-profile/UserProfile';
 import { Basket } from 'pages/basket/Basket';
 import { ProductDetailsPage } from 'pages/ProductDetails/ProductDetailsPage';
 import { RequireAuth } from 'hocs/RequireAuth';
@@ -40,7 +40,7 @@ const AppRouter = () => {
         path={pagePathnames.user}
         element={
           <RequireAuth>
-            <UserProfile />
+            <UserProfilePage />
           </RequireAuth>
         }
       />

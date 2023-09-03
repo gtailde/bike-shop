@@ -1,12 +1,12 @@
 import './style.scss';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Address } from './Address/Address';
-import { type IAddressData } from './types';
+import { Address } from '../../blocks/Address/Address';
+import { type IAddressData } from '../../blocks/Address/types';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
 import { pagePathnames } from 'router/pagePathnames';
-import { getAddressesForPost } from './helpers';
+import { changeAddressListItem, disableAddressListControls, getAddressesForPost } from './helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { profileFormFields } from './formFields';
@@ -34,11 +34,11 @@ export const Registration = () => {
 
   const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const [isSameAddress, setIsSameAddress] = useState(false);
-  const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState(
-    [] as IAddressData[],
+  const [billingIsDefaultControlList, setBillingIsDefaultControlList] = useState<IAddressData[]>(
+    [],
   );
-  const [shippingIsDefaultControlList, setShippingIsDefaultControlList] = useState(
-    [] as IAddressData[],
+  const [shippingIsDefaultControlList, setShippingIsDefaultControlList] = useState<IAddressData[]>(
+    [],
   );
 
   const onSubmit = handleSubmit(async (profileInfo) => {
@@ -83,18 +83,38 @@ export const Registration = () => {
     console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
   });
 
-  const handleChangeAddress = (addressList: IAddressData[]) => {
-    setAddressInfo(addressList);
+  const handleChangeAddress = (addressObject: IAddressData) => {
+    const newAddressData = changeAddressListItem(addressInfo, addressObject);
+    setAddressInfo(newAddressData);
   };
+
+  const handleAddAddress = (addressList: IAddressData) => {
+    const newAddressData = [...addressInfo, addressList];
+    setAddressInfo(newAddressData);
+  };
+
+  const handleDeleteAddress = (addressList: IAddressData) => {
+    const index = addressInfo.findIndex((data) => data.key === addressList.key);
+    const newAddressData = [...addressInfo.slice(0, index), ...addressInfo.slice(index + 1)];
+    setAddressInfo(newAddressData);
+  };
+
   const handleIsSame = (value: boolean) => {
     setIsSameAddress(value);
   };
 
-  const handleSetDefault = (
-    setter: React.Dispatch<React.SetStateAction<IAddressData[]>>,
-    addressList: IAddressData[],
-  ) => {
-    setter(addressList);
+  const handleSetDefaultBillingAddress = (addressObject: IAddressData) => {
+    const disabledControlsAddressList = disableAddressListControls(addressInfo);
+    const newAddressData = changeAddressListItem(disabledControlsAddressList, addressObject);
+    setAddressInfo(newAddressData);
+    setBillingIsDefaultControlList(newAddressData);
+  };
+
+  const handleSetDefaultShippingAddress = (addressObject: IAddressData) => {
+    const disabledControlsAddressList = disableAddressListControls(addressInfo);
+    const newAddressData = changeAddressListItem(disabledControlsAddressList, addressObject);
+    setAddressInfo(newAddressData);
+    setShippingIsDefaultControlList(newAddressData);
   };
 
   return (
@@ -125,16 +145,20 @@ export const Registration = () => {
           <Address
             label={AddressSectionName.BILLING}
             onEdit={handleChangeAddress}
+            onAdd={handleAddAddress}
+            onDelete={handleDeleteAddress}
             onSetSame={handleIsSame}
-            onSetDefault={handleSetDefault.bind(this, setBillingIsDefaultControlList)}
+            onSetDefault={handleSetDefaultBillingAddress}
             isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
           <Address
             label={AddressSectionName.SHIPPING}
             onEdit={handleChangeAddress}
+            onAdd={handleAddAddress}
+            onDelete={handleDeleteAddress}
             onSetSame={handleIsSame}
-            onSetDefault={handleSetDefault.bind(this, setShippingIsDefaultControlList)}
+            onSetDefault={handleSetDefaultShippingAddress}
             isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
