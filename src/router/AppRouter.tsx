@@ -10,6 +10,7 @@ import { About } from 'pages/about/About';
 import { Catalog } from 'pages/catalog/Catalog';
 import { UserProfilePage } from 'pages/user-profile/UserProfile';
 import { Basket } from 'pages/basket/Basket';
+import { ProductDetailsPage } from 'pages/ProductDetails/ProductDetailsPage';
 import { RequireAuth } from 'hocs/RequireAuth';
 
 const AppRouter = () => {
@@ -17,7 +18,8 @@ const AppRouter = () => {
     <Routes>
       <Route path={pagePathnames.main} element={<Main />} />
       <Route path={pagePathnames.about} element={<About />} />
-      <Route path={pagePathnames.catalog} element={<Catalog />} />
+      <Route path={pagePathnames.catalog} element={<CatalogPage />} />
+      <Route path={pagePathnames.product} element={<ProductDetailsPage />} />
       <Route
         path={pagePathnames.login}
         element={
