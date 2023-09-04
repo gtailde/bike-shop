@@ -32,6 +32,12 @@ class CommercetoolsAPI {
     throw axiosError;
   }
 
+  protected handleError(error: any, errorMessage: string): IErrorResponse {
+    if (isAxiosError(error)) return this.handleAxiosError(error);
+    console.error('An unexpected error occurred:', error);
+    throw new Error(errorMessage);
+  }
+
   protected authHeaders = {
     'Content-Type': 'application/json',
   };
@@ -68,13 +74,11 @@ class CommercetoolsAPI {
       localStorage.setItem('anonym_token', JSON.stringify(responseData));
       return responseData;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('Error fetching access token:', error);
-      throw new Error('Failed to fetch access token');
+      return this.handleError(error, 'Failed to change email');
     }
   }
 
-  protected async checkAccessToken(token: string): Promise<ITokenData | IErrorResponse> {
+  protected async checkAccessToken(token: string): Promise<ITokenData> {
     try {
       const url = `${this.authUrl}/oauth/introspect`;
       const authHeaders = this.getAuthHeaders();
@@ -87,7 +91,6 @@ class CommercetoolsAPI {
 
       return response.data;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
       console.error('Error checking access token:', error);
       throw new Error('Failed to check access token');
     }
@@ -107,9 +110,7 @@ class CommercetoolsAPI {
 
       return response.data;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('Error refreshing token:', error);
-      throw new Error('Failed to refresh access token');
+      return this.handleError(error, 'Failed to change email');
     }
   }
 
@@ -150,8 +151,7 @@ class CommercetoolsAPI {
       if (accessToken) {
         const token: IAccessToken = JSON.parse(accessToken);
         const isAccessTokenValid = await this.checkAccessToken(token.access_token);
-
-        if (isAccessTokenValid) {
+        if (isAccessTokenValid.active) {
           localStorage.removeItem('anonym_token');
           return;
         }
@@ -173,7 +173,7 @@ class CommercetoolsAPI {
         const token: IAccessToken = JSON.parse(anonymToken);
         const isAccessTokenValid = await this.checkAccessToken(token.access_token);
 
-        if (isAccessTokenValid) return;
+        if (isAccessTokenValid.active) return;
 
         if (token.refresh_token) {
           const refreshToken = await this.refreshToken(token.refresh_token);

@@ -1,5 +1,5 @@
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import type { AxiosResponse } from 'axios';
 import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
 
@@ -24,9 +24,7 @@ class CustomersAPI extends CommercetoolsAPI {
       if (!('id' in loginData)) throw new Error(loginData.message);
       return responseData;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed to register customer');
+      return this.handleError(error, 'Failed to change email');
     }
   }
 
@@ -46,14 +44,13 @@ class CustomersAPI extends CommercetoolsAPI {
       const response = await axios.post(url, body, { headers });
       const responseData: IAccessToken = response.data;
       if (!responseData) throw new Error('Login error');
-      await this.logoutCustomer('anonym_token');
+      const getAnonymToken = localStorage.getItem('anonym_token');
+      if (getAnonymToken) await this.logoutCustomer('anonym_token');
       localStorage.setItem('access_token', JSON.stringify(responseData));
       const customer = await this.getCustomer();
       return customer;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed to log in customer');
+      return this.handleError(error, 'Failed to change email');
     }
   }
 
@@ -65,9 +62,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const response = await axios.get(url, { headers: tokenHeaders });
       return response.data;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed to get customer');
+      return this.handleError(error, 'Failed to change email');
     }
   }
 
@@ -91,4 +86,4 @@ class CustomersAPI extends CommercetoolsAPI {
 }
 const customersApi = new CustomersAPI();
 
-export default customersApi;
+export { customersApi, CustomersAPI };
