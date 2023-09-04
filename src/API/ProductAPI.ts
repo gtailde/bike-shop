@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import type { ICategory, ICategoryList, IProduct, IProductList, IFilters } from 'types/types';
+import type {
+  ICategory,
+  ICategoryList,
+  IProduct,
+  IProductList,
+  IFilters,
+  IFacetResult,
+} from 'types/types';
 
 class ProductAPI extends CommercetoolsAPI {
   private async performGetRequest(
@@ -17,6 +24,24 @@ class ProductAPI extends CommercetoolsAPI {
     } catch (error) {
       console.error('An unexpected error occurred:', error);
       throw new Error(`Error fetching ${endpoint} data`);
+    }
+  }
+
+  public async filter(categoryId: string): Promise<IFacetResult> {
+    try {
+      const token = this.getToken();
+      const url = `${this.apiUrl}/${this.projectKey}/product-projections/search`;
+
+      const queryParams = new URLSearchParams({
+        filter: `categories.id: subtree("${categoryId}")`,
+      }).toString();
+
+      const headers = this.getTokenHeaders(token.access_token);
+      const response = await axios.get(`${url}?${queryParams}`, { headers });
+      return response.data;
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Error filtering product projections by category');
     }
   }
 
@@ -80,4 +105,3 @@ class ProductAPI extends CommercetoolsAPI {
 
 const productAPI = new ProductAPI();
 export default productAPI;
-

@@ -69,7 +69,7 @@ export interface ICategory {
     'en-US': string;
   };
   ancestors: IProductTypeInfo[];
-  parent: IProductTypeInfo;
+  parent?: IProductTypeInfo;
   orderHint: string;
   assets: string[];
 }
@@ -173,6 +173,13 @@ export interface IProductAvailability {
   id: string;
 }
 
+export interface IFacetResult {
+  offset: number;
+  count: number;
+  results: IProduct[];
+  facets: Record<string, { type: string; count: number }>;
+}
+
 // common
 
 export type IUpdateAction =
@@ -241,4 +248,3 @@ export interface ICategoryList extends IList {
 export interface IProductList extends IList {
   results: IProduct[];
 }
-
