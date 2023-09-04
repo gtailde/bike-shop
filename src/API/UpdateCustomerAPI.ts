@@ -45,6 +45,31 @@ class UpdateCustomerAPI extends CustomersAPI {
   public async setDateOfBirth(dateOfBirth: string) {
     return await this.updateCustomers('setDateOfBirth', 'dateOfBirth', dateOfBirth);
   }
+
+  public async changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<ICustomer | IErrorResponse> {
+    try {
+      const customerData = await this.getCustomer();
+      if (!('id' in customerData)) throw new Error('error get customer data');
+      const url = `${this.apiUrl}/${this.projectKey}/customers/password`;
+      const token = this.getToken('access_token');
+      const tokenHeaders = this.getTokenHeaders(token.access_token);
+      const body = {
+        id: customerData.id,
+        version: customerData.version,
+        currentPassword,
+        newPassword,
+      };
+
+      const response = await axios.post(url, body, { headers: tokenHeaders });
+      await this.loginCustomer(customerData.email, newPassword);
+      return response.data;
+    } catch (error) {
+      return this.handleError(error, 'Failed to change user data');
+    }
+  }
 }
 
 const updateCustomersAPI = new UpdateCustomerAPI();
