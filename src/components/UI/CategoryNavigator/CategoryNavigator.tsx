@@ -7,7 +7,6 @@ import productAPI from 'API/ProductAPI';
 
 const ROOT: ICategory = {
   id: 'd25845ae-547e-4f77-9637-bd16255bf874',
-  typeId: '',
   createdAt: '',
   createdBy: {
     user: {
@@ -58,7 +57,7 @@ export const CategoryNavigator = ({ onSelect }: { onSelect: (data: ICategory) =>
 
   const fetchCategoryList = async () => {
     const response = await productAPI.getCategories();
-    const categoriesList: ICategory[] = response;
+    const categoriesList: ICategory[] = response.results;
     setFetchedCategoryList(categoriesList);
   };
 

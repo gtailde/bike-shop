@@ -1,6 +1,6 @@
 import { type ICustomer } from 'types/types';
 
-export const customerInfo: ICustomer & { birthDate: Date } = {
+export const customerInfo: ICustomer & { dateOfBirth: string } = {
   id: 'b93ebd2a-3f3d-4ce8-9898-1d465c13c7e5',
   version: 1,
   versionModifiedAt: '2023-08-25T18:29:27.725Z',
@@ -8,18 +8,14 @@ export const customerInfo: ICustomer & { birthDate: Date } = {
   createdAt: '2023-08-25T18:29:27.725Z',
   lastModifiedAt: '2023-08-25T18:29:27.725Z',
   lastModifiedBy: {
-    user: {
-      id: 'string',
-      typeId: 'string',
-    },
+    clientId: '',
     isPlatformClient: false,
+    anonymousId: '',
   },
   createdBy: {
-    user: {
-      id: 'string',
-      typeId: 'string',
-    },
+    clientId: '',
     isPlatformClient: false,
+    anonymousId: '',
   },
   email: 'firebrand-rs@somemail.com',
   firstName: 'John',
@@ -33,7 +29,7 @@ export const customerInfo: ICustomer & { birthDate: Date } = {
       streetName: 'Random-street',
       postalCode: '156788',
       city: 'Random-City',
-      additionalAddressInfo: 'Home',
+      title: 'Home',
     },
     {
       id: '10547',
@@ -42,7 +38,7 @@ export const customerInfo: ICustomer & { birthDate: Date } = {
       streetName: 'Random-street',
       postalCode: '165798',
       city: 'Random-City',
-      additionalAddressInfo: 'Office',
+      title: 'Office',
     },
     {
       id: '10777',
@@ -51,7 +47,7 @@ export const customerInfo: ICustomer & { birthDate: Date } = {
       streetName: 'Random-street',
       postalCode: '454378',
       city: 'Random-City',
-      additionalAddressInfo: 'Work',
+      title: 'Work',
     },
   ],
   billingAddressIds: ['10001', '10547'],
@@ -66,5 +62,5 @@ export const customerInfo: ICustomer & { birthDate: Date } = {
   authenticationMode: 'Password',
   defaultBillingAddressId: '10001',
   defaultShippingAddressId: '10777',
-  birthDate: new Date('2003-08-25T10:23:03Z'), // чего там по днями рождения?
+  dateOfBirth: new Date('2003-08-25T10:23:03Z').toISOString(), // чего там по днями рождения?
 };
