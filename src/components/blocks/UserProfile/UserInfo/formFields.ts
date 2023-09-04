@@ -23,10 +23,4 @@ export const profileFormFields = [
     label: 'Email address',
     name: 'email',
   },
-  {
-    id: '5',
-    type: 'password',
-    label: 'Password',
-    name: 'password',
-  },
 ] as const;
