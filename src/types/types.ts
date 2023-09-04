@@ -18,6 +18,7 @@ export interface ICustomer {
   email: string;
   firstName: string;
   lastName: string;
+  dateOfBirth: string;
   password: string;
   addresses: IBaseAddress[];
   shippingAddressIds: string[];

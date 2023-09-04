@@ -15,15 +15,17 @@ class UpdateCustomerAPI extends CustomersAPI {
       const token = this.getToken('access_token');
       const tokenHeaders = this.getTokenHeaders(token.access_token);
 
-      const actionObject: Record<string, any> = {};
-      actionObject[action] = { [changeType]: newUserData };
-
       const body = {
         version: customerData.version,
-        actions: [actionObject],
+        actions: [
+          {
+            action,
+            [changeType]: newUserData,
+          },
+        ],
       };
 
-      const response = await axios.post(url, body, { headers: tokenHeaders });
+      const response = await axios.post(url, JSON.stringify(body), { headers: tokenHeaders });
       return response.data;
     } catch (error) {
       return this.handleError(error, 'Failed to change user data');
