@@ -112,7 +112,7 @@ class UpdateCustomerAPI extends CustomersAPI {
     }
   }
 
-  protected async addAddress(addressData: IAddressData): Promise<string> {
+  public async addAddress(addressData: IAddressData): Promise<string> {
     return (await this.modifyAddress('addAddress', addressData)) as string;
   }
 

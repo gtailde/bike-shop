@@ -32,7 +32,7 @@ class CommercetoolsAPI {
     throw axiosError;
   }
 
-  protected handleError(error: any, errorMessage: string): IErrorResponse {
+  protected handleError(error: unknown, errorMessage: string): IErrorResponse {
     if (isAxiosError(error)) return this.handleAxiosError(error);
     console.error('An unexpected error occurred:', error);
     throw new Error(errorMessage);
