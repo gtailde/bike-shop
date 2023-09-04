@@ -8,14 +8,18 @@ export const customerInfo: ICustomer & { birthDate: Date } = {
   createdAt: '2023-08-25T18:29:27.725Z',
   lastModifiedAt: '2023-08-25T18:29:27.725Z',
   lastModifiedBy: {
-    clientId: '3ljXP8YjRgV-DMfceZhEJJML',
+    user: {
+      id: 'string',
+      typeId: 'string',
+    },
     isPlatformClient: false,
-    anonymousId: '084ea885-9832-4c31-afad-ffb8d6469ba2',
   },
   createdBy: {
-    clientId: '3ljXP8YjRgV-DMfceZhEJJML',
+    user: {
+      id: 'string',
+      typeId: 'string',
+    },
     isPlatformClient: false,
-    anonymousId: '084ea885-9832-4c31-afad-ffb8d6469ba2',
   },
   email: 'firebrand-rs@somemail.com',
   firstName: 'John',

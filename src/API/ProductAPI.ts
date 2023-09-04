@@ -1,27 +1,19 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import { type ICategoryResponse, type IFacetResult } from 'types/types';
+import type { ICategory, IFacetResult, IFilters, IProduct } from 'types/types';
 
 class ProductAPI extends CommercetoolsAPI {
-  private async performGetRequest<T>(endpoint: string): Promise<T> {
+  public async getCategories(): Promise<ICategory[]> {
     try {
       const token = this.getToken();
-      const url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
+      const url = `${this.apiUrl}/${this.projectKey}/categories?limit=200`;
       const headers = this.getTokenHeaders(token.access_token);
       const response = await axios.get(url, { headers });
-      return response.data;
+      return response.data.results;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      throw new Error(`Error fetching ${endpoint} data`);
+      throw new Error(`Error fetching categories data`);
     }
-  }
-
-  public async getCategories() {
-    return await this.performGetRequest<ICategoryResponse>('categories?limit=200');
-  }
-
-  public async getProducts() {
-    return await this.performGetRequest('products');
   }
 
   public async filter(categoryId: string): Promise<IFacetResult> {
@@ -42,7 +34,7 @@ class ProductAPI extends CommercetoolsAPI {
     }
   }
 
-  public async searchProduct(searchText: string, limit = 10, offset = 0): Promise<string> {
+  public async searchProduct(searchText: string, limit = 20, offset = 0): Promise<IProduct[]> {
     try {
       const token = this.getToken();
       const url = `${this.apiUrl}/${this.projectKey}/product-projections/search`;
@@ -55,10 +47,31 @@ class ProductAPI extends CommercetoolsAPI {
 
       const headers = this.getTokenHeaders(token.access_token);
       const response = await axios.get(`${url}?${queryParams}`, { headers });
-      return response.data;
+      return response.data.results;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
       throw new Error('Error searching product projections by text');
+    }
+  }
+
+  public async getProducts(
+    filters: IFilters = { brand: '', color: '' },
+    sorting = 'name.en-US asc',
+  ): Promise<IProduct[]> {
+    try {
+      const token = this.getToken();
+      const queryParams = Object.entries(filters)
+        .map(([key, value]) => `${key}="${value}"`)
+        .join('&');
+      const url = `${this.apiUrl}/${this.projectKey}/product-projections?where=${queryParams}&sort=${sorting}`;
+      const headers = {
+        Authorization: `Bearer ${token.access_token}`,
+      };
+      const response = await axios.get(url, { headers });
+      return response.data.results;
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Error get product projections');
     }
   }
 }

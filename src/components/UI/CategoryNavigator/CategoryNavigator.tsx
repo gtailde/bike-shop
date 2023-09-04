@@ -7,16 +7,35 @@ import productAPI from 'API/ProductAPI';
 
 const ROOT: ICategory = {
   id: 'd25845ae-547e-4f77-9637-bd16255bf874',
+  typeId: '',
+  createdAt: '',
+  createdBy: {
+    user: {
+      id: 'string',
+      typeId: 'string',
+    },
+    isPlatformClient: false,
+  },
   key: 'Shop',
+  lastMessageSequenceNumber: 1,
+  lastModifiedAt: '',
+  lastModifiedBy: {
+    user: {
+      id: 'string',
+      typeId: 'string',
+    },
+    isPlatformClient: false,
+  },
   name: {
     'en-US': 'Shop',
   },
-  description: 'Shop',
+  description: { 'en-US': 'Shop' },
   ancestors: [],
   orderHint: '0',
-  metaTitle: '',
-  metaDescription: '',
-  metaKeywords: '',
+  slug: { 'en-US': 'Shop' },
+  version: 3,
+  versionModifiedAt: '',
+  assets: [''],
 };
 
 export const CategoryNavigator = ({ onSelect }: { onSelect: (data: ICategory) => void }) => {
@@ -39,7 +58,7 @@ export const CategoryNavigator = ({ onSelect }: { onSelect: (data: ICategory) =>
 
   const fetchCategoryList = async () => {
     const response = await productAPI.getCategories();
-    const categoriesList: ICategory[] = response.results;
+    const categoriesList: ICategory[] = response;
     setFetchedCategoryList(categoriesList);
   };
 
