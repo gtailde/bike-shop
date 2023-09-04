@@ -1,6 +1,6 @@
 import { CustomersAPI } from './CustomersAPI';
 import type { ICustomer, IErrorResponse, IBaseAddress } from 'types/types';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 
 class UpdateCustomerAPI extends CustomersAPI {
   private async updateCustomers(
@@ -28,7 +28,9 @@ class UpdateCustomerAPI extends CustomersAPI {
       const response = await axios.post(url, JSON.stringify(body), { headers: tokenHeaders });
       return response.data;
     } catch (error) {
-      return this.handleError(error, 'Failed to change user data');
+      if (isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Failed update customer');
     }
   }
 
@@ -69,7 +71,9 @@ class UpdateCustomerAPI extends CustomersAPI {
       await this.loginCustomer(customerData.email, newPassword);
       return response.data;
     } catch (error) {
-      return this.handleError(error, 'Failed to change user data');
+      if (isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Failde change password');
     }
   }
 

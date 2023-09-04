@@ -1,5 +1,5 @@
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
 
@@ -24,7 +24,9 @@ class CustomersAPI extends CommercetoolsAPI {
       if (!('id' in loginData)) throw new Error(loginData.message);
       return responseData;
     } catch (error) {
-      return this.handleError(error, 'Failed to change email');
+      if (isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Failed register customer');
     }
   }
 
@@ -50,7 +52,9 @@ class CustomersAPI extends CommercetoolsAPI {
       const customer = await this.getCustomer();
       return customer;
     } catch (error) {
-      return this.handleError(error, 'Failed to change email');
+      if (isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Failed login customer');
     }
   }
 
@@ -62,7 +66,9 @@ class CustomersAPI extends CommercetoolsAPI {
       const response = await axios.get(url, { headers: tokenHeaders });
       return response.data;
     } catch (error) {
-      return this.handleError(error, 'Failed to change email');
+      if (isAxiosError(error)) return this.handleAxiosError(error);
+      console.error('An unexpected error occurred:', error);
+      throw new Error('Error get customer');
     }
   }
 
