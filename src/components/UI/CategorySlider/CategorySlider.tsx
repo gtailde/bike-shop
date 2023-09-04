@@ -1,6 +1,7 @@
 import './style.scss';
 import React from 'react';
 import { type ICategory } from 'types/types';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface ICategorySliderProps {
   categoryList: ICategory[];
@@ -14,20 +15,22 @@ export const CategorySlider = ({
   onSelect,
 }: ICategorySliderProps) => {
   return (
-    <ul className="category-slider">
+    <Swiper className="category-slider" slidesPerView="auto">
       {categoryList.map((category) => (
-        <li
-          key={category.id}
-          onClick={() => {
-            onSelect(category);
-          }}
-          className={`category-slider__item ${
-            category === selectedCategory ? 'category-slider__item--selected' : ''
-          }`}
-        >
-          {category.name['en-US']}
-        </li>
+        <SwiperSlide key={category.id}>
+          <div
+            key={category.id}
+            onClick={() => {
+              onSelect(category);
+            }}
+            className={`category-slider__item ${
+              category === selectedCategory ? 'category-slider__item--selected' : ''
+            }`}
+          >
+            {category.name['en-US']}
+          </div>
+        </SwiperSlide>
       ))}
-    </ul>
+    </Swiper>
   );
 };

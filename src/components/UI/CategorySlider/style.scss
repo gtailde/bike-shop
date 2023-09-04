@@ -8,6 +8,12 @@
   color: var(--accent-color-1-default);
   overflow-x: hidden;
 
+  .swiper-wrapper {
+    display: flex;
+    gap: 24px;
+    flex-shrink: 0;
+  }
+
   &__item {
     flex-shrink: 0;
 
