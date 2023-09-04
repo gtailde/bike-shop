@@ -37,6 +37,7 @@ export interface IBaseAddress {
   id: string;
   key: string;
   // ...
+  title: string;
   country: string;
   streetName: string;
   postalCode: string;
@@ -89,4 +90,12 @@ export interface ITokenData {
   client_id?: string;
   exp?: number;
   scope?: string;
+}
+
+export interface IAddressData {
+  title: string;
+  country: string;
+  city: string;
+  streetName: string;
+  postalCode: string;
 }
