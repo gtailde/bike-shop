@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
+import type { ICategoryList, IProductList } from 'types/types';
 
 class ProductAPI extends CommercetoolsAPI {
-  private async performGetRequest(endpoint: string): Promise<string> {
+  private async performGetRequest(endpoint: string): Promise<ICategoryList | IProductList> {
     try {
       const token = this.getToken();
       const url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
@@ -15,15 +16,15 @@ class ProductAPI extends CommercetoolsAPI {
     }
   }
 
-  public async getCategories() {
-    return await this.performGetRequest('categories');
+  public async getCategories(): Promise<ICategoryList> {
+    return (await this.performGetRequest('categories')) as ICategoryList;
   }
 
-  public async getProducts() {
-    return await this.performGetRequest('products');
+  public async getProducts(): Promise<IProductList> {
+    return (await this.performGetRequest('products')) as IProductList;
   }
 
-  public async searchProduct(searchText: string, limit = 10, offset = 0): Promise<string> {
+  public async searchProduct(searchText: string, limit = 20, offset = 0): Promise<IProductList> {
     try {
       const token = this.getToken();
       const url = `${this.apiUrl}/${this.projectKey}/product-projections/search`;
