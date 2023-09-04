@@ -47,6 +47,8 @@ export interface IBaseAddress {
 
 // product
 
+export type IFilters = Record<string, string>;
+
 export interface ICategory {
   id: string;
   version: number;
