@@ -1,5 +1,3 @@
-import { IAddressData } from 'components/blocks/Address/types';
-
 export interface ICustomer {
   id: string;
   version: number;

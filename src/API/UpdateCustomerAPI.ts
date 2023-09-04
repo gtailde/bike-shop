@@ -103,7 +103,7 @@ class UpdateCustomerAPI extends CustomersAPI {
 
       if (action === 'addAddress') {
         const lastAddress = responseData.addresses.slice(-1)[0];
-        return lastAddress?.id || '';
+        return lastAddress?.id ?? '';
       }
       return responseData;
     } catch (error) {
