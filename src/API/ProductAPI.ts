@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import type { ICategoryList, IProductList } from 'types/types';
+import type { ICategory, ICategoryList, IProduct, IProductList } from 'types/types';
 
 class ProductAPI extends CommercetoolsAPI {
-  private async performGetRequest(endpoint: string): Promise<ICategoryList | IProductList> {
+  private async performGetRequest(
+    endpoint: 'categories' | 'products',
+    id?: string,
+  ): Promise<ICategoryList | IProductList | ICategory | IProduct> {
     try {
       const token = this.getToken();
-      const url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
+      let url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
+      if (id) url += `/${id}`;
       const headers = this.getTokenHeaders(token.access_token);
       const response = await axios.get(url, { headers });
       return response.data;
@@ -22,6 +26,14 @@ class ProductAPI extends CommercetoolsAPI {
 
   public async getProducts(): Promise<IProductList> {
     return (await this.performGetRequest('products')) as IProductList;
+  }
+
+  public async getCategory(CategoryId: string): Promise<ICategory> {
+    return (await this.performGetRequest('categories', CategoryId)) as ICategory;
+  }
+
+  public async getProduct(ProductId: string): Promise<IProduct> {
+    return (await this.performGetRequest('products', ProductId)) as IProduct;
   }
 
   public async searchProduct(searchText: string, limit = 20, offset = 0): Promise<IProductList> {
