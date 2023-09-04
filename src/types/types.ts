@@ -89,3 +89,57 @@ export interface ITokenData {
   exp?: number;
   scope?: string;
 }
+
+export interface ICategory {
+  id: string;
+  key: string;
+  name: {
+    ['en-US']: string;
+  };
+  description: string;
+  ancestors: ICategoryReference[];
+  parent?: ICategoryReference;
+  orderHint: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeywords: string;
+}
+
+interface ICategoryReference {
+  id: string;
+  typeId: string;
+  obj: ICategory;
+}
+
+export interface ICategoryResponse {
+  limit: number;
+  offset: number;
+  count: number;
+  total: number;
+  results: ICategory[];
+}
+
+export interface IFacetResult {
+  offset: number;
+  count: number;
+  results: IProduct[];
+  facets: Record<string, { type: string; count: number }>;
+}
+
+interface IProduct {
+  categories: Array<{ id: string; typeId: string }>;
+  description: { 'en-US': string };
+  masterVariant: IProductVariant;
+  name: { 'en-US': string };
+  published: true;
+  searchKeywords: {};
+  variants: IProductVariant[];
+}
+
+interface IProductVariant {
+  attributes: Array<{ name: string; value: string }>;
+  availability: { isOnStock: boolean; availableQuantity: number; id: string };
+  id: number;
+  images: Array<{ dimensions: { h: number; w: number }; url: string }>;
+  prices: Array<{ id: string; value: { centAmount: number; currencyCode: string } }>;
+}

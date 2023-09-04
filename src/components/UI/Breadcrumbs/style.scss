@@ -1,0 +1,24 @@
+.breadscrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  grid-column: 1/-1;
+  gap: 4px;
+  border-radius: 4px;
+  padding: 8px 16px;
+  background-color: var(--main-color-4);
+
+  &__icon {
+    transform: rotate(-90deg);
+  }
+
+  &__item {
+    gap: 4px;
+    display: flex;
+    align-items: center;
+
+    &:not(:last-of-type) {
+      color: var(--accent-color-1-default);
+    }
+  }
+}

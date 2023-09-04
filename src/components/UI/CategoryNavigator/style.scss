@@ -1,0 +1,7 @@
+.category-navigator {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  grid-column: 1 / -1;
+  user-select: none;
+}

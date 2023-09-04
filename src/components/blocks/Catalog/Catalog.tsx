@@ -9,6 +9,9 @@ import { ReactComponent as FilterIcon } from './assets/filter-icon.svg';
 import { getMockProductList } from './mocks';
 import { type IProductData } from './Filter/types';
 import useDebounce from 'hooks/useDebounce';
+import { CategoryNavigator } from 'components/UI/CategoryNavigator/CategoryNavigator';
+import { type ICategory } from 'types/types';
+import productAPI from 'API/ProductAPI';
 
 export const Catalog = () => {
   const [isFilterShows, setIsFilterShows] = useState(false);
@@ -29,6 +32,15 @@ export const Catalog = () => {
       setSearchResults(getMockProductList(20));
     }, 300);
   }, [debouncedSearchQuery, sortType, filterSettings]);
+
+  const handleSelectCategory = async (data: ICategory) => {
+    const categoryProducts = (await productAPI.filter(data.id)).results;
+    console.log(data.name['en-US']);
+    console.log(categoryProducts);
+    // TO-DO:
+    // 1. get adapted product list (IProductData[]) from categoryProducts (IProduct[])
+    // 2. set it by setSearchResults
+  };
 
   return (
     <section className="catalog">
@@ -63,6 +75,7 @@ export const Catalog = () => {
             filter
           </Button>
         </div>
+        <CategoryNavigator onSelect={handleSelectCategory} />
         {
           <Filter
             onHide={() => {

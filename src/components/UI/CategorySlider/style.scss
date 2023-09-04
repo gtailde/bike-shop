@@ -1,0 +1,18 @@
+.category-slider {
+  display: flex;
+  gap: 24px;
+  padding: 12px;
+  grid-column: 1/-1;
+  border-top: 1px solid var(--accent-color-1-default);
+  border-bottom: 1px solid var(--accent-color-1-default);
+  color: var(--accent-color-1-default);
+  overflow-x: hidden;
+
+  &__item {
+    flex-shrink: 0;
+
+    &--selected {
+      color: var(--main-color-2-default);
+    }
+  }
+}
