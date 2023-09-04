@@ -9,6 +9,7 @@ import { getAddressInfo } from './helpers';
 import { AddressSectionName } from './const';
 import { type IAction, type IBaseAddress, type ICustomer } from 'types/types';
 import { customerInfo } from './mock';
+import { UserPassword } from './UserPassword/UserPassword';
 
 export const UserProfile = () => {
   const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
@@ -105,6 +106,7 @@ export const UserProfile = () => {
         </p>
         <Form>
           <UserInfo {...profileInfo} />
+          <UserPassword />
           <Address
             label={AddressSectionName.BILLING}
             onEdit={handleChangeAddress}

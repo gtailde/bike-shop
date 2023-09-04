@@ -56,7 +56,7 @@ class ProductAPI extends CommercetoolsAPI {
     }
   }
 
-  public async getProducts(
+  public async getProductProjections(
     filters: IFilters = { brand: '', color: '' },
     sorting = 'name.en-US asc',
   ): Promise<IProduct[]> {
@@ -80,3 +80,4 @@ class ProductAPI extends CommercetoolsAPI {
 
 const productAPI = new ProductAPI();
 export default productAPI;
+

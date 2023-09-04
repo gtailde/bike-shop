@@ -241,3 +241,4 @@ export interface ICategoryList extends IList {
 export interface IProductList extends IList {
   results: IProduct[];
 }
+
