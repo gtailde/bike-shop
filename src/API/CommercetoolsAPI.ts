@@ -32,6 +32,12 @@ class CommercetoolsAPI {
     throw axiosError;
   }
 
+  protected handleError(error: unknown, errorMessage: string): IErrorResponse {
+    if (isAxiosError(error)) return this.handleAxiosError(error);
+    console.error('An unexpected error occurred:', error);
+    throw new Error(errorMessage);
+  }
+
   protected authHeaders = {
     'Content-Type': 'application/json',
   };
@@ -68,9 +74,7 @@ class CommercetoolsAPI {
       localStorage.setItem('anonym_token', JSON.stringify(responseData));
       return responseData;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed get anonymous token');
+      return this.handleError(error, 'Failed to change email');
     }
   }
 
@@ -106,9 +110,7 @@ class CommercetoolsAPI {
 
       return response.data;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed refresh token');
+      return this.handleError(error, 'Failed to change email');
     }
   }
 
