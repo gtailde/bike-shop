@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { NavPopup } from 'components/popup/NavPopup';
 import { Logo } from 'components/UI/Logo/Logo';
-import customersApi from 'API/CustomersAPI';
+import { customersApi } from 'API/CustomersAPI';
 import { toast } from 'react-toastify';
 
 export const Header = () => {

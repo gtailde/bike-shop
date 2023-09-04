@@ -1,5 +1,5 @@
 import { CustomersAPI } from './CustomersAPI';
-import type { ICustomer, IErrorResponse, IAddressData } from 'types/types';
+import type { ICustomer, IErrorResponse, IBaseAddress } from 'types/types';
 import axios from 'axios';
 
 class UpdateCustomerAPI extends CustomersAPI {
@@ -75,7 +75,7 @@ class UpdateCustomerAPI extends CustomersAPI {
 
   private async modifyAddress(
     action: 'addAddress' | 'changeAddress',
-    addressData: IAddressData,
+    addressData: IBaseAddress,
     addressId?: string,
   ): Promise<string | ICustomer> {
     try {
@@ -112,17 +112,17 @@ class UpdateCustomerAPI extends CustomersAPI {
     }
   }
 
-  public async addAddress(addressData: IAddressData): Promise<string> {
+  public async addAddress(addressData: IBaseAddress): Promise<string> {
     return (await this.modifyAddress('addAddress', addressData)) as string;
   }
 
-  public async changeAddress(addressData: IAddressData, addressId: string) {
+  public async changeAddress(addressData: IBaseAddress, addressId: string) {
     return await this.modifyAddress('changeAddress', addressData, addressId);
   }
 
   public async addAddressId(
     type: 'addBillingAddressId' | 'addShippingAddressId',
-    addressData: IAddressData | '',
+    addressData: IBaseAddress | '',
     addressId?: string,
   ) {
     if (addressId) return await this.updateCustomers(type, 'addressId', addressId);

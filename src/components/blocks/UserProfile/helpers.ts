@@ -9,9 +9,9 @@ export const getAddressInfo = ({
   defaultShippingAddressId,
 }: ICustomer) => {
   const addressInfo = addresses.map((address) => {
-    const addressSectionTag = billingAddressIds.includes(address.id)
+    const addressSectionTag = billingAddressIds.includes(address.id || '')
       ? AddressSectionName.BILLING
-      : shippingAddressIds.includes(address.id)
+      : shippingAddressIds.includes(address.id || '')
       ? AddressSectionName.SHIPPING
       : '';
 
@@ -24,7 +24,7 @@ export const getAddressInfo = ({
     }
 
     return {
-      title: address.additionalAddressInfo,
+      title: address.title,
       id: address.id,
       key: address.key,
       country: address.country,

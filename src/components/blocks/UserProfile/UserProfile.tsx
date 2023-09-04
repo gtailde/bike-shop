@@ -11,7 +11,7 @@ import { type IAction, type IBaseAddress, type ICustomer } from 'types/types';
 import { customerInfo } from './mock';
 
 export const UserProfile = () => {
-  const [profileInfo, setProfileInfo] = useState<ICustomer & { birthDate: Date }>();
+  const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
   const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const [isSameAddress, setIsSameAddress] = useState(false);
   const { id: userId } = useParams();
@@ -40,7 +40,7 @@ export const UserProfile = () => {
         streetName: addressObject.street,
         postalCode: addressObject.postalCode,
         city: addressObject.city,
-        additionalAddressInfo: addressObject.title,
+        title: addressObject.title,
         // ... other props
       },
     };
@@ -57,7 +57,7 @@ export const UserProfile = () => {
         streetName: addressObject.street,
         postalCode: addressObject.postalCode,
         city: addressObject.city,
-        additionalAddressInfo: addressObject.title,
+        title: addressObject.title,
         // ... other props
       },
     };

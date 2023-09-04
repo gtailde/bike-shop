@@ -1,3 +1,5 @@
+import { IAddressData } from 'components/blocks/Address/types';
+
 export interface ICustomer {
   id: string;
   version: number;
@@ -34,16 +36,13 @@ export interface ICustomer {
 }
 
 export interface IBaseAddress {
-  id: string;
+  id?: string;
   key: string;
-  // ...
   title: string;
   country: string;
   streetName: string;
   postalCode: string;
   city: string;
-  // ...
-  additionalAddressInfo: string;
 }
 
 export type IUpdateAction =
@@ -90,12 +89,4 @@ export interface ITokenData {
   client_id?: string;
   exp?: number;
   scope?: string;
-}
-
-export interface IAddressData {
-  title: string;
-  country: string;
-  city: string;
-  streetName: string;
-  postalCode: string;
 }

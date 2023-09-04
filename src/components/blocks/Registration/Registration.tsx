@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { profileFormSchema } from './schemes';
-import customersApi from 'API/CustomersAPI';
+import { customersApi } from 'API/CustomersAPI';
 import { type ICustomer, type IErrorResponse } from 'types/types';
 import { toast, type ToastContent } from 'react-toastify';
 
