@@ -15,7 +15,7 @@ export const CategorySlider = ({
   onSelect,
 }: ICategorySliderProps) => {
   return (
-    <Swiper className="category-slider" slidesPerView="auto">
+    <Swiper className="category-slider" slidesPerView="auto" spaceBetween={16}>
       {categoryList.map((category) => (
         <SwiperSlide key={category.id}>
           <div
