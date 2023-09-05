@@ -15,7 +15,7 @@ export const profileFormFields = [
     id: '3',
     type: 'date',
     label: 'Date of birth',
-    name: 'birthDate',
+    name: 'dateOfBirth',
   },
   {
     id: '4',
