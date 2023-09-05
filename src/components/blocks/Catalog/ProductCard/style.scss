@@ -7,6 +7,7 @@
   padding: 24px 12px;
   background-color: var(--main-color-4);
   border-radius: 4px;
+  transition: background-color 0.2s ease;
 
   &__name {
     @include font-text-accent;
@@ -55,6 +56,10 @@
 
   &__cart-button {
     align-self: start;
+  }
+
+  &:hover {
+    background-color: var(--main-color-2-shadow-2);
   }
 
 }
