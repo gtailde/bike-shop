@@ -12,8 +12,6 @@ import { useForm } from 'react-hook-form';
 import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { formFields } from './formFields';
 import { customersApi } from 'API/CustomersAPI';
-import { type ICustomer, type IErrorResponse } from 'types/types';
-import { toast, type ToastContent } from 'react-toastify';
 
 const schema = yup.object({
   email: emailSchema,
@@ -36,23 +34,8 @@ export const Login = () => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      const response = await customersApi.loginCustomer(data.email, data.password);
-      if ((response as ICustomer).id) {
-        toast.success('You have successfully logged in!', {
-          theme: 'dark',
-        });
-        navigate(pagePathnames.main, { replace: true });
-      } else {
-        toast.error((response as IErrorResponse).message, {
-          theme: 'dark',
-        });
-      }
-    } catch (error) {
-      toast.error(error as ToastContent<unknown>, {
-        theme: 'dark',
-      });
-    }
+    const response = await customersApi.loginCustomer(data.email, data.password);
+    if ('id' in response) navigate(pagePathnames.main, { replace: true });
   });
 
   return (

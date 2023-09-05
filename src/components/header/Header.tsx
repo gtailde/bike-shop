@@ -7,7 +7,6 @@ import { pagePathnames } from 'router/pagePathnames';
 import { NavPopup } from 'components/popup/NavPopup';
 import { Logo } from 'components/UI/Logo/Logo';
 import { customersApi } from 'API/CustomersAPI';
-import { toast } from 'react-toastify';
 
 export const Header = () => {
   const [isNavPopupActive, setIsNavPopupActive] = useState(false);
@@ -21,17 +20,8 @@ export const Header = () => {
   };
 
   const logout = async (tokenType: 'access_token') => {
-    try {
-      await customersApi.logoutCustomer(tokenType);
-      toast.success('You have successfully logged out!', {
-        theme: 'dark',
-      });
-      navigate(pagePathnames.login);
-    } catch (error) {
-      toast.error('You are already logged out!', {
-        theme: 'dark',
-      });
-    }
+    await customersApi.logoutCustomer(tokenType);
+    navigate(pagePathnames.login);
   };
 
   return (

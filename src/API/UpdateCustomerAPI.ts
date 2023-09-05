@@ -1,16 +1,20 @@
 import { CustomersAPI } from './CustomersAPI';
-import type { ICustomer, IErrorResponse, IBaseAddress } from 'types/types';
+import type { ICustomer, IBaseAddress, IAddressUpdateAction } from 'types/types';
 import axios from 'axios';
+import { successNotify, errorNotify } from './Notifiers';
 
 class UpdateCustomerAPI extends CustomersAPI {
   private async updateCustomers(
     action: string,
     changeType: string,
     newUserData: string,
-  ): Promise<ICustomer | IErrorResponse> {
+  ): Promise<ICustomer | null> {
     try {
       const customerData = await this.getCustomer();
-      if (!('id' in customerData)) throw new Error('error get customer data');
+      if (!('id' in customerData)) {
+        errorNotify('error get customer data');
+        return null;
+      }
       const url = `${this.apiUrl}/${this.projectKey}/customers/${customerData.id}`;
       const token = this.getToken('access_token');
       const tokenHeaders = this.getTokenHeaders(token.access_token);
@@ -28,7 +32,9 @@ class UpdateCustomerAPI extends CustomersAPI {
       const response = await axios.post(url, JSON.stringify(body), { headers: tokenHeaders });
       return response.data;
     } catch (error) {
-      return this.handleError(error, 'Failed to change user data');
+      errorNotify(this.handleError(error, 'Failed to change user data').message);
+      console.log(this.handleError(error, 'Failed to change user data'));
+      return null;
     }
   }
 
@@ -51,10 +57,13 @@ class UpdateCustomerAPI extends CustomersAPI {
   public async changePassword(
     currentPassword: string,
     newPassword: string,
-  ): Promise<ICustomer | IErrorResponse> {
+  ): Promise<ICustomer | null> {
     try {
       const customerData = await this.getCustomer();
-      if (!('id' in customerData)) throw new Error('error get customer data');
+      if (!('id' in customerData)) {
+        errorNotify('error get customer data');
+        return null;
+      }
       const url = `${this.apiUrl}/${this.projectKey}/customers/password`;
       const token = this.getToken('access_token');
       const tokenHeaders = this.getTokenHeaders(token.access_token);
@@ -69,7 +78,8 @@ class UpdateCustomerAPI extends CustomersAPI {
       await this.loginCustomer(customerData.email, newPassword);
       return response.data;
     } catch (error) {
-      return this.handleError(error, 'Failed to change user data');
+      errorNotify(this.handleError(error, 'Failed to change user data').message);
+      return null;
     }
   }
 
@@ -80,7 +90,10 @@ class UpdateCustomerAPI extends CustomersAPI {
   ): Promise<string | ICustomer> {
     try {
       const customerData = await this.getCustomer();
-      if (!('id' in customerData)) throw new Error('error get customer data');
+      if (!('id' in customerData)) {
+        errorNotify('error get customer data');
+        return '';
+      }
       const url = `${this.apiUrl}/${this.projectKey}/customers/${customerData.id}`;
       const token = this.getToken('access_token');
       const tokenHeaders = this.getTokenHeaders(token.access_token);
@@ -105,10 +118,12 @@ class UpdateCustomerAPI extends CustomersAPI {
         const lastAddress = responseData.addresses.slice(-1)[0];
         return lastAddress?.id ?? '';
       }
+      successNotify('Address successfully modified!');
       return responseData;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      throw new Error(`Failed to ${action} customer address`);
+      errorNotify(`Failed to ${action} customer address`);
+      return '';
     }
   }
 
@@ -121,11 +136,7 @@ class UpdateCustomerAPI extends CustomersAPI {
   }
 
   public async addAddressId(
-    type:
-      | 'addBillingAddressId'
-      | 'addShippingAddressId'
-      | 'setDefaultBillingAddress'
-      | 'setDefaultShippingAddress',
+    type: IAddressUpdateAction,
     addressData: IBaseAddress | '',
     addressId?: string,
   ) {
@@ -148,5 +159,4 @@ class UpdateCustomerAPI extends CustomersAPI {
   }
 }
 
-const updateCustomersAPI = new UpdateCustomerAPI();
-export default updateCustomersAPI;
+export const updateCustomersAPI = new UpdateCustomerAPI();
