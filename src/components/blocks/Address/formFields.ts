@@ -21,7 +21,7 @@ export const addressFormFields = [
     id: '4',
     type: 'text',
     label: 'Street',
-    name: 'street',
+    name: 'streetName',
   },
   {
     id: '5',

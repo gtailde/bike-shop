@@ -18,7 +18,7 @@ export const AddressRecordEdit = (props: IAddressRecordEditProps) => {
       title: props.title,
       country: props.country,
       city: props.city,
-      street: props.street,
+      streetName: props.streetName,
       postalCode: props.postalCode,
     },
     resolver: yupResolver(addressFormSchema),

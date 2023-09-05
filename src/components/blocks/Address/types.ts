@@ -1,3 +1,5 @@
+import { type IAddressUpdateAction } from 'types/types';
+
 export interface IProfileInfo {
   firstName: string;
   lastName: string;
@@ -10,13 +12,13 @@ export interface IAddressFormData {
   title: string;
   country: string;
   city: string;
-  street: string;
+  streetName: string;
   postalCode: string;
 }
 
 export interface IAddressData extends IAddressFormData {
   id?: string;
   key: string;
-  source: string;
+  source: IAddressUpdateAction;
   isDefault: boolean;
 }
