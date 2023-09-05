@@ -62,5 +62,5 @@ export const customerInfo: ICustomer & { dateOfBirth: string } = {
   authenticationMode: 'Password',
   defaultBillingAddressId: '10001',
   defaultShippingAddressId: '10777',
-  dateOfBirth: new Date('2003-08-25T10:23:03Z').toISOString(), // чего там по днями рождения?
+  dateOfBirth: new Date('2003-08-25T10:23:03Z').toISOString(),
 };
