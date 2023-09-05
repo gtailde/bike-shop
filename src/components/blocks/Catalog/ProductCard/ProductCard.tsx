@@ -18,7 +18,12 @@ export const ProductCard = ({
   const navigate = useNavigate();
 
   return (
-    <article className="product-card">
+    <article
+      className="product-card"
+      onClick={() => {
+        navigate(`${pagePathnames.catalog}/${id}`);
+      }}
+    >
       <div className="product-card__slider slider">
         <img className="slider__image" src={titleImage} alt="" />
         <div className="slider__dots">
@@ -37,8 +42,8 @@ export const ProductCard = ({
         <Button
           accent
           className="product-card__cart-button button--w-icon"
-          onClick={() => {
-            navigate(`${pagePathnames.catalog}/${id}`);
+          onClick={(evt) => {
+            evt.stopPropagation();
           }}
         >
           <CartIcon />
