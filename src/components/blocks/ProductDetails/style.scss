@@ -1,0 +1,146 @@
+@use '../../../styles/mixins.scss' as *;
+
+.product-details {
+  &__content {
+    display: grid;
+    gap: 24px 16px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 350px;
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__headline {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+    font-size: 22px;
+  }
+
+  &__category {
+    @include font-text-regular;
+    color: var(--accent-color-1-default);
+  }
+
+  &__price {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__new-price {
+    @include font-title-mobile;
+    color: var(--accent-color-1-default);
+  }
+
+  &__old-price {
+    font-family: "Teko", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-decoration: line-through;
+    color: var(--main-color-2-shadow-1);
+  }
+
+  &__option {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    user-select: none;
+  }
+
+  &__option-title {
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+  }
+
+  &__option-variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__basket-controls {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__accordion {
+    grid-column: 1 / -1;
+  }
+}
+
+.radio-button {
+  cursor: pointer;
+
+  &__input {
+    display: none;
+  }
+
+  &__input:checked ~ &__label {
+    background-color: var(--accent-color-1-default);
+    color: var(--main-color-3);
+  }
+
+  &__label {
+    display: inline-block;
+    padding: 15px 22px;
+    border: 1px solid var(--accent-color-1-default);
+    border-radius: 4px;
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+  }
+
+  &:hover {
+    background: var(--accent-color-1-shadow-3);
+  }
+
+  &:active {
+    background: var(--accent-color-1-shadow-2);
+  }
+}
+
+
+.image-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+
+
+  &__slide-line {
+    max-width: 350px;
+
+      img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+  }
+
+  &__select-thumbs {
+    max-width: 350px;
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+  }
+
+  div &__select-thumb {
+    img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+  }
+}
