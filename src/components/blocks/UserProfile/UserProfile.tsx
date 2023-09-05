@@ -6,77 +6,79 @@ import { UserInfo } from './UserInfo/UserInfo';
 import { Form } from 'components/UI/Form/Form';
 import { useParams } from 'react-router-dom';
 import { getAddressInfo } from './helpers';
-import { AddressSectionName } from './const';
+import { AddressActionName } from '../../../const';
 import { type IAction, type IBaseAddress, type ICustomer } from 'types/types';
-import { customerInfo } from './mock';
 import { UserPassword } from './UserPassword/UserPassword';
+import { customersApi } from 'API/CustomersAPI';
+import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
+import { type CustomerData } from './types';
 
 export const UserProfile = () => {
   const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
   const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
-  const [isSameAddress, setIsSameAddress] = useState(false);
   const { id: userId } = useParams();
 
-  const getCustomerData = () => {
-    // fetching customer data...
-    setTimeout(() => {
-      setProfileInfo(customerInfo);
-
-      const customerAddresses = getAddressInfo(customerInfo);
-      setAddressInfo(customerAddresses);
-    }, 1000);
-  };
-
   useEffect(() => {
-    getCustomerData();
+    void getCustomerData();
   }, []);
 
-  const handleChangeAddress = (addressObject: IAddressData) => {
+  const getCustomerData = async () => {
+    const customer = await customersApi.getCustomer();
+    if ('id' in customer) {
+      setProfileInfo(customer);
+      setAddressInfo(getAddressInfo(customer));
+      console.log(customer);
+    }
+  };
+
+  const updateCustomerData = async (customerData: CustomerData) => {
+    await updateCustomersAPI.setEmail(customerData.email);
+    await updateCustomersAPI.setFirstName(customerData.firstName);
+    await updateCustomersAPI.setLastName(customerData.lastName);
+    await updateCustomersAPI.setDateOfBirth(customerData.dateOfBirth as unknown as string);
+    void getCustomerData();
+  };
+
+  const handleChangeAddress = async (addressObject: IAddressData) => {
     const actionObject: IAction & { address: Omit<IBaseAddress, 'id'>; addressId: string } = {
       action: 'changeAddress',
       addressId: addressObject.id ?? '',
       address: {
         key: addressObject.key,
-        country: addressObject.country,
-        streetName: addressObject.street,
+        country: addressObject.country.toUpperCase(),
+        streetName: addressObject.streetName,
         postalCode: addressObject.postalCode,
         city: addressObject.city,
         title: addressObject.title,
-        // ... other props
       },
     };
-    console.log('post change address data', actionObject); // await
-    getCustomerData();
+    await updateCustomersAPI.changeAddress(actionObject.address, actionObject.addressId);
+    void getCustomerData();
   };
 
-  const handleAddAddress = (addressObject: IAddressData) => {
+  const handleAddAddress = async (addressObject: IAddressData) => {
     const actionObject: IAction & { address: Omit<IBaseAddress, 'id'> } = {
       action: 'addAddress',
       address: {
         key: addressObject.key,
         country: addressObject.country,
-        streetName: addressObject.street,
+        streetName: addressObject.streetName,
         postalCode: addressObject.postalCode,
         city: addressObject.city,
         title: addressObject.title,
-        // ... other props
       },
     };
-    console.log('post add address data', actionObject); // await
-    getCustomerData();
+    await updateCustomersAPI.addAddressId(addressObject.source, actionObject.address);
+    void getCustomerData();
   };
 
-  const handleDeleteAddress = (addressObject: IAddressData) => {
+  const handleDeleteAddress = async (addressObject: IAddressData) => {
     const actionObject: IAction & { addressId: string } = {
       action: 'removeAddress',
       addressId: addressObject.id ?? '-1',
     };
-    console.log('post remove address data', actionObject); // await
-    getCustomerData();
-  };
-
-  const handleIsSame = (value: boolean) => {
-    setIsSameAddress(value);
+    await updateCustomersAPI.removeAddress(actionObject.addressId);
+    void getCustomerData();
   };
 
   const handleSetDefaultBilling = (addressObject: IAddressData) => {
@@ -84,8 +86,7 @@ export const UserProfile = () => {
       action: 'setDefaultBillingAddress',
       addressId: addressObject.id ?? '',
     };
-    console.log('post change default billing address data', actionObject); // await
-    getCustomerData();
+    void getCustomerData();
   };
 
   const handleSetDefaultShipping = (addressObject: IAddressData) => {
@@ -93,8 +94,7 @@ export const UserProfile = () => {
       action: 'setDefaultShippingAddress',
       addressId: addressObject.id ?? '',
     };
-    console.log('post change default shipping address data', actionObject); // await
-    getCustomerData();
+    void getCustomerData();
   };
 
   return (
@@ -105,26 +105,22 @@ export const UserProfile = () => {
           {'dinamic-address-params-user-id: ' + JSON.stringify(userId)}
         </p>
         <Form>
-          <UserInfo {...profileInfo} />
+          <UserInfo userInfo={profileInfo ?? {}} onChangeUserInfo={updateCustomerData} />
           <UserPassword />
           <Address
-            label={AddressSectionName.BILLING}
+            label={AddressActionName.BILLING}
             onEdit={handleChangeAddress}
             onAdd={handleAddAddress}
             onDelete={handleDeleteAddress}
-            onSetSame={handleIsSame}
             onSetDefault={handleSetDefaultBilling}
-            isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
           <Address
-            label={AddressSectionName.SHIPPING}
+            label={AddressActionName.SHIPPING}
             onEdit={handleChangeAddress}
             onAdd={handleAddAddress}
             onDelete={handleDeleteAddress}
-            onSetSame={handleIsSame}
             onSetDefault={handleSetDefaultShipping}
-            isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
         </Form>

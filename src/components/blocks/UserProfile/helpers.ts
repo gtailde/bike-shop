@@ -1,5 +1,5 @@
-import { type ICustomer } from 'types/types';
-import { AddressSectionName } from './const';
+import { type ICustomer, type IAddressUpdateAction } from 'types/types';
+import { AddressActionName } from '../../../const';
 
 export const getAddressInfo = ({
   addresses,
@@ -10,16 +10,16 @@ export const getAddressInfo = ({
 }: ICustomer) => {
   const addressInfo = addresses.map((address) => {
     const addressSectionTag = billingAddressIds.includes(address.id ?? '')
-      ? AddressSectionName.BILLING
+      ? AddressActionName.BILLING
       : shippingAddressIds.includes(address.id ?? '')
-      ? AddressSectionName.SHIPPING
+      ? AddressActionName.SHIPPING
       : '';
 
     let isDefault = false;
-    if (addressSectionTag === AddressSectionName.BILLING) {
+    if (addressSectionTag === AddressActionName.BILLING) {
       isDefault = defaultBillingAddressId === address.id;
     }
-    if (addressSectionTag === AddressSectionName.SHIPPING) {
+    if (addressSectionTag === AddressActionName.SHIPPING) {
       isDefault = defaultShippingAddressId === address.id;
     }
 
@@ -29,9 +29,9 @@ export const getAddressInfo = ({
       key: address.key,
       country: address.country,
       city: address.city,
-      street: address.streetName,
+      streetName: address.streetName,
       postalCode: address.postalCode,
-      source: addressSectionTag,
+      source: addressSectionTag as IAddressUpdateAction,
       isDefault,
     };
   });

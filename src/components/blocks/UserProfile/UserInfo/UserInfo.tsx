@@ -2,17 +2,24 @@ import React, { useState } from 'react';
 import { UserInfoView } from './UserInfoView';
 import { UserInfoEdit } from './UserInfoEdit';
 import { type ICustomer } from 'types/types';
+import { type CustomerData } from '../types';
 
-export const UserInfo = ({ ...props }: Partial<ICustomer & { birthDate: Date }>) => {
+interface UserInfoProps {
+  onChangeUserInfo: (customerData: CustomerData) => void;
+  userInfo?: Partial<ICustomer & { dateOfBirth: string }>;
+}
+
+export const UserInfo = ({ userInfo, onChangeUserInfo }: UserInfoProps) => {
   const [isEditMode, setIsEditMode] = useState(false);
   if (isEditMode) {
     return (
       <UserInfoEdit
         onBack={() => setIsEditMode(false)}
         onSave={() => setIsEditMode(false)}
-        {...props}
+        onChangeUserInfo={onChangeUserInfo}
+        {...userInfo}
       />
     );
   }
-  return <UserInfoView {...props} onEdit={() => setIsEditMode(true)} />;
+  return <UserInfoView {...userInfo} onEdit={() => setIsEditMode(true)} />;
 };
