@@ -28,7 +28,6 @@ export const UserProfile = () => {
     if ('id' in customer) {
       setProfileInfo(customer);
       setAddressInfo(getAddressInfo(customer));
-      console.log(customer);
     }
   };
 
