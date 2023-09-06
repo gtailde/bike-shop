@@ -25,6 +25,10 @@ html {
   flex-direction: column;
   justify-content: center;
   flex-grow: 1;
+
+  &--scroll-block {
+    overflow: hidden;
+  }
 }
 
 .visually-hidden {
