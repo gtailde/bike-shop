@@ -116,7 +116,7 @@ export interface IProductVariantData {
   description: {
     'en-US': string;
   };
-  categories: string[];
+  categories: Array<{ id: string; typeId: string }>;
   categoryOrderHints: Record<string, string>;
   slug: {
     'en-US': string;
@@ -151,6 +151,14 @@ export interface IProductPrice {
     centAmount: number;
     fractionDigits: number;
   };
+  discounted: {
+    value: {
+      type: string;
+      currencyCode: string;
+      centAmount: number;
+      fractionDigits: number;
+    };
+  };
 }
 
 export interface IProductImage {
@@ -163,7 +171,7 @@ export interface IProductImage {
 
 export interface IProductAttribute {
   name: string;
-  value: string;
+  value: string | { key: string; label: string };
 }
 
 export interface IProductAvailability {
