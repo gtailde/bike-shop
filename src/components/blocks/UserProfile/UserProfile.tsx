@@ -45,6 +45,14 @@ export const UserProfile = () => {
     }
   };
 
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    const customer = await updateCustomersAPI.changePassword(currentPassword, newPassword);
+    if (customer) {
+      setProfileInfo(customer);
+      successNotify('Your password successfully changed!');
+    }
+  };
+
   const handleChangeAddress = async (addressObject: IAddressData) => {
     const actionObject: IAction & { address: Omit<IBaseAddress, 'id'>; addressId: string } = {
       action: 'changeAddress',
@@ -112,7 +120,7 @@ export const UserProfile = () => {
         </p>
         <Form>
           <UserInfo userInfo={profileInfo ?? {}} onChangeUserInfo={updateCustomerData} />
-          <UserPassword />
+          <UserPassword onChangePassword={changePassword} />
           <Address
             label={AddressActionName.BILLING}
             onEdit={handleChangeAddress}
