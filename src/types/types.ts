@@ -182,29 +182,11 @@ export interface IFacetResult {
 
 // common
 
-export type IUpdateAction =
-  | 'changeEmail'
-  | 'setFirstName'
-  | 'setLastName'
-  | 'addAddress'
-  | 'changeAddress'
-  | 'removeAddress'
-  | 'setDefaultShippingAddress'
-  | 'addShippingAddressId'
-  | 'removeShippingAddressId'
-  | 'setDefaultBillingAddress'
-  | 'addBillingAddressId'
-  | 'removeBillingAddressId';
-
 export type IAddressUpdateAction =
   | 'addBillingAddressId'
   | 'addShippingAddressId'
   | 'setDefaultBillingAddress'
   | 'setDefaultShippingAddress';
-
-export interface IAction {
-  action: IUpdateAction;
-}
 
 // error
 
