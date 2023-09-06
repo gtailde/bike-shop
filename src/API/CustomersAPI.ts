@@ -27,7 +27,7 @@ class CustomersAPI extends CommercetoolsAPI {
       successNotify(`You have successfully registered as ${responseData.firstName}!`);
       return responseData;
     } catch (error) {
-      const errorResponse = this.handleError(error, 'Failed to change email');
+      const errorResponse = this.handleError(error, 'Failed to register user');
       errorNotify(errorResponse.message);
       return errorResponse;
     }
@@ -57,7 +57,7 @@ class CustomersAPI extends CommercetoolsAPI {
       successNotify('You have successfully logged in!');
       return customer;
     } catch (error) {
-      const errorResponse = this.handleError(error, 'Failed to change email');
+      const errorResponse = this.handleError(error, 'Failed to login user');
       errorNotify(errorResponse.message);
       return errorResponse;
     }
@@ -71,7 +71,7 @@ class CustomersAPI extends CommercetoolsAPI {
       const response = await axios.get(url, { headers: tokenHeaders });
       return response.data;
     } catch (error) {
-      const errorResponse = this.handleError(error, 'Failed to change email');
+      const errorResponse = this.handleError(error, 'Failed to get user data');
       errorNotify(errorResponse.message);
       return errorResponse;
     }
