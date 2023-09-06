@@ -7,7 +7,7 @@ import { Form } from 'components/UI/Form/Form';
 import { useParams } from 'react-router-dom';
 import { getAddressInfo } from './helpers';
 import { AddressActionName } from '../../../const';
-import { type IAction, type IBaseAddress, type ICustomer } from 'types/types';
+import { type IAction, type IBaseAddress, type ICustomer, type IErrorResponse } from 'types/types';
 import { UserPassword } from './UserPassword/UserPassword';
 import { customersApi } from 'API/CustomersAPI';
 import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
@@ -25,6 +25,10 @@ export const UserProfile = () => {
 
   const getCustomerData = async () => {
     const customer = await customersApi.getCustomer();
+    setCustomerDataState(customer);
+  };
+
+  const setCustomerDataState = (customer: ICustomer | IErrorResponse) => {
     if ('id' in customer) {
       setProfileInfo(customer);
       setAddressInfo(getAddressInfo(customer));
@@ -65,8 +69,11 @@ export const UserProfile = () => {
         title: addressObject.title,
       },
     };
-    await updateCustomersAPI.changeAddress(actionObject.address, actionObject.addressId);
-    void getCustomerData();
+    const customer = await updateCustomersAPI.changeAddress(
+      actionObject.address,
+      actionObject.addressId,
+    );
+    if (typeof customer !== 'string') setCustomerDataState(customer);
   };
 
   const handleAddAddress = async (addressObject: IAddressData) => {
@@ -81,8 +88,11 @@ export const UserProfile = () => {
         title: addressObject.title,
       },
     };
-    await updateCustomersAPI.addAddressId(addressObject.source, actionObject.address);
-    void getCustomerData();
+    const customer = await updateCustomersAPI.addAddressId(
+      addressObject.source,
+      actionObject.address,
+    );
+    if (customer) setCustomerDataState(customer);
   };
 
   const handleDeleteAddress = async (addressObject: IAddressData) => {
@@ -90,8 +100,8 @@ export const UserProfile = () => {
       action: 'removeAddress',
       addressId: addressObject.id ?? '-1',
     };
-    await updateCustomersAPI.removeAddress(actionObject.addressId);
-    void getCustomerData();
+    const customer = await updateCustomersAPI.removeAddress(actionObject.addressId);
+    if (customer) setCustomerDataState(customer);
   };
 
   const handleSetDefaultBilling = (addressObject: IAddressData) => {
