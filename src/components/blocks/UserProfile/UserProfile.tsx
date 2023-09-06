@@ -12,6 +12,7 @@ import { UserPassword } from './UserPassword/UserPassword';
 import { customersApi } from 'API/CustomersAPI';
 import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
 import { type CustomerData } from './types';
+import { successNotify } from 'Notifiers';
 
 export const UserProfile = () => {
   const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
@@ -32,11 +33,16 @@ export const UserProfile = () => {
   };
 
   const updateCustomerData = async (customerData: CustomerData) => {
-    await updateCustomersAPI.setEmail(customerData.email);
-    await updateCustomersAPI.setFirstName(customerData.firstName);
-    await updateCustomersAPI.setLastName(customerData.lastName);
-    await updateCustomersAPI.setDateOfBirth(customerData.dateOfBirth as unknown as string);
-    void getCustomerData();
+    const results = [
+      await updateCustomersAPI.setEmail(customerData.email),
+      await updateCustomersAPI.setFirstName(customerData.firstName),
+      await updateCustomersAPI.setLastName(customerData.lastName),
+      await updateCustomersAPI.setDateOfBirth(customerData.dateOfBirth as unknown as string),
+    ];
+    if (!results.some((res) => res === null)) {
+      void getCustomerData();
+      successNotify('Your personal information successfully changed!');
+    }
   };
 
   const handleChangeAddress = async (addressObject: IAddressData) => {
