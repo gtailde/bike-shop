@@ -32,6 +32,7 @@ export const UserProfile = () => {
     if ('id' in customer) {
       setProfileInfo(customer);
       setAddressInfo(getAddressInfo(customer));
+      console.log(customer);
     }
   };
 
@@ -104,20 +105,22 @@ export const UserProfile = () => {
     if (customer) setCustomerDataState(customer);
   };
 
-  const handleSetDefaultBilling = (addressObject: IAddressData) => {
-    const actionObject: IAction & { addressId: string } = {
-      action: 'setDefaultBillingAddress',
-      addressId: addressObject.id ?? '',
-    };
-    void getCustomerData();
+  const handleSetDefaultBilling = async (addressObject: IAddressData) => {
+    const customer = await updateCustomersAPI.addAddressId(
+      AddressActionName.BILLING_DEFAULT,
+      '',
+      addressObject.id,
+    );
+    if (customer) setCustomerDataState(customer);
   };
 
-  const handleSetDefaultShipping = (addressObject: IAddressData) => {
-    const actionObject: IAction & { addressId: string } = {
-      action: 'setDefaultShippingAddress',
-      addressId: addressObject.id ?? '',
-    };
-    void getCustomerData();
+  const handleSetDefaultShipping = async (addressObject: IAddressData) => {
+    const customer = await updateCustomersAPI.addAddressId(
+      AddressActionName.SHIPPING_DEFAULT,
+      '',
+      addressObject.id,
+    );
+    if (customer) setCustomerDataState(customer);
   };
 
   return (
