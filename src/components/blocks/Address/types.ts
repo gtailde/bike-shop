@@ -22,3 +22,15 @@ export interface IAddressData extends IAddressFormData {
   source: IAddressUpdateAction;
   isDefault: boolean;
 }
+
+export interface IAddressRecordProps {
+  data: IAddressData;
+  onSave: (data: IAddressData) => void;
+  onDelete: (data: IAddressData) => void;
+  onSetDefault: (isDefault: boolean, addressKey: string) => void;
+}
+
+export interface IAddressRecordEditProps extends IAddressData {
+  onCancel: () => void;
+  onSave: (data: IAddressFormData) => void;
+}

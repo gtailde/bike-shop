@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { AddressRecord } from './AddressRecord/AddressRecord';
 import { type IAddressData } from './types';
@@ -17,7 +17,7 @@ interface IAddressProps extends React.ComponentProps<'fieldset'> {
   onSetDefault: (data: IAddressData) => void;
 }
 
-export const Address = ({
+export const Address: FC<IAddressProps> = ({
   isSameAddress,
   addressList,
   label,
@@ -26,7 +26,7 @@ export const Address = ({
   onDelete,
   onSetSame,
   onSetDefault,
-}: IAddressProps) => {
+}) => {
   const addressListClone = addressList.map(({ isDefault, source, ...address }) => ({
     ...address,
     source,

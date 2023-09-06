@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { FilterAccordion } from './FilterAccordion/FilterAccordion';
 import { type IFilterRangeSlider, type IFilterList } from './types';
@@ -53,7 +53,7 @@ interface IFilterProps {
   isShows: boolean;
 }
 
-export const Filter = ({ onHide, onSearch, isShows }: IFilterProps) => {
+export const Filter: FC<IFilterProps> = ({ onHide, onSearch, isShows }) => {
   const [filterSettings, setFilterSettings] = useState<IFilterSettings>({});
 
   return (

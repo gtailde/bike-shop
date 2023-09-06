@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { Button } from 'components/UI/Button/Button';
-import { type ICustomer } from 'types/types';
+import { type UserInfoViewProps } from './types';
 
-export const UserInfoView = ({
+export const UserInfoView: FC<UserInfoViewProps> = ({
   firstName,
   lastName,
   email,
   dateOfBirth,
   onEdit,
-}: Partial<ICustomer & { dateOfBirth: string; onEdit: () => void }>) => {
+}) => {
   return (
     <fieldset className="form__fieldset">
       <p className="form__fieldset-headline">

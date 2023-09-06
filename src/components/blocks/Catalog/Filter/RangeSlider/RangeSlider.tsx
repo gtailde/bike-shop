@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { TextField } from 'components/UI/TextField/TextField';
 
 export interface IRangeSliderProps {
@@ -11,7 +11,7 @@ export interface IRangeSliderProps {
 
 const GAP = 10; // percent
 
-export const RangeSlider = ({ className, minLimit, maxLimit, onChange }: IRangeSliderProps) => {
+export const RangeSlider: FC<IRangeSliderProps> = ({ className, minLimit, maxLimit, onChange }) => {
   const [minPriceValue, setMinPriceValue] = useState(minLimit);
   const [maxPriceValue, setMaxPriceValue] = useState(maxLimit);
   const [rangeValue, setRangeValue] = useState({ min: minLimit, max: maxLimit });

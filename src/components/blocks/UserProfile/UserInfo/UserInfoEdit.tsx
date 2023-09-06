@@ -1,24 +1,13 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { profileFormSchema } from 'components/blocks/Registration/schemes';
 import { useForm } from 'react-hook-form';
 import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { Button } from 'components/UI/Button/Button';
-import { type ICustomer } from 'types/types';
-import { type CustomerData } from '../types';
+import { type UserInfoEditProps } from './types';
 
-type UserInfoEditProps = Partial<
-  ICustomer & {
-    dateOfBirth: string;
-  }
-> & {
-  onBack: () => void;
-  onSave: () => void;
-  onChangeUserInfo: (customerData: CustomerData) => void;
-};
-
-export const UserInfoEdit = ({
+export const UserInfoEdit: FC<UserInfoEditProps> = ({
   firstName,
   lastName,
   email,
@@ -26,7 +15,7 @@ export const UserInfoEdit = ({
   onBack,
   onSave,
   onChangeUserInfo,
-}: UserInfoEditProps) => {
+}) => {
   const form = useForm({
     defaultValues: {
       firstName,

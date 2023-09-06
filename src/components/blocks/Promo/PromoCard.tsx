@@ -1,4 +1,4 @@
-import React, { type ReactElement } from 'react';
+import React, { type FC, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { type IPromoCardData } from './types';
@@ -25,7 +25,7 @@ const decorateVariants: IDecorateVariant[] = [
   { decorativeIcon: <DecorativeIcon2 />, decorativeBackground: decorativeBackground2 },
 ];
 
-export const PromoCard = ({ promoCardData, variantIndex = 0 }: IPromoCardProps) => {
+export const PromoCard: FC<IPromoCardProps> = ({ promoCardData, variantIndex = 0 }) => {
   const { name, description, code } = promoCardData;
   const decorateSet = decorateVariants[variantIndex % decorateVariants.length];
 

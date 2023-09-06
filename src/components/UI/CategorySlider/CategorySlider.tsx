@@ -1,5 +1,5 @@
 import './style.scss';
-import React from 'react';
+import React, { type FC } from 'react';
 import { type ICategory } from 'types/types';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -9,11 +9,11 @@ interface ICategorySliderProps {
   onSelect: (data: ICategory) => void;
 }
 
-export const CategorySlider = ({
+export const CategorySlider: FC<ICategorySliderProps> = ({
   categoryList,
   selectedCategory,
   onSelect,
-}: ICategorySliderProps) => {
+}) => {
   return (
     <Swiper className="category-slider" slidesPerView="auto">
       {categoryList.map((category) => (
