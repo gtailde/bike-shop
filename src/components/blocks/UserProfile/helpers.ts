@@ -1,5 +1,6 @@
-import { type ICustomer, type IAddressUpdateAction } from 'types/types';
+import { type ICustomer, type IAddressUpdateAction, type IBaseAddress } from 'types/types';
 import { AddressActionName } from '../../../const';
+import { type IAddressData } from '../Address/types';
 
 export const getAddressInfo = ({
   addresses,
@@ -37,4 +38,15 @@ export const getAddressInfo = ({
   });
 
   return addressInfo;
+};
+
+export const extractBaseAddressFromAddressData = (addressData: IAddressData): IBaseAddress => {
+  return {
+    key: addressData.key,
+    country: addressData.country.toUpperCase(),
+    streetName: addressData.streetName,
+    postalCode: addressData.postalCode,
+    city: addressData.city,
+    title: addressData.title,
+  };
 };
