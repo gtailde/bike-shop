@@ -5,9 +5,9 @@ import { type IAddressData } from '../Address/types';
 import { UserInfo } from './UserInfo/UserInfo';
 import { Form } from 'components/UI/Form/Form';
 import { useParams } from 'react-router-dom';
-import { getAddressInfo } from './helpers';
+import { extractBaseAddressFromAddressData, getAddressInfo } from './helpers';
 import { AddressActionName } from '../../../const';
-import { type IAction, type IBaseAddress, type ICustomer, type IErrorResponse } from 'types/types';
+import { type ICustomer, type IErrorResponse } from 'types/types';
 import { UserPassword } from './UserPassword/UserPassword';
 import { customersApi } from 'API/CustomersAPI';
 import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
@@ -32,7 +32,6 @@ export const UserProfile = () => {
     if ('id' in customer) {
       setProfileInfo(customer);
       setAddressInfo(getAddressInfo(customer));
-      console.log(customer);
     }
   };
 
@@ -58,50 +57,23 @@ export const UserProfile = () => {
   };
 
   const handleChangeAddress = async (addressObject: IAddressData) => {
-    const actionObject: IAction & { address: Omit<IBaseAddress, 'id'>; addressId: string } = {
-      action: 'changeAddress',
-      addressId: addressObject.id ?? '',
-      address: {
-        key: addressObject.key,
-        country: addressObject.country.toUpperCase(),
-        streetName: addressObject.streetName,
-        postalCode: addressObject.postalCode,
-        city: addressObject.city,
-        title: addressObject.title,
-      },
-    };
     const customer = await updateCustomersAPI.changeAddress(
-      actionObject.address,
-      actionObject.addressId,
+      extractBaseAddressFromAddressData(addressObject),
+      addressObject.id ?? '',
     );
     if (typeof customer !== 'string') setCustomerDataState(customer);
   };
 
   const handleAddAddress = async (addressObject: IAddressData) => {
-    const actionObject: IAction & { address: Omit<IBaseAddress, 'id'> } = {
-      action: 'addAddress',
-      address: {
-        key: addressObject.key,
-        country: addressObject.country,
-        streetName: addressObject.streetName,
-        postalCode: addressObject.postalCode,
-        city: addressObject.city,
-        title: addressObject.title,
-      },
-    };
     const customer = await updateCustomersAPI.addAddressId(
       addressObject.source,
-      actionObject.address,
+      extractBaseAddressFromAddressData(addressObject),
     );
     if (customer) setCustomerDataState(customer);
   };
 
   const handleDeleteAddress = async (addressObject: IAddressData) => {
-    const actionObject: IAction & { addressId: string } = {
-      action: 'removeAddress',
-      addressId: addressObject.id ?? '-1',
-    };
-    const customer = await updateCustomersAPI.removeAddress(actionObject.addressId);
+    const customer = await updateCustomersAPI.removeAddress(addressObject.id ?? '');
     if (customer) setCustomerDataState(customer);
   };
 
