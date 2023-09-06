@@ -4,20 +4,22 @@ import { Address } from '../Address/Address';
 import { type IAddressData } from '../Address/types';
 import { UserInfo } from './UserInfo/UserInfo';
 import { Form } from 'components/UI/Form/Form';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { extractBaseAddressFromAddressData, getAddressInfo } from './helpers';
 import { AddressActionName } from '../../../const';
-import { type ICustomer, type IErrorResponse } from 'types/types';
+import { type ICustomer } from 'types/types';
 import { UserPassword } from './UserPassword/UserPassword';
 import { customersApi } from 'API/CustomersAPI';
 import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
 import { type CustomerData } from './types';
 import { successNotify } from 'Notifiers';
+import { pagePathnames } from 'router/pagePathnames';
 
 export const UserProfile = () => {
   const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
   const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
   const { id: userId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     void getCustomerData();
@@ -25,13 +27,15 @@ export const UserProfile = () => {
 
   const getCustomerData = async () => {
     const customer = await customersApi.getCustomer();
-    setCustomerDataState(customer);
+    if ('id' in customer) setCustomerDataState(customer);
   };
 
-  const setCustomerDataState = (customer: ICustomer | IErrorResponse) => {
-    if ('id' in customer) {
+  const setCustomerDataState = (customer: ICustomer) => {
+    if (userId === customer.id) {
       setProfileInfo(customer);
       setAddressInfo(getAddressInfo(customer));
+    } else {
+      navigate(pagePathnames.error, { replace: true });
     }
   };
 
