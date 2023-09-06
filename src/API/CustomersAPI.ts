@@ -2,7 +2,7 @@ import { CommercetoolsAPI } from './CommercetoolsAPI';
 import axios from 'axios';
 import type { AxiosResponse } from 'axios';
 import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
-import { successNotify, errorNotify } from './Notifiers';
+import { successNotify, errorNotify } from '../Notifiers';
 
 class CustomersAPI extends CommercetoolsAPI {
   public async registerCustomer(

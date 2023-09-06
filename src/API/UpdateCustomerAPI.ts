@@ -1,7 +1,7 @@
 import { CustomersAPI } from './CustomersAPI';
 import type { ICustomer, IBaseAddress, IAddressUpdateAction } from 'types/types';
 import axios from 'axios';
-import { successNotify, errorNotify } from './Notifiers';
+import { successNotify, errorNotify } from '../Notifiers';
 
 class UpdateCustomerAPI extends CustomersAPI {
   private async updateCustomers(
@@ -118,7 +118,8 @@ class UpdateCustomerAPI extends CustomersAPI {
         const lastAddress = responseData.addresses.slice(-1)[0];
         return lastAddress?.id ?? '';
       }
-      successNotify('Address successfully modified!');
+
+      successNotify('Address successfully changed!');
       return responseData;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
