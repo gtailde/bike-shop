@@ -65,11 +65,9 @@ export const Catalog = () => {
     return await getProductDetails(result.masterData.current, result.id);
   };
 
-  const getProductDetails = async (
-    object: IProductVariantData,
-    id: string,
-  ): Promise<IProductDetails> => {
+  const getProductDetails = async (object: IProductVariantData, id: string) => {
     const variants = [...object.variants, object.masterVariant];
+
     const getCategoryNames = async (obj: IProductVariantData) => {
       const fetchedCategories = obj.categories.map(
         async (category) => await productAPI.getCategory(category.id),
@@ -93,13 +91,13 @@ export const Catalog = () => {
           .map((value) => value.attributes.find((att) => att.name === key)?.value);
 
         switch (key) {
-          // case 'Size':
-          //   {
-          //     const list: string[] = [];
-          //     optionValues.map((value) => typeof value === 'object' && list.push(value));
-          //     options.push({ title: key, list: Array.from(new Set(list.reverse())) });
-          //   }
-          //   break;
+          case 'Size':
+            {
+              const list: string[] = [];
+              optionValues.map((value) => typeof value === 'object' && list.push(value.label));
+              options.push({ title: key, list: Array.from(new Set(list.reverse())) });
+            }
+            break;
           case 'Color':
             {
               const list: string[] = [];
@@ -120,7 +118,13 @@ export const Catalog = () => {
       images: object.masterVariant.images.slice(1).map((img) => img.url),
       description: object.description['en-US'],
       specification: getSpecification(object),
-      price: object.masterVariant.prices[0].value.centAmount,
+      price:
+        object.masterVariant.prices[0].value.centAmount /
+        10 ** object.masterVariant.prices[0].value.fractionDigits,
+      discountPrice: object.masterVariant.prices[0].discounted
+        ? object.masterVariant.prices[0].discounted.value.centAmount /
+          10 ** object.masterVariant.prices[0].discounted.value.fractionDigits
+        : undefined,
       options: getOptions(variants),
     };
   };

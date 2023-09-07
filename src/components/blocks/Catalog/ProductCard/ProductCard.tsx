@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { transformPriceText } from './helpers';
 import { type IProductDetails } from 'types/types';
+import { Price } from 'components/UI/Price/Price';
 
 export const ProductCard = ({
   id,
@@ -35,10 +36,12 @@ export const ProductCard = ({
       <div className="product-card__text-content">
         <h1 className="product-card__name">{name}</h1>
         <p className="product-card__description">{description}</p>
-        <span className="product-card__price">
-          <span className="product-card__new-price">{`${transformPriceText(price)}$`}</span>
-          <span className="product-card__old-price">{`${transformPriceText(price)}$`}</span>
-        </span>
+        <Price
+          className="product-card__price"
+          price={price}
+          discountPrice={discountPrice}
+          formatter={transformPriceText}
+        />
         <Button
           accent
           className="product-card__cart-button button--w-icon"
