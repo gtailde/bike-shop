@@ -2,19 +2,19 @@ import './style.scss';
 import React from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { ReactComponent as CartIcon } from './assets/basket.svg';
-import { type IProductData } from '../Filter/types';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { transformPriceText } from './helpers';
+import { type IProductDetails } from 'types/types';
 
 export const ProductCard = ({
   id,
   titleImage,
   name,
   description,
-  oldPrice,
-  newPrice,
-}: IProductData) => {
+  price,
+  discountPrice,
+}: IProductDetails) => {
   const navigate = useNavigate();
 
   return (
@@ -36,8 +36,10 @@ export const ProductCard = ({
         <h1 className="product-card__name">{name}</h1>
         <p className="product-card__description">{description}</p>
         <span className="product-card__price">
-          <span className="product-card__new-price">{transformPriceText(newPrice)}</span>
-          <span className="product-card__old-price">{transformPriceText(oldPrice)}</span>
+          <span className="product-card__new-price">
+            {transformPriceText(discountPrice ?? price)}
+          </span>
+          <span className="product-card__old-price">{transformPriceText(price)}</span>
         </span>
         <Button
           accent

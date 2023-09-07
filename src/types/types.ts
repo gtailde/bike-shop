@@ -116,7 +116,10 @@ export interface IProductVariantData {
   description: {
     'en-US': string;
   };
-  categories: string[];
+  categories: Array<{
+    id: string;
+    typeId: string;
+  }>;
   categoryOrderHints: Record<string, string>;
   slug: {
     'en-US': string;
@@ -141,6 +144,19 @@ export interface IProductVariant {
   availability: {
     channels: Record<string, IProductAvailability>;
   };
+}
+
+export interface IProductDetails {
+  id: string;
+  name: string;
+  categories: string[];
+  titleImage: string;
+  images: string[];
+  description: string;
+  specification: string;
+  price: number;
+  discountPrice?: number;
+  options: Array<{ title: string; list: string[] }>;
 }
 
 export interface IProductPrice {
