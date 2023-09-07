@@ -6,6 +6,7 @@ import { type IAddressData } from '../../blocks/Address/types';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
 import { pagePathnames } from 'router/pagePathnames';
+import { AddressActionName } from '../../../const';
 import { changeAddressListItem, disableAddressListControls, getAddressesForPost } from './helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -13,13 +14,6 @@ import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { profileFormSchema } from './schemes';
 import { customersApi } from 'API/CustomersAPI';
-import { type ICustomer, type IErrorResponse } from 'types/types';
-import { toast, type ToastContent } from 'react-toastify';
-
-const AddressSectionName = {
-  BILLING: 'Billing Address',
-  SHIPPING: 'Shipping Address',
-};
 
 export const Registration = () => {
   const profileForm = useForm({
@@ -46,41 +40,23 @@ export const Registration = () => {
       addressInfo,
       billingIsDefaultControlList,
       isSameAddress,
-      AddressSectionName.BILLING,
+      AddressActionName.BILLING,
     );
 
     const shippingInfo = getAddressesForPost(
       addressInfo,
       shippingIsDefaultControlList,
       isSameAddress,
-      AddressSectionName.SHIPPING,
+      AddressActionName.SHIPPING,
+    );
+    const response = await customersApi.registerCustomer(
+      profileInfo.email,
+      profileInfo.firstName,
+      profileInfo.lastName,
+      profileInfo.password,
     );
 
-    try {
-      const response = await customersApi.registerCustomer(
-        profileInfo.email,
-        profileInfo.firstName,
-        profileInfo.lastName,
-        profileInfo.password,
-      );
-
-      if ((response as ICustomer).id) {
-        toast.success(`You have successfully registered as ${(response as ICustomer).firstName}!`, {
-          theme: 'dark',
-        });
-        navigate(pagePathnames.main, { replace: true });
-      } else {
-        toast.error((response as IErrorResponse).message, {
-          theme: 'dark',
-        });
-      }
-    } catch (error) {
-      toast.error(error as ToastContent<unknown>, {
-        theme: 'dark',
-      });
-    }
-
-    console.log('post registration data', { profileInfo, billingInfo, shippingInfo });
+    if ('id' in response) navigate(pagePathnames.main, { replace: true });
   });
 
   const handleChangeAddress = (addressObject: IAddressData) => {
@@ -143,7 +119,7 @@ export const Registration = () => {
             </div>
           </fieldset>
           <Address
-            label={AddressSectionName.BILLING}
+            label={AddressActionName.BILLING}
             onEdit={handleChangeAddress}
             onAdd={handleAddAddress}
             onDelete={handleDeleteAddress}
@@ -153,7 +129,7 @@ export const Registration = () => {
             addressList={addressInfo}
           />
           <Address
-            label={AddressSectionName.SHIPPING}
+            label={AddressActionName.SHIPPING}
             onEdit={handleChangeAddress}
             onAdd={handleAddAddress}
             onDelete={handleDeleteAddress}

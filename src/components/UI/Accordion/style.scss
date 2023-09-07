@@ -1,6 +1,8 @@
 @use '../../../styles/mixins.scss' as *;
 
 .accordion {
+  border-top: 1px solid var(--accent-color-1-default);
+
   &__group {
     display: flex;
     flex-direction: column;

@@ -9,7 +9,7 @@ import {
 export const profileFormSchema = yup.object({
   firstName: userNameSchema,
   lastName: userNameSchema,
-  birthDate: dateSchema,
+  dateOfBirth: dateSchema,
   email: emailSchema,
   password: passwordSchema,
 });

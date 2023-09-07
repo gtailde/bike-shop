@@ -1,5 +1,5 @@
 import './style.scss';
-import React from 'react';
+import React, { type FC } from 'react';
 import { ReactComponent as ArrowIcon } from './assets/arrow-down-icon.svg';
 import { type ICategory } from 'types/types';
 
@@ -8,7 +8,7 @@ interface IBreadcrumbsProps {
   onSelect: (data: ICategory) => void;
 }
 
-export const Breadcrumbs = ({ categoryPathArray, onSelect }: IBreadcrumbsProps) => {
+export const Breadcrumbs: FC<IBreadcrumbsProps> = ({ categoryPathArray, onSelect }) => {
   return (
     <ul className="breadscrumbs">
       {categoryPathArray?.map((category, index) => (

@@ -37,7 +37,7 @@ const AppRouter = () => {
         }
       />
       <Route
-        path={pagePathnames.user}
+        path={`${pagePathnames.users}/:id`}
         element={
           <RequireAuth>
             <UserProfilePage />

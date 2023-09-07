@@ -1,33 +1,41 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { profileFormSchema } from 'components/blocks/Registration/schemes';
 import { useForm } from 'react-hook-form';
 import { profileFormFields } from './formFields';
 import { TextField } from 'components/UI/TextField/TextField';
 import { Button } from 'components/UI/Button/Button';
-import { type ICustomer } from 'types/types';
+import { type UserInfoEditProps } from './types';
 
-export const UserInfoEdit = ({
+export const UserInfoEdit: FC<UserInfoEditProps> = ({
   firstName,
   lastName,
   email,
-  birthDate,
+  dateOfBirth,
   onBack,
   onSave,
-}: Partial<ICustomer & { birthDate: Date; onBack: () => void; onSave: () => void }>) => {
+  onChangeUserInfo,
+}) => {
   const form = useForm({
     defaultValues: {
       firstName,
       lastName,
       email,
-      birthDate,
+      dateOfBirth: new Date(dateOfBirth ?? ''),
     },
     resolver: yupResolver(profileFormSchema),
     mode: 'all',
   });
 
-  const { register, handleSubmit, formState } = form;
-  const { errors } = formState;
+  const { register, formState, getValues } = form;
+  const { errors, touchedFields } = formState;
+
+  const onSubmit = () => {
+    if (!Object.keys(errors).length && touchedFields.dateOfBirth) {
+      onSave();
+      onChangeUserInfo(getValues());
+    }
+  };
 
   return (
     <fieldset className="form__fieldset">
@@ -46,7 +54,7 @@ export const UserInfoEdit = ({
           />
         ))}
       </div>
-      <Button className="form__fieldset-button" accent onClick={onSave}>
+      <Button className="form__fieldset-button" accent onClick={onSubmit}>
         Save
       </Button>
     </fieldset>

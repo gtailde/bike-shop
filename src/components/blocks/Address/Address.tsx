@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { AddressRecord } from './AddressRecord/AddressRecord';
 import { type IAddressData } from './types';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
 import { mergeAddressData } from './helpers';
+import { type IAddressUpdateAction } from 'types/types';
 
 interface IAddressProps extends React.ComponentProps<'fieldset'> {
-  label: string;
+  label: IAddressUpdateAction;
   addressList: IAddressData[];
-  isSameAddress: boolean;
+  isSameAddress?: boolean;
   onEdit: (data: IAddressData) => void;
   onAdd: (data: IAddressData) => void;
   onDelete: (data: IAddressData) => void;
-  onSetSame: (value: boolean) => void;
+  onSetSame?: (value: boolean) => void;
   onSetDefault: (data: IAddressData) => void;
 }
 
-export const Address = ({
+export const Address: FC<IAddressProps> = ({
   isSameAddress,
   addressList,
   label,
@@ -25,7 +26,7 @@ export const Address = ({
   onDelete,
   onSetSame,
   onSetDefault,
-}: IAddressProps) => {
+}) => {
   const addressListClone = addressList.map(({ isDefault, source, ...address }) => ({
     ...address,
     source,
@@ -38,10 +39,10 @@ export const Address = ({
       source: label,
       isDefault: false,
       title: 'New address',
-      country: '',
-      city: '',
-      street: '',
-      postalCode: '',
+      country: 'US',
+      city: 'City',
+      streetName: 'Street name',
+      postalCode: '12345',
     };
   };
   const [controlIsDefaultList, setControlIsDefaultList] = useState<IAddressData[]>([]);
@@ -72,8 +73,18 @@ export const Address = ({
   return (
     <fieldset className="form__fieldset">
       <p className="form__fieldset-headline">
-        <legend className="form__legend">{label}</legend>
-        <ControlLabel label="Addresses are the same" checked={isSameAddress} onChange={onSetSame} />
+        <legend className="form__legend">
+          {label === 'addBillingAddressId' || label === 'setDefaultBillingAddress'
+            ? 'Billing Address'
+            : 'Shipping Address'}
+        </legend>
+        {onSetSame && (
+          <ControlLabel
+            label="Addresses are the same"
+            checked={isSameAddress}
+            onChange={onSetSame}
+          />
+        )}
         <Button onClick={handleAddAddress}>Add</Button>
       </p>
       {addressListToShow.map((data) => (
