@@ -10,8 +10,8 @@ export const Select = ({ className, ...props }: ComponentProps<'select'>) => {
         <option value="none" disabled>
           Sort by:
         </option>
-        <option value="masterVariant.prices[0].value.centAmount">Price ↑</option>
-        <option value="masterVariant.prices[0].value.centAmount">Price ↓</option>
+        {/* <option value="masterVariant.prices[0].value.centAmount">Price ↑</option>
+        <option value="masterVariant.prices[0].value.centAmount">Price ↓</option> */}
         <option value="name.en-US asc">Name ↑</option>
         <option value="name.en-US desc">Name ↓</option>
       </select>

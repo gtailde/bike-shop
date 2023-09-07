@@ -93,13 +93,13 @@ export const Catalog = () => {
           .map((value) => value.attributes.find((att) => att.name === key)?.value);
 
         switch (key) {
-          case 'Size':
-            {
-              const list: string[] = [];
-              optionValues.map((value) => typeof value === 'object' && list.push(value));
-              options.push({ title: key, list: Array.from(new Set(list.reverse())) });
-            }
-            break;
+          // case 'Size':
+          //   {
+          //     const list: string[] = [];
+          //     optionValues.map((value) => typeof value === 'object' && list.push(value));
+          //     options.push({ title: key, list: Array.from(new Set(list.reverse())) });
+          //   }
+          //   break;
           case 'Color':
             {
               const list: string[] = [];
