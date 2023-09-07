@@ -84,7 +84,7 @@ export const addressFormSchema = yup.object({
     })
     .required('Country is required field'),
   city: citySchema,
-  street: streetSchema,
+  streetName: streetSchema,
   postalCode: yup
     .string()
     .required('Postal code is required field')

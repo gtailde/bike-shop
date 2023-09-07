@@ -34,7 +34,7 @@ class CommercetoolsAPI {
 
   protected handleError(error: unknown, errorMessage: string): IErrorResponse {
     if (isAxiosError(error)) return this.handleAxiosError(error);
-    console.error('An unexpected error occurred:', error);
+    console.log('An error occurred:', errorMessage);
     throw new Error(errorMessage);
   }
 
@@ -74,7 +74,7 @@ class CommercetoolsAPI {
       localStorage.setItem('anonym_token', JSON.stringify(responseData));
       return responseData;
     } catch (error) {
-      return this.handleError(error, 'Failed to change email');
+      return this.handleError(error, 'Failed to get anonymous token');
     }
   }
 
@@ -110,7 +110,7 @@ class CommercetoolsAPI {
 
       return response.data;
     } catch (error) {
-      return this.handleError(error, 'Failed to change email');
+      return this.handleError(error, 'Failed to refresh token');
     }
   }
 

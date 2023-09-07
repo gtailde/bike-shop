@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <AppRouter />
-        <ToastContainer autoClose={2000} />
+        <ToastContainer autoClose={2000} hideProgressBar />
         <Footer />
       </BrowserRouter>
     </React.StrictMode>
