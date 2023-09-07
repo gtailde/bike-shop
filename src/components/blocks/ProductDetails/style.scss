@@ -14,6 +14,11 @@
     }
   }
 
+  &__price {
+    align-items: center;
+    gap: 12px;
+  }
+
   &__options {
     display: flex;
     flex-direction: column;
@@ -34,28 +39,6 @@
   &__category {
     @include font-text-regular;
     color: var(--accent-color-1-default);
-  }
-
-  &__price {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  &__new-price {
-    @include font-title-mobile;
-    color: var(--accent-color-1-default);
-  }
-
-  &__old-price {
-    font-family: 'Teko', sans-serif;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 100%;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    text-decoration: line-through;
-    color: var(--main-color-2-shadow-1);
   }
 
   &__option {

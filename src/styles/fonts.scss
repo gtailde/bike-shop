@@ -31,6 +31,14 @@
 }
 
 @font-face {
+  font-family: 'Teko';
+  src: url('../assets/fonts/Teko-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Poppins';
   src: url('../assets/fonts/Poppins-Medium.woff') format('woff');
   font-weight: 500;

@@ -1,3 +1,4 @@
+import './style.scss';
 import React, { type ComponentProps } from 'react';
 
 interface IPriceProps extends ComponentProps<'div'> {
@@ -11,12 +12,12 @@ export const Price = ({ price, discountPrice, className, formatter, ...props }: 
 
   return (
     <p className={`price ${className ?? ''}`} {...props}>
-      <span className="product-details__new-price">
+      <span className="price__new-price">
         {showDiscountPrice
           ? formatter?.(discountPrice) ?? discountPrice
           : formatter?.(price) ?? price}
       </span>
-      <span className="product-details__old-price">
+      <span className="price__old-price">
         {showDiscountPrice ? formatter?.(price) ?? price : ''}
       </span>
     </p>

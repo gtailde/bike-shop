@@ -36,6 +36,8 @@
   &__price {
     display: flex;
     flex-direction: column;
+    align-items: start;
+    gap: 0px;
   }
 
   &__new-price {
@@ -72,7 +74,7 @@
 
   &__image {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
   }
 
