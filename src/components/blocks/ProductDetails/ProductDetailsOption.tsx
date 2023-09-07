@@ -1,11 +1,11 @@
 import React from 'react';
 
-export const ProductDetailsOption = ({ data }: { data: { title: string; variants: string[] } }) => {
+export const ProductDetailsOption = ({ data }: { data: { title: string; list: string[] } }) => {
   return (
     <div className="product-details__option">
       <p className="product-details__option-title">{data.title}</p>
       <div className="product-details__option-variants">
-        {data.variants.map((item, index) => {
+        {data.list.map((item, index) => {
           return (
             <label
               key={`${item}_${index}`}

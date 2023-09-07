@@ -29,7 +29,7 @@ export const Accordion = ({
       {contents.map(({ title, content }, index) => {
         if (activeIndex === index) {
           return (
-            <div key={title} className="accordion__group">
+            <div key={title} className="accordion__group accordion__group--expanded">
               <p className="accordion__group-title">
                 {title}
                 <ArrowDownIcon className="icon accordion__expand-icon" />
