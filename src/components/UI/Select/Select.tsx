@@ -1,9 +1,9 @@
 import './style.scss';
-import React, { type ComponentProps } from 'react';
+import React, { type FC, type ComponentProps } from 'react';
 import { ReactComponent as ArrowDownIcon } from './assets/arrow-down-icon.svg';
 import { ReactComponent as SortIcon } from './assets/sort-icon.svg';
 
-export const Select = ({ className, ...props }: ComponentProps<'select'>) => {
+export const Select: FC<ComponentProps<'select'>> = ({ className, ...props }) => {
   return (
     <div className={`${className ?? ''} select`}>
       <select {...props}>

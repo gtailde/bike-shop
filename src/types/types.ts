@@ -116,10 +116,8 @@ export interface IProductVariantData {
   description: {
     'en-US': string;
   };
-  categories: Array<{
-    id: string;
-    typeId: string;
-  }>;
+  categories: Array<{ id: string; typeId: string }>;
+
   categoryOrderHints: Record<string, string>;
   slug: {
     'en-US': string;
@@ -167,6 +165,14 @@ export interface IProductPrice {
     centAmount: number;
     fractionDigits: number;
   };
+  discounted: {
+    value: {
+      type: string;
+      currencyCode: string;
+      centAmount: number;
+      fractionDigits: number;
+    };
+  };
 }
 
 export interface IProductImage {
@@ -179,7 +185,7 @@ export interface IProductImage {
 
 export interface IProductAttribute {
   name: string;
-  value: string;
+  value: string | { key: string; label: string };
 }
 
 export interface IProductAvailability {
@@ -198,23 +204,11 @@ export interface IFacetResult {
 
 // common
 
-export type IUpdateAction =
-  | 'changeEmail'
-  | 'setFirstName'
-  | 'setLastName'
-  | 'addAddress'
-  | 'changeAddress'
-  | 'removeAddress'
-  | 'setDefaultShippingAddress'
-  | 'addShippingAddressId'
-  | 'removeShippingAddressId'
-  | 'setDefaultBillingAddress'
+export type IAddressUpdateAction =
   | 'addBillingAddressId'
-  | 'removeBillingAddressId';
-
-export interface IAction {
-  action: IUpdateAction;
-}
+  | 'addShippingAddressId'
+  | 'setDefaultBillingAddress'
+  | 'setDefaultShippingAddress';
 
 // error
 

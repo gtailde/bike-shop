@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import { ReactComponent as UserIcon } from './assets/user-icon.svg';
 import { ReactComponent as BasketIcon } from './assets/basket.svg';
@@ -7,13 +7,29 @@ import { pagePathnames } from 'router/pagePathnames';
 import { NavPopup } from 'components/popup/NavPopup';
 import { Logo } from 'components/UI/Logo/Logo';
 import { customersApi } from 'API/CustomersAPI';
-import { toast } from 'react-toastify';
+import { type ICustomer } from 'types/types';
 
 export const Header = () => {
+  const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
   const [isNavPopupActive, setIsNavPopupActive] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    void getCustomerData();
+  }, []);
+
+  const getCustomerData = async () => {
+    try {
+      const customer = await customersApi.getCustomer();
+      if ('id' in customer) setProfileInfo(customer);
+    } catch (error) {
+      console.log('Anonymous session started');
+    }
+  };
+
   const openPopup = () => {
     setIsNavPopupActive(true);
+    void getCustomerData();
   };
 
   const closePopup = () => {
@@ -21,17 +37,8 @@ export const Header = () => {
   };
 
   const logout = async (tokenType: 'access_token') => {
-    try {
-      await customersApi.logoutCustomer(tokenType);
-      toast.success('You have successfully logged out!', {
-        theme: 'dark',
-      });
-      navigate(pagePathnames.login);
-    } catch (error) {
-      toast.error('You are already logged out!', {
-        theme: 'dark',
-      });
-    }
+    await customersApi.logoutCustomer(tokenType);
+    navigate(pagePathnames.login);
   };
 
   return (
@@ -51,12 +58,18 @@ export const Header = () => {
         <div className="page-header__user-navigation">
           <span className="page-header__user-navigation-item user" onClick={openPopup}>
             <UserIcon className="user__icon" />
-            <span className="user__name"> user name</span>
+            <span className="user__name"> {profileInfo?.firstName}</span>
           </span>
           <NavPopup isOpened={isNavPopupActive} onClose={closePopup}>
-            <Link to={pagePathnames.user} className="nav-popup__link" onClick={closePopup}>
-              Profile
-            </Link>
+            {profileInfo?.id && (
+              <Link
+                to={`${pagePathnames.users}/${profileInfo.id}`}
+                className="nav-popup__link"
+                onClick={closePopup}
+              >
+                Profile
+              </Link>
+            )}
             <Link to={pagePathnames.login} className="nav-popup__link" onClick={closePopup}>
               Log in
             </Link>

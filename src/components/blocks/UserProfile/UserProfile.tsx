@@ -4,97 +4,99 @@ import { Address } from '../Address/Address';
 import { type IAddressData } from '../Address/types';
 import { UserInfo } from './UserInfo/UserInfo';
 import { Form } from 'components/UI/Form/Form';
-import { useParams } from 'react-router-dom';
-import { getAddressInfo } from './helpers';
-import { AddressSectionName } from './const';
-import { type IAction, type IBaseAddress, type ICustomer } from 'types/types';
-import { customerInfo } from './mock';
+import { useNavigate, useParams } from 'react-router-dom';
+import { extractBaseAddressFromAddressData, getAddressInfo } from './helpers';
+import { AddressActionName } from '../../../const';
+import { type ICustomer } from 'types/types';
 import { UserPassword } from './UserPassword/UserPassword';
+import { customersApi } from 'API/CustomersAPI';
+import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
+import { type CustomerData } from './types';
+import { successNotify } from 'Notifiers';
+import { pagePathnames } from 'router/pagePathnames';
 
 export const UserProfile = () => {
   const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
   const [addressInfo, setAddressInfo] = useState<IAddressData[]>([]);
-  const [isSameAddress, setIsSameAddress] = useState(false);
   const { id: userId } = useParams();
-
-  const getCustomerData = () => {
-    // fetching customer data...
-    setTimeout(() => {
-      setProfileInfo(customerInfo);
-
-      const customerAddresses = getAddressInfo(customerInfo);
-      setAddressInfo(customerAddresses);
-    }, 1000);
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getCustomerData();
+    void getCustomerData();
   }, []);
 
-  const handleChangeAddress = (addressObject: IAddressData) => {
-    const actionObject: IAction & { address: Omit<IBaseAddress, 'id'>; addressId: string } = {
-      action: 'changeAddress',
-      addressId: addressObject.id ?? '',
-      address: {
-        key: addressObject.key,
-        country: addressObject.country,
-        streetName: addressObject.street,
-        postalCode: addressObject.postalCode,
-        city: addressObject.city,
-        title: addressObject.title,
-        // ... other props
-      },
-    };
-    console.log('post change address data', actionObject); // await
-    getCustomerData();
+  const getCustomerData = async () => {
+    const customer = await customersApi.getCustomer();
+    if ('id' in customer) setCustomerDataState(customer);
   };
 
-  const handleAddAddress = (addressObject: IAddressData) => {
-    const actionObject: IAction & { address: Omit<IBaseAddress, 'id'> } = {
-      action: 'addAddress',
-      address: {
-        key: addressObject.key,
-        country: addressObject.country,
-        streetName: addressObject.street,
-        postalCode: addressObject.postalCode,
-        city: addressObject.city,
-        title: addressObject.title,
-        // ... other props
-      },
-    };
-    console.log('post add address data', actionObject); // await
-    getCustomerData();
+  const setCustomerDataState = (customer: ICustomer) => {
+    if (userId === customer.id) {
+      setProfileInfo(customer);
+      setAddressInfo(getAddressInfo(customer));
+    } else {
+      navigate(pagePathnames.error, { replace: true });
+    }
   };
 
-  const handleDeleteAddress = (addressObject: IAddressData) => {
-    const actionObject: IAction & { addressId: string } = {
-      action: 'removeAddress',
-      addressId: addressObject.id ?? '-1',
-    };
-    console.log('post remove address data', actionObject); // await
-    getCustomerData();
+  const updateCustomerData = async (customerData: CustomerData) => {
+    const results = [
+      await updateCustomersAPI.setEmail(customerData.email),
+      await updateCustomersAPI.setFirstName(customerData.firstName),
+      await updateCustomersAPI.setLastName(customerData.lastName),
+      await updateCustomersAPI.setDateOfBirth(customerData.dateOfBirth as unknown as string),
+    ];
+    if (!results.some((res) => res === null)) {
+      void getCustomerData();
+      successNotify('Your personal information successfully changed!');
+    }
   };
 
-  const handleIsSame = (value: boolean) => {
-    setIsSameAddress(value);
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    const customer = await updateCustomersAPI.changePassword(currentPassword, newPassword);
+    if (customer) {
+      setProfileInfo(customer);
+      successNotify('Your password successfully changed!');
+    }
   };
 
-  const handleSetDefaultBilling = (addressObject: IAddressData) => {
-    const actionObject: IAction & { addressId: string } = {
-      action: 'setDefaultBillingAddress',
-      addressId: addressObject.id ?? '',
-    };
-    console.log('post change default billing address data', actionObject); // await
-    getCustomerData();
+  const handleChangeAddress = async (addressObject: IAddressData) => {
+    const customer = await updateCustomersAPI.changeAddress(
+      extractBaseAddressFromAddressData(addressObject),
+      addressObject.id ?? '',
+    );
+    if (typeof customer !== 'string') setCustomerDataState(customer);
   };
 
-  const handleSetDefaultShipping = (addressObject: IAddressData) => {
-    const actionObject: IAction & { addressId: string } = {
-      action: 'setDefaultShippingAddress',
-      addressId: addressObject.id ?? '',
-    };
-    console.log('post change default shipping address data', actionObject); // await
-    getCustomerData();
+  const handleAddAddress = async (addressObject: IAddressData) => {
+    const customer = await updateCustomersAPI.addAddressId(
+      addressObject.source,
+      extractBaseAddressFromAddressData(addressObject),
+    );
+    if (customer) setCustomerDataState(customer);
+  };
+
+  const handleDeleteAddress = async (addressObject: IAddressData) => {
+    const customer = await updateCustomersAPI.removeAddress(addressObject.id ?? '');
+    if (customer) setCustomerDataState(customer);
+  };
+
+  const handleSetDefaultBilling = async (addressObject: IAddressData) => {
+    const customer = await updateCustomersAPI.addAddressId(
+      AddressActionName.BILLING_DEFAULT,
+      '',
+      addressObject.id,
+    );
+    if (customer) setCustomerDataState(customer);
+  };
+
+  const handleSetDefaultShipping = async (addressObject: IAddressData) => {
+    const customer = await updateCustomersAPI.addAddressId(
+      AddressActionName.SHIPPING_DEFAULT,
+      '',
+      addressObject.id,
+    );
+    if (customer) setCustomerDataState(customer);
   };
 
   return (
@@ -105,26 +107,22 @@ export const UserProfile = () => {
           {'dinamic-address-params-user-id: ' + JSON.stringify(userId)}
         </p>
         <Form>
-          <UserInfo {...profileInfo} />
-          <UserPassword />
+          <UserInfo userInfo={profileInfo ?? {}} onChangeUserInfo={updateCustomerData} />
+          <UserPassword onChangePassword={changePassword} />
           <Address
-            label={AddressSectionName.BILLING}
+            label={AddressActionName.BILLING}
             onEdit={handleChangeAddress}
             onAdd={handleAddAddress}
             onDelete={handleDeleteAddress}
-            onSetSame={handleIsSame}
             onSetDefault={handleSetDefaultBilling}
-            isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
           <Address
-            label={AddressSectionName.SHIPPING}
+            label={AddressActionName.SHIPPING}
             onEdit={handleChangeAddress}
             onAdd={handleAddAddress}
             onDelete={handleDeleteAddress}
-            onSetSame={handleIsSame}
             onSetDefault={handleSetDefaultShipping}
-            isSameAddress={isSameAddress}
             addressList={addressInfo}
           />
         </Form>

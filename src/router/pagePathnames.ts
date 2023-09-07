@@ -7,7 +7,7 @@ export const pagePathnames: Pathnames = {
   product: '/catalog/:id',
   registration: '/registration',
   login: '/login',
-  user: '/user/:id',
+  users: '/users',
   basket: '/basket',
   error: '/error',
 };

@@ -12,12 +12,12 @@ export interface IFilterRangeSlider {
 }
 
 export interface IProductData {
-  id: number;
+  id: string;
   titleImage: string;
   images: string[];
   name: string;
   description: string;
-  specification: Record<string, string>;
+  specification: string;
   oldPrice: number;
   newPrice: number;
 }

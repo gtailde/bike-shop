@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { type FC, useEffect, useRef, useState } from 'react';
 import { type IFilterSettings } from '../Filter';
 import { FilterGroup } from '../FilterGroup/FilterGroup';
 import { type IFilterRangeSlider, type IFilterList } from '../types';
@@ -10,12 +10,12 @@ interface IFilterGroupProps {
   onChange: (data: IFilterSettings) => void;
 }
 
-export const FilterAccordion = ({
+export const FilterAccordion: FC<IFilterGroupProps> = ({
   rangeSliders,
   controlGroups,
   filterSettings,
   onChange,
-}: IFilterGroupProps) => {
+}) => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [groupHeight, setGroupHeight] = useState(0);
   const activeContentRef = useRef<HTMLDivElement>(null);
