@@ -36,10 +36,8 @@ export const ProductCard = ({
         <h1 className="product-card__name">{name}</h1>
         <p className="product-card__description">{description}</p>
         <span className="product-card__price">
-          <span className="product-card__new-price">
-            {transformPriceText(discountPrice ?? price)}
-          </span>
-          <span className="product-card__old-price">{transformPriceText(price)}</span>
+          <span className="product-card__new-price">{`${transformPriceText(price)}$`}</span>
+          <span className="product-card__old-price">{`${transformPriceText(price)}$`}</span>
         </span>
         <Button
           accent

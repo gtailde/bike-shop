@@ -10,10 +10,10 @@ export const Select = ({ className, ...props }: ComponentProps<'select'>) => {
         <option value="none" disabled>
           Sort by:
         </option>
-        <option value="price-asc">Price ↑</option>
-        <option value="price-desc">Price ↓</option>
-        <option value="name-asc">Name ↑</option>
-        <option value="name-desc">Name ↓</option>
+        <option value="masterVariant.prices[0].value.centAmount">Price ↑</option>
+        <option value="masterVariant.prices[0].value.centAmount">Price ↓</option>
+        <option value="name.en-US asc">Name ↑</option>
+        <option value="name.en-US desc">Name ↓</option>
       </select>
       <div className="select__icon-container select__icon-container--left">
         <SortIcon className="icon" />

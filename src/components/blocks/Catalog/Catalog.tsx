@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import './style.scss';
 import React, { useEffect, useState } from 'react';
 import { ProductCard } from './ProductCard/ProductCard';
@@ -20,7 +21,7 @@ export const Catalog = () => {
   const [isFilterShows, setIsFilterShows] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-  const [sortType, setSortType] = useState('none');
+  const [sortType, setSortType] = useState('name.en-US asc');
   const [searchResults, setSearchResults] = useState<IProductDetails[]>();
   const [filterSettings, setFilterSettings] = useState<IFilterSettings>({});
 
@@ -29,8 +30,26 @@ export const Catalog = () => {
   }, 500);
 
   useEffect(() => {
+    (async () => {
+      const searchedProduct = (await productAPI.searchProduct(debouncedSearchQuery)).results;
+      // const filteredProduct = await getFilteredProduct();
+      // const product = searchedProduct.filter((sp) => filteredProduct.find((fp) => fp.id === sp.id));
+
+      const resultProduct: IProductDetails[] = [];
+      for (let i = 0; i < searchedProduct.length; i++) {
+        resultProduct.push(await fetchProductData(searchedProduct[i].id));
+      }
+
+      setSearchResults(resultProduct);
+      console.log(resultProduct);
+    })();
+
     console.log({ debouncedSearchQuery, sortType, filterSettings });
   }, [debouncedSearchQuery, sortType, filterSettings]);
+
+  // const getFilteredProduct = async () => {
+  //   return await productAPI.getProductProjections({ brand: '', color: '' }, sortType);
+  // };
 
   const handleSelectCategory = async (data: ICategory) => {
     const categoryProducts = (await productAPI.filter(data.id)).results;
@@ -126,6 +145,7 @@ export const Catalog = () => {
             className="catalog__select-field"
             value={sortType}
             onChange={(evt) => {
+              console.log(evt.target.value);
               setSortType(evt.target.value);
             }}
           />
