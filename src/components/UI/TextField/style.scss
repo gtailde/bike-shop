@@ -20,7 +20,7 @@
     user-select: none;
     color:  var(--main-color-2-shadow-1);
   }
-  
+
   &__input:not(:placeholder-shown) ~ &__fieldset &__legend {
     max-width: 100%;
   }
@@ -55,6 +55,32 @@
       height: 24px;
       opacity: 0;
     }
+
+    &::-webkit-search-cancel-button {
+      position: absolute;
+      right: 12px;
+      top: 0;
+      bottom: 0;
+      z-index: 1;
+      margin: auto 0;
+      width: 24px;
+      height: 24px;
+      opacity: 0;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: var(--main-color-2-default);
+      caret-color: var(--main-color-2-default);
+    }
   }
 
   &__fieldset {
@@ -75,7 +101,7 @@
     font-size: 0.75em;
     max-width: 0px;
     white-space: nowrap;
-  
+
     span {
       padding: 0 5px;
       display: inline-block;
@@ -92,16 +118,16 @@
     width: 24px;
     height: 24px;
     pointer-events: none;
-      svg {
-        cursor: pointer;
-        &:hover {
-          fill: var(--main-color-1);
-        }
-
-        &:active {
-          fill: var(--main-color-2-shadow-2);
-        }
+    svg {
+      cursor: pointer;
+      &:hover {
+        fill: var(--main-color-1);
       }
+
+      &:active {
+        fill: var(--main-color-2-shadow-2);
+      }
+    }
   }
 
   &__text-helper {
@@ -120,8 +146,8 @@
   }
 
   &:focus-within &__fieldset {
-      border-color: var(--accent-color-1-default);
-    }
+    border-color: var(--accent-color-1-default);
+  }
 
   &:focus-within &__label {
     left: 5px;
@@ -129,22 +155,22 @@
     transform: translate(14px, -9px);
     color:  var(--main-color-2-default);
   }
-  
+
   &:focus-within &__legend {
     max-width: 100%;
   }
 
   &--invalid:focus-within &__fieldset {
-      border-color: var(--status-color-error);
-    }
+    border-color: var(--status-color-error);
+  }
 
   &--invalid:focus-within &__label {
     color:  var(--status-color-error);
   }
 
   &--invalid &__fieldset {
-      border-color: var(--status-color-error);
-    }
+    border-color: var(--status-color-error);
+  }
 
   &--invalid  &__label {
     color:  var(--status-color-error);

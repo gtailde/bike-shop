@@ -1,15 +1,10 @@
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import type { AxiosResponse } from 'axios';
 import type { ICustomer, IErrorResponse, IAccessToken } from '../types/types';
+import { successNotify, errorNotify } from '../Notifiers';
 
 class CustomersAPI extends CommercetoolsAPI {
-  protected getToken(tokenType: 'access_token' | 'anonym_token'): IAccessToken {
-    const getToken = localStorage.getItem(tokenType);
-    if (!getToken) throw new Error('Token not found');
-    return JSON.parse(getToken);
-  }
-
   public async registerCustomer(
     email: string,
     firstName: string,
@@ -24,15 +19,17 @@ class CustomersAPI extends CommercetoolsAPI {
       const body = { email, firstName, lastName, password };
 
       const response: AxiosResponse = await axios.post(url, body, { headers });
-      const responseData = response.data.customer;
+      const responseData: ICustomer = response.data.customer;
       const loginData = await this.loginCustomer(email, password);
 
-      if (!('id' in loginData)) throw new Error(loginData.message);
+      if (!('id' in loginData)) errorNotify(loginData.message);
+
+      successNotify(`You have successfully registered as ${responseData.firstName}!`);
       return responseData;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed to register customer');
+      const errorResponse = this.handleError(error, 'Failed to register user');
+      errorNotify(errorResponse.message);
+      return errorResponse;
     }
   }
 
@@ -51,15 +48,18 @@ class CustomersAPI extends CommercetoolsAPI {
 
       const response = await axios.post(url, body, { headers });
       const responseData: IAccessToken = response.data;
-      if (!responseData) throw new Error('Login error');
-      await this.logoutCustomer('anonym_token');
+      if (!responseData) errorNotify('Login error');
+      const getAnonymToken = localStorage.getItem('anonym_token');
+      if (getAnonymToken) await this.logoutCustomer('anonym_token');
       localStorage.setItem('access_token', JSON.stringify(responseData));
       const customer = await this.getCustomer();
+
+      successNotify('You have successfully logged in!');
       return customer;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed to log in customer');
+      const errorResponse = this.handleError(error, 'Failed to login user');
+      errorNotify(errorResponse.message);
+      return errorResponse;
     }
   }
 
@@ -71,9 +71,9 @@ class CustomersAPI extends CommercetoolsAPI {
       const response = await axios.get(url, { headers: tokenHeaders });
       return response.data;
     } catch (error) {
-      if (isAxiosError(error)) return this.handleAxiosError(error);
-      console.error('An unexpected error occurred:', error);
-      throw new Error('Failed to get customer');
+      const errorResponse = this.handleError(error, 'Failed to get user data');
+      errorNotify(errorResponse.message);
+      return errorResponse;
     }
   }
 
@@ -86,15 +86,16 @@ class CustomersAPI extends CommercetoolsAPI {
 
       if (tokenType === 'access_token') {
         const getAnonymToken = await this.getAnonymousToken();
-        if (!('access_token' in getAnonymToken)) throw new Error(getAnonymToken.message);
+        if (!('access_token' in getAnonymToken)) errorNotify(getAnonymToken.message);
         localStorage.setItem('anonym_token', JSON.stringify(getAnonymToken));
+        successNotify('You have successfully logged out!');
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      throw new Error('Failed to logout customer');
+      errorNotify('Failed to logout customer');
     }
   }
 }
 const customersApi = new CustomersAPI();
 
-export default customersApi;
+export { customersApi, CustomersAPI };

@@ -1,0 +1,24 @@
+div.category-slider {
+  display: flex;
+  gap: 24px;
+  padding: 12px;
+  margin: 0;
+  grid-column: 1/-1;
+  border-top: 1px solid var(--accent-color-1-default);
+  border-bottom: 1px solid var(--accent-color-1-default);
+  color: var(--accent-color-1-default);
+  overflow-x: hidden;
+
+  .swiper-slide {
+    width: auto;
+  }
+
+  &__item {
+    flex-shrink: 0;
+    width: max-content;
+
+    &--selected {
+      color: var(--main-color-2-default);
+    }
+  }
+}

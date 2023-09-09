@@ -1,14 +1,5 @@
-import { type IAddressData } from './types';
-
-export const mergeAddressData = (
-  addressList: IAddressData[],
-  isDefaultControlList: IAddressData[],
-) => {
-  return addressList.map((address) => {
-    const match = isDefaultControlList.find((item) => item.id === address.id);
-    return match ?? address;
-  });
-};
+import { type IAddressData } from '../../blocks/Address/types';
+import { mergeAddressData } from 'components/blocks/Address/helpers';
 
 export const getAddressesForPost = (
   sharedList: IAddressData[],
@@ -21,4 +12,21 @@ export const getAddressesForPost = (
     : mergeAddressData(sharedList, controlSet).filter(
         (address) => address.source === addressSection,
       );
+};
+
+export const disableAddressListControls = (addressList: IAddressData[]) => {
+  return addressList.map((address) => ({ ...address, isDefault: false }));
+};
+
+export const changeAddressListItem = (
+  addressList: IAddressData[],
+  addressItem: IAddressData,
+): IAddressData[] => {
+  const index = addressList.findIndex((data) => data.key === addressItem.key);
+  const newAddressData = [
+    ...addressList.slice(0, index),
+    addressItem,
+    ...addressList.slice(index + 1),
+  ];
+  return newAddressData;
 };

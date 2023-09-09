@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { countryRegex } from './countriesList';
+import { countryRegex, postCodeRegex } from './countriesList';
 
 export const emailSchema = yup
   .string()
@@ -64,25 +64,34 @@ const onlyCharactersSchema = yup
     excludeEmptyString: true,
   });
 
-export const dateSchema = yup.string().required('Date is required');
+export const dateSchema = yup
+  .date()
+  .max('December 31, 2005 00:00:00', 'You must be over 18 years of age')
+  .required('Date is required field');
 
 export const userNameSchema = onlyCharactersSchema;
 export const titleSchema = yup.string().required();
 export const citySchema = onlyCharactersSchema;
 export const streetSchema = characterSchema;
-export const countrySchema = yup
-  .string()
-  .matches(countryRegex, {
-    message: 'Invalid country code, e.g. DE, US or AU',
-    excludeEmptyString: true,
-  })
-  .required('Country is required');
 
-export const postalCodeSchema = yup
-  .string()
-  .strict()
-  .required('Postal code is required')
-  .matches(/^(?=.*[0-9]).*$/, {
-    message: 'Postal code must contain at least one digit',
-    excludeEmptyString: true,
-  });
+export const addressFormSchema = yup.object({
+  title: titleSchema,
+  country: yup
+    .string()
+    .matches(countryRegex, {
+      message: 'Invalid country code, e.g. DE, US or AU',
+      excludeEmptyString: true,
+    })
+    .required('Country is required field'),
+  city: citySchema,
+  streetName: streetSchema,
+  postalCode: yup
+    .string()
+    .required('Postal code is required field')
+    .when('country', ([country], schema) => {
+      return schema.matches(postCodeRegex[country.toUpperCase() as keyof typeof postCodeRegex], {
+        message: 'invalid postal code for this country',
+        excludeEmptyString: true,
+      });
+    }),
+});

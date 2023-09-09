@@ -11,6 +11,7 @@ html {
   background-color: var(--main-color-3);
   @include font-text-regular;
   color: var(--main-color-2-default);
+  margin-right: calc(100% - 100vw);
 }
 
 #root {
@@ -24,6 +25,10 @@ html {
   flex-direction: column;
   justify-content: center;
   flex-grow: 1;
+
+  &--scroll-block {
+    overflow: hidden;
+  }
 }
 
 .visually-hidden {

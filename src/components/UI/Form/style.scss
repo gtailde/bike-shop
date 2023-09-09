@@ -1,6 +1,7 @@
 @use "../../../styles/mixins.scss" as *;
 
 .form {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -47,6 +48,13 @@
     @media (min-width: 768px) {
       grid-template-columns: repeat(2, minmax(100px, 350px));
     }
+
+    &--stack {
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(1, minmax(100px, 350px));
+      }
+  
+    }
   }
   
   &__legend {
@@ -61,5 +69,38 @@
 
   &__note {
     align-self: center;
+  }
+
+  &__fieldset-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px 24px;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+  }
+
+  &__fieldset-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    dt {
+      color: var(--main-color-2-shadow-1);
+    }
+    dd {
+      margin: 0;
+    }
+  }
+
+  &__fieldset-button {
+    align-self: center;
+  }
+
+  @media (min-width: 768px) {
+    width: 100%;
+    max-width: 720px;
   }
 }

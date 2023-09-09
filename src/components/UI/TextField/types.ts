@@ -5,4 +5,5 @@ export interface ITextFieldProps extends ComponentProps<'input'> {
   name: string;
   helpText?: string;
   isValid?: boolean;
+  dateOfBirth?: string;
 }

@@ -1,25 +1,19 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { TextField } from 'components/UI/TextField/TextField';
 import { Button } from 'components/UI/Button/Button';
-import { type IAddressFormData, type IAddressData } from '../types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { addressFormFields } from '../formFields';
-import { addressFormSchema } from '../schemes';
-import { type CountryName } from 'validations/countriesList';
+import { addressFormSchema } from 'validations/validationSchemes';
+import { type IAddressRecordEditProps } from '../types';
 
-interface IAddressRecordEditProps extends IAddressData {
-  onCancel: () => void;
-  onSave: (data: IAddressFormData) => void;
-}
-
-export const AddressRecordEdit = (props: IAddressRecordEditProps) => {
+export const AddressRecordEdit: FC<IAddressRecordEditProps> = ({ onSave, onCancel, ...props }) => {
   const form = useForm({
     defaultValues: {
       title: props.title,
-      country: props.country as CountryName,
+      country: props.country,
       city: props.city,
-      street: props.street,
+      streetName: props.streetName,
       postalCode: props.postalCode,
     },
     resolver: yupResolver(addressFormSchema),
@@ -44,10 +38,10 @@ export const AddressRecordEdit = (props: IAddressRecordEditProps) => {
         ))}
       </div>
       <div className="address-record__controls">
-        <Button accent onClick={handleSubmit(props.onSave)}>
+        <Button accent onClick={handleSubmit(onSave)}>
           Save
         </Button>
-        <Button onClick={props.onCancel}>Cancel</Button>
+        <Button onClick={onCancel}>Cancel</Button>
       </div>
     </div>
   );

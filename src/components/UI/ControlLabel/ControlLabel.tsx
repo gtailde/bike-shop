@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { type ComponentProps } from 'react';
+import React, { type FC, type ComponentProps } from 'react';
 import { ReactComponent as CheckIcon } from './assets/check-icon.svg';
 
 interface IControlLabelProps extends Omit<ComponentProps<'input'>, 'onChange'> {
@@ -7,7 +7,7 @@ interface IControlLabelProps extends Omit<ComponentProps<'input'>, 'onChange'> {
   onChange: (value: boolean) => void;
 }
 
-export const ControlLabel = ({ className, label, onChange, ...props }: IControlLabelProps) => {
+export const ControlLabel: FC<IControlLabelProps> = ({ className, label, onChange, ...props }) => {
   return (
     <label className={`${className ?? ''} checkbox-field`}>
       <input

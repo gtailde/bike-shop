@@ -1,6 +1,9 @@
 @use "../../../styles/mixins.scss" as *;
 
 .button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 14px 22px;
   background-color: transparent;
   border: 1px solid var(--accent-color-1-default);
@@ -46,6 +49,26 @@
 
     &:active {
       background-color: transparent;
+    }
+  }
+
+  &--w-icon {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  &--wo-borders {
+    border-style: none;
+    padding: 0;
+
+    &:hover {
+      background-color: transparent;
+      color: var(--accent-color-1-light);
+    }
+
+    &:active {
+      background-color: transparent;
+      color: var(--accent-color-1-shadow-1);
     }
   }
 }

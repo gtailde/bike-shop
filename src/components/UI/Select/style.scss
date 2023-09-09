@@ -1,0 +1,49 @@
+.select {
+  position: relative;
+
+  select {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 48px;
+    background: none;
+    font: inherit;
+    letter-spacing: inherit;
+    color: currentColor;
+    border-radius: 4px;
+    border: 1px solid var(--main-color-2-default);
+    outline: none;
+    transition: border-color 0.2s ease;
+    appearance: none;
+
+    option {
+      background-color: var(--main-color-4);
+      border-radius: 4px;
+    }
+  }
+
+  &__icon-container {
+    position: absolute;
+    right: 12px;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+
+    &--left {
+      right: 0px;
+      left: 12px;
+    }
+    svg {
+      cursor: pointer;
+      &:hover {
+        fill: var(--main-color-1);
+      }
+
+      &:active {
+        fill: var(--main-color-2-shadow-2);
+      }
+    }
+  }
+}

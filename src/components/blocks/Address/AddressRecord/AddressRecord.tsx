@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React, { type FC, useState } from 'react';
 import './style.scss';
-import { type IAddressFormData, type IAddressData } from '../types';
+import { type IAddressFormData, type IAddressData, type IAddressRecordProps } from '../types';
 import { Button } from 'components/UI/Button/Button';
 import { ReactComponent as EditIcon } from './assets/edit-icon.svg';
 import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
 import { AddressRecordEdit } from './AddressRecordEdit';
 
-interface IAddressRecordProps {
-  data: IAddressData;
-  onSave: (data: IAddressData) => void;
-  onDelete: (data: IAddressData) => void;
-  onSetDefault: (isDefault: boolean, addressId: number) => void;
-}
-
-export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddressRecordProps) => {
+export const AddressRecord: FC<IAddressRecordProps> = ({
+  data,
+  onSave,
+  onDelete,
+  onSetDefault,
+}) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleEditAddress = () => {
@@ -24,7 +22,7 @@ export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddress
     onDelete(data);
   };
   const handleIsDefault = (value: boolean) => {
-    onSetDefault(value, data.id);
+    onSetDefault(value, data.key);
   };
   const handleEditCancel = () => {
     setIsEditMode(false);
@@ -37,8 +35,14 @@ export const AddressRecord = ({ data, onSave, onDelete, onSetDefault }: IAddress
     });
   };
 
-  const getTextContent = ({ id, source, isDefault, title, ...descriptionProps }: IAddressData) =>
-    Object.values(descriptionProps).join(' ');
+  const getTextContent = ({
+    id,
+    key,
+    source,
+    isDefault,
+    title,
+    ...descriptionProps
+  }: IAddressData) => Object.values(descriptionProps).join(' ');
 
   return isEditMode ? (
     <AddressRecordEdit onCancel={handleEditCancel} onSave={handleEditSave} {...data} />
