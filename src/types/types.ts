@@ -47,6 +47,12 @@ export interface IBaseAddress {
 
 // product
 
+export interface IPerformRequestData {
+  limit?: number;
+  offset?: number;
+  id?: string;
+}
+
 export type IFilters = Record<string, string>;
 
 export interface ICategory {
