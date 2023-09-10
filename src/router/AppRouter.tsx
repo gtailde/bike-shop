@@ -9,7 +9,7 @@ import { Error } from 'pages/error/Error';
 import { About } from 'pages/about/About';
 import { CatalogPage } from 'pages/catalog/Catalog';
 import { UserProfilePage } from 'pages/user-profile/UserProfile';
-import { Basket } from 'pages/basket/Basket';
+import { BasketPage } from 'pages/basket/BasketPage';
 import { ProductDetailsPage } from 'pages/ProductDetails/ProductDetailsPage';
 import { RequireAuth } from 'hocs/RequireAuth';
 
@@ -44,7 +44,7 @@ const AppRouter = () => {
           </RequireAuth>
         }
       />
-      <Route path={pagePathnames.basket} element={<Basket />} />
+      <Route path={pagePathnames.basket} element={<BasketPage />} />
       <Route path={pagePathnames.error} element={<Error />} />
       <Route path="/*" element={<Navigate to={pagePathnames.error} />} />
     </Routes>
