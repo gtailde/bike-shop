@@ -7,6 +7,7 @@ import type {
   IProductList,
   IFilters,
   IFacetResult,
+  ISort,
   IPerformRequestData,
 } from 'types/types';
 
@@ -64,20 +65,63 @@ class ProductAPI extends CommercetoolsAPI {
   }
 
   public async getProductProjections(
-    filters: IFilters = { brand: '', color: '' },
-    sorting = 'name.en-US asc',
-  ): Promise<IProduct[]> {
+    filters?: IFilters,
+    sorting?: ISort,
+    limit = 8,
+    offset = 0,
+  ): Promise<IProductList> {
     try {
       const token = this.getToken();
-      const queryParams = Object.entries(filters)
-        .map(([key, value]) => `${key}="${value}"`)
-        .join('&');
-      const url = `${this.apiUrl}/${this.projectKey}/product-projections?where=${queryParams}&sort=${sorting}`;
+      const paramsData: string[] = [];
+
+      if (filters?.brand) {
+        const brandFilter = `filter=variants.attributes.Brand:${filters.brand
+          .map((brand) => `"${brand}"`)
+          .join(',')}`;
+        paramsData.push(brandFilter);
+      }
+
+      if (filters?.price) {
+        const priceFilter = `filter=variants.price.centAmount:range(${filters.price.min ?? 0} to ${
+          filters.price.max ?? '*'
+        })`;
+        paramsData.push(priceFilter);
+      }
+
+      if (filters?.size) {
+        const sizeFilter = `filter=variants.attributes.Size.key:${filters.size
+          .map((size) => `"${size}"`)
+          .join(',')}`;
+        paramsData.push(sizeFilter);
+      }
+
+      if (filters?.categoryId) {
+        const categoryFilter = `filter=categories.id:${filters.categoryId
+          .map((id) => `subtree("${id}")`)
+          .join(',')}`;
+        paramsData.push(categoryFilter);
+      }
+
+      if (filters?.searchText) {
+        paramsData.push(`text.en-US=${String(filters.searchText)}`);
+      }
+
+      if (sorting?.method && sorting?.type) {
+        const sortingParam = `sort=${sorting.method} ${sorting.type}`;
+        paramsData.push(sortingParam);
+      }
+
+      paramsData.push(`limit=${limit}`);
+      paramsData.push(`offset=${offset}`);
+
+      const queryParams = paramsData.join('&');
+      const url = `${this.apiUrl}/${this.projectKey}/product-projections/search?${queryParams}`;
       const headers = {
         Authorization: `Bearer ${token.access_token}`,
       };
+
       const response = await axios.get(url, { headers });
-      return response.data.results;
+      return response.data;
     } catch (error) {
       console.error('An unexpected error occurred:', error);
       throw new Error('Error get product projections');

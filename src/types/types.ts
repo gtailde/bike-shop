@@ -47,13 +47,27 @@ export interface IBaseAddress {
 
 // product
 
+export interface IFilters {
+  brand?: string[];
+  size?: string[];
+  categoryId?: string[];
+  price?: {
+    min?: number;
+    max?: number;
+  };
+  searchText?: string;
+}
+
+export interface ISort {
+  method?: 'price' | 'name.en-US';
+  type?: 'asc' | 'desc';
+}
+
 export interface IPerformRequestData {
   limit?: number;
   offset?: number;
   id?: string;
 }
-
-export type IFilters = Record<string, string>;
 
 export interface ICategory {
   id: string;

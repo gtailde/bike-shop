@@ -31,7 +31,9 @@ export const Catalog = () => {
 
   useEffect(() => {
     (async () => {
-      const searchedProduct = (await productAPI.searchProduct(debouncedSearchQuery)).results;
+      const searchedProduct = (
+        await productAPI.getProductProjections({ searchText: debouncedSearchQuery })
+      ).results;
       // const filteredProduct = await getFilteredProduct();
       // const product = searchedProduct.filter((sp) => filteredProduct.find((fp) => fp.id === sp.id));
 
