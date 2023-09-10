@@ -20,7 +20,8 @@ class ProductAPI extends CommercetoolsAPI {
       const token = this.getToken();
       let url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
       if (requestData?.id) url += `/${String(requestData.id)}`;
-      url += `?limit=${String(requestData?.limit)}&offset=${String(requestData?.offset)}`;
+      if (requestData?.limit)
+        url += `?limit=${String(requestData?.limit)}&offset=${String(requestData?.offset ?? 0)}`;
       const headers = this.getTokenHeaders(token.access_token);
       const response = await axios.get(url, { headers });
       return response.data;
@@ -48,8 +49,8 @@ class ProductAPI extends CommercetoolsAPI {
     }
   }
 
-  public async getCategories(): Promise<ICategoryList> {
-    return (await this.performGetRequest('categories')) as ICategoryList;
+  public async getCategories(limit = 100): Promise<ICategoryList> {
+    return (await this.performGetRequest('categories', { limit })) as ICategoryList;
   }
 
   public async getProducts(limit = 8, offset = 0): Promise<IProductList> {
@@ -74,7 +75,7 @@ class ProductAPI extends CommercetoolsAPI {
       const token = this.getToken();
       const paramsData: string[] = [];
 
-      if (filters?.brand) {
+      if (filters?.brand?.length) {
         const brandFilter = `filter=variants.attributes.Brand:${filters.brand
           .map((brand) => `"${brand}"`)
           .join(',')}`;
@@ -88,14 +89,14 @@ class ProductAPI extends CommercetoolsAPI {
         paramsData.push(priceFilter);
       }
 
-      if (filters?.size) {
+      if (filters?.size?.length) {
         const sizeFilter = `filter=variants.attributes.Size.key:${filters.size
           .map((size) => `"${size}"`)
           .join(',')}`;
         paramsData.push(sizeFilter);
       }
 
-      if (filters?.categoryId) {
+      if (filters?.categoryId?.length) {
         const categoryFilter = `filter=categories.id:${filters.categoryId
           .map((id) => `subtree("${id}")`)
           .join(',')}`;
