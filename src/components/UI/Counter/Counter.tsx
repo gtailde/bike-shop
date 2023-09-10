@@ -1,10 +1,14 @@
 import './style.scss';
 import React, { useState, type ComponentProps } from 'react';
 
-export const Counter = ({ className, ...props }: ComponentProps<'div'>) => {
+export const Counter = ({
+  className,
+  accent,
+  ...props
+}: ComponentProps<'div'> & { accent?: boolean }) => {
   const [value, setValue] = useState(1);
   return (
-    <div className={`counter ${className ?? ''}`} {...props}>
+    <div className={`counter ${className ?? ''} ${accent ? 'counter--accent' : ''}`} {...props}>
       <button className="counter__dec" onClick={() => setValue(value - 1)}>
         -
       </button>
