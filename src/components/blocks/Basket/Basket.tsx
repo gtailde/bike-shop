@@ -22,7 +22,7 @@ export const Basket = () => {
                 </div>
                 <div className="cart-product-card__description-column">
                   <div className="cart-product-card__text">
-                    <h3 className="cart-product-card__name">Cube Cross Race C:68X ...</h3>
+                    <h3 className="cart-product-card__name">MOTUS TOUR HUB GEAR CROSSBAR 400WH</h3>
                     <dl className="cart-product-card__product-options">
                       <dt>Size:</dt>
                       <dd>M</dd>
@@ -31,12 +31,17 @@ export const Basket = () => {
                     </dl>
                   </div>
                   <p className="cart-product-card__price">
-                    <span className="cart-product-card__base-price">$1 899.00</span>
+                    <span className="cart-product-card__base-price">
+                      $1 899.00<span className="cart-product-card__count"> x 2</span>
+                    </span>
                     <span className="cart-product-card__discount-price">$2 199.00</span>
                   </p>
                   <Counter className="cart-product-card__counter" />
-                  <p className="cart-product-card__total-price">3 798.00</p>
-                  <Button className="address-record__button button--icon-only" aria-label="Delete">
+                  <p className="cart-product-card__total-price">$3 798.00</p>
+                  <Button
+                    className="cart-product-card__delete-button button--icon-only"
+                    aria-label="Delete"
+                  >
                     <DeleteIcon className="icon" />
                   </Button>
                 </div>
@@ -69,7 +74,9 @@ export const Basket = () => {
             </tr>
           </table>
         </div>
-        <Button className="cart__checkout-button">Checkout</Button>
+        <Button accent className="cart__checkout-button">
+          Checkout
+        </Button>
       </div>
     </section>
   );

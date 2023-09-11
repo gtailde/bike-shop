@@ -36,7 +36,7 @@
   &__price {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
     gap: 0px;
   }
 
@@ -63,7 +63,6 @@
   &:hover {
     background-color: var(--main-color-2-shadow-2);
   }
-
 }
 
 .slider {

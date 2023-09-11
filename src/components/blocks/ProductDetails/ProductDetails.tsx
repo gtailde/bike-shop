@@ -128,7 +128,7 @@ export const ProductDetails = () => {
               <ProductDetailsOption key={`${option.title}_${index}`} data={option} />
             ))}
             <div className="product-details__basket-controls">
-              <Counter className="product-details__counter" />
+              <Counter accent className="product-details__counter" />
               <Button accent>Add to Basket</Button>
             </div>
           </div>
