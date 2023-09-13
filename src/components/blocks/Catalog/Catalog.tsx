@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import './style.scss';
 import React, { useEffect, useState } from 'react';
 import { ProductCard } from './ProductCard/ProductCard';
@@ -33,9 +32,8 @@ export const Catalog = () => {
   }, 500);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       console.time('with deps');
-      console.log(filterSettings);
 
       const searchedProduct = (
         await productAPI.getProductProjections(
@@ -49,24 +47,14 @@ export const Catalog = () => {
           },
         )
       ).results;
-      // console.log(searchedProduct);
-      // const filteredProduct = await getFilteredProduct();
-      // const product = searchedProduct.filter((sp) => filteredProduct.find((fp) => fp.id === sp.id));
 
       const resultProduct: Array<Promise<IProductDetails>> = [];
       searchedProduct.forEach((product) => resultProduct.push(fetchProductData(product.id)));
 
       setSearchResults(await Promise.all(resultProduct));
       console.timeEnd('with deps');
-      // console.log(await Promise.all(resultProduct));
     })();
-
-    // console.log({ debouncedSearchQuery, sortType, filterSettings });
   }, [debouncedSearchQuery, sortType, filterSettings]);
-
-  // const getFilteredProduct = async () => {
-  //   return await productAPI.getProductProjections({ brand: '', color: '' }, sortType);
-  // };
 
   const handleSelectCategory = async (data: ICategory) => {
     console.time('select category');
@@ -170,7 +158,6 @@ export const Catalog = () => {
             className="catalog__select-field"
             value={sortType}
             onChange={(evt) => {
-              console.log(evt.target.value);
               setSortType(evt.target.value);
             }}
           />

@@ -1,50 +1,12 @@
 import './style.scss';
-import React, { type FC, useState } from 'react';
+import React, { type FC, useState, useEffect } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { FilterAccordion } from './FilterAccordion/FilterAccordion';
-import { type IFilterRangeSlider, type IFilterList } from './types';
+import { type IFilterRangeSlider, type IFilterOption } from './types';
 import { type IFilters } from 'types/types';
-
-// FETCH CATALOG DATA
-const filterGroups: IFilterList[] = [
-  // CALC FILTER CATEGORIES
-  {
-    title: 'size',
-    list: ['XS', 'S', 'M', 'L', 'XL'],
-  },
-  {
-    title: 'category',
-    list: [
-      'Road Bikes',
-      'Hybrid Bikes',
-      'Mountain Bikes',
-      'Gravel Bikes',
-      "Kids' Bikes",
-      'Touring Bikes',
-      'Electric Bikes',
-      'Folding Bikes',
-      'BMX Bikes',
-    ],
-  },
-  {
-    title: 'brand',
-    list: [
-      'Cannondale',
-      'Specialized',
-      'Muddyfox',
-      'Trek',
-      'Cube',
-      'Pinnacle',
-      'GT',
-      'Cosmic',
-      'Raleigh',
-      'Brompton',
-    ],
-  },
-];
+import productAPI from 'API/ProductAPI';
 
 const rangeSliders: IFilterRangeSlider[] = [
-  // CALC FILTER PRICE RANGE
   {
     title: 'price',
     rangeValues: {
@@ -67,6 +29,33 @@ interface IFilterProps {
 
 export const Filter: FC<IFilterProps> = ({ onHide, onSearch, isShows }) => {
   const [filterSettings, setFilterSettings] = useState<IFilters>({});
+  const [filterGroups, setFilterGroups] = useState<IFilterOption[]>([
+    {
+      title: 'size',
+      list: ['XS', 'S', 'M', 'L', 'XL'],
+    },
+  ]);
+
+  useEffect(() => {
+    void (async () => {
+      const response = await productAPI.getCategories();
+      const bikeCategories = response.results;
+      setFilterGroups((prev) => [
+        ...prev,
+        {
+          title: 'category',
+          list: [...bikeCategories.slice(0, 8).map((category) => category.name['en-US'])],
+          IDs: [...bikeCategories.slice(0, 8).map((category) => category.id)],
+        },
+        {
+          title: 'brand',
+          list: [...bikeCategories.slice(8, 20).map((category) => category.name['en-US'])].filter(
+            (category) => !['Brands', 'Bikes'].includes(category),
+          ),
+        },
+      ]);
+    })();
+  }, []);
 
   return (
     <div className={`catalog__filter filter ${isShows ? 'filter--show' : ''}`}>

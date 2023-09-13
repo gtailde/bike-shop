@@ -2,14 +2,14 @@ import React, { type ComponentProps, forwardRef } from 'react';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
 import { RangeSlider } from '../RangeSlider/RangeSlider';
 import { ReactComponent as ArrowDownIcon } from './assets/arrow-down-icon.svg';
-// import { type IFilterSettings } from '../Filter';
-import { type IFilterRangeSlider, type IFilterList } from '../types';
+import { type IFilterRangeSlider, type IFilterOption } from '../types';
 import { type IFilters } from 'types/types';
 
 export interface IFilterGroupProps extends Omit<ComponentProps<'div'>, 'onChange'> {
   title: string;
   rangeValues?: IFilterRangeSlider['rangeValues'];
-  list?: IFilterList['list'];
+  list?: IFilterOption['list'];
+  IDs?: string[]; // for categories IDs
   height?: number;
   filterSettings: IFilters;
   className?: string;
@@ -24,6 +24,7 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
       title,
       rangeValues,
       list,
+      IDs,
       height,
       filterSettings,
       className,
@@ -39,11 +40,6 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
         ...filterSettings,
         [title]: currentFilter,
       };
-
-      // console.log(item);
-      // console.log(value);
-      // console.log(title);
-      console.log(currentFilter);
 
       if (value) currentFilter?.push(item);
       else
@@ -78,17 +74,17 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
             )}
             {list && (
               <ul className="filter__group-options-list group-options">
-                {list?.map((item) => (
+                {list?.map((item, index) => (
                   <li key={item} className="filter__group-options-item">
                     <ControlLabel
                       checked={Boolean(
                         filterSettings?.[title as keyof Omit<IFilters, 'price'>]?.find(
-                          (elem) => elem === item,
+                          (elem) => elem === (IDs?.[index] ?? item),
                         ),
                       )}
                       label={item}
                       onChange={(value) => {
-                        onChangeCheckbox(value, item);
+                        onChangeCheckbox(value, IDs?.[index] ?? item);
                       }}
                     />
                   </li>

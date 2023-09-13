@@ -1,11 +1,11 @@
 import React, { type FC, useEffect, useRef, useState } from 'react';
 import { FilterGroup } from '../FilterGroup/FilterGroup';
-import { type IFilterRangeSlider, type IFilterList } from '../types';
+import { type IFilterRangeSlider, type IFilterOption } from '../types';
 import { type IFilters } from 'types/types';
 
 interface IFilterGroupProps {
   rangeSliders: IFilterRangeSlider[];
-  controlGroups: IFilterList[];
+  controlGroups: IFilterOption[];
   filterSettings: IFilters;
   onChange: (data: IFilters) => void;
 }

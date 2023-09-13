@@ -74,7 +74,7 @@ class ProductAPI extends CommercetoolsAPI {
     try {
       const token = this.getToken();
       const paramsData: string[] = [];
-      console.log(filters);
+
       if (filters?.brand?.length) {
         const brandFilter = `filter=variants.attributes.Brand:${filters.brand
           .map((brand) => `"${brand}"`)
