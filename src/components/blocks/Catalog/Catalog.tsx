@@ -2,7 +2,7 @@
 import './style.scss';
 import React, { useEffect, useState } from 'react';
 import { ProductCard } from './ProductCard/ProductCard';
-import { Filter, type IFilterSettings } from './Filter/Filter';
+import { Filter } from './Filter/Filter';
 import { TextField } from 'components/UI/TextField/TextField';
 import { Select } from 'components/UI/Select/Select';
 import { Button } from 'components/UI/Button/Button';
@@ -14,6 +14,9 @@ import {
   type IProductVariant,
   type IProductDetails,
   type ICategory,
+  type SortMethod,
+  type SortType,
+  type IFilters,
 } from 'types/types';
 import productAPI from 'API/ProductAPI';
 
@@ -23,7 +26,7 @@ export const Catalog = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [sortType, setSortType] = useState('name.en-US asc');
   const [searchResults, setSearchResults] = useState<IProductDetails[]>();
-  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({});
+  const [filterSettings, setFilterSettings] = useState<IFilters>({});
 
   const debouncedSearch = useDebounce((value: string) => {
     setDebouncedSearchQuery(value);
@@ -31,22 +34,34 @@ export const Catalog = () => {
 
   useEffect(() => {
     (async () => {
+      console.time('with deps');
+      console.log(filterSettings);
+
       const searchedProduct = (
-        await productAPI.getProductProjections({ searchText: debouncedSearchQuery })
+        await productAPI.getProductProjections(
+          {
+            ...filterSettings,
+            searchText: debouncedSearchQuery,
+          },
+          {
+            method: sortType.slice(0, sortType.indexOf(' ')) as SortMethod,
+            type: sortType.slice(sortType.indexOf(' ')) as SortType,
+          },
+        )
       ).results;
+      // console.log(searchedProduct);
       // const filteredProduct = await getFilteredProduct();
       // const product = searchedProduct.filter((sp) => filteredProduct.find((fp) => fp.id === sp.id));
 
-      const resultProduct: IProductDetails[] = [];
-      for (let i = 0; i < searchedProduct.length; i++) {
-        resultProduct.push(await fetchProductData(searchedProduct[i].id));
-      }
+      const resultProduct: Array<Promise<IProductDetails>> = [];
+      searchedProduct.forEach((product) => resultProduct.push(fetchProductData(product.id)));
 
-      setSearchResults(resultProduct);
-      console.log(resultProduct);
+      setSearchResults(await Promise.all(resultProduct));
+      console.timeEnd('with deps');
+      // console.log(await Promise.all(resultProduct));
     })();
 
-    console.log({ debouncedSearchQuery, sortType, filterSettings });
+    // console.log({ debouncedSearchQuery, sortType, filterSettings });
   }, [debouncedSearchQuery, sortType, filterSettings]);
 
   // const getFilteredProduct = async () => {
@@ -54,12 +69,16 @@ export const Catalog = () => {
   // };
 
   const handleSelectCategory = async (data: ICategory) => {
+    console.time('select category');
+
     const categoryProducts = (await productAPI.filter(data.id)).results;
-    const products: Array<Promise<IProductDetails>> = [];
-    for (let i = 0; i < categoryProducts.length; i++) {
-      products.push(fetchProductData(categoryProducts[i].id));
-    }
-    setSearchResults(await Promise.all(products));
+
+    const resultProduct: Array<Promise<IProductDetails>> = [];
+    categoryProducts.forEach((product) => resultProduct.push(fetchProductData(product.id)));
+
+    setSearchResults(await Promise.all(resultProduct));
+
+    console.timeEnd('select category');
   };
 
   const fetchProductData = async (id: string | undefined) => {

@@ -3,16 +3,17 @@ import React, { type FC, useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { FilterAccordion } from './FilterAccordion/FilterAccordion';
 import { type IFilterRangeSlider, type IFilterList } from './types';
+import { type IFilters } from 'types/types';
 
 // FETCH CATALOG DATA
 const filterGroups: IFilterList[] = [
   // CALC FILTER CATEGORIES
   {
-    title: 'Size',
-    list: ['S', 'M', 'L', 'XL'],
+    title: 'size',
+    list: ['XS', 'S', 'M', 'L', 'XL'],
   },
   {
-    title: 'Category',
+    title: 'category',
     list: [
       'Road Bikes',
       'Hybrid Bikes',
@@ -26,18 +27,29 @@ const filterGroups: IFilterList[] = [
     ],
   },
   {
-    title: 'Brand',
-    list: ['BMC', 'Burgtec', 'Cannondale', 'Castelli', 'Cervelo'],
+    title: 'brand',
+    list: [
+      'Cannondale',
+      'Specialized',
+      'Muddyfox',
+      'Trek',
+      'Cube',
+      'Pinnacle',
+      'GT',
+      'Cosmic',
+      'Raleigh',
+      'Brompton',
+    ],
   },
 ];
 
 const rangeSliders: IFilterRangeSlider[] = [
   // CALC FILTER PRICE RANGE
   {
-    title: 'Price',
+    title: 'price',
     rangeValues: {
-      minLimit: 3540,
-      maxLimit: 9870,
+      minLimit: 200,
+      maxLimit: 5000,
     },
   },
 ];
@@ -49,12 +61,12 @@ export type IFilterSettings = Record<
 
 interface IFilterProps {
   onHide: () => void;
-  onSearch: (data: IFilterSettings) => void;
+  onSearch: (data: IFilters) => void;
   isShows: boolean;
 }
 
 export const Filter: FC<IFilterProps> = ({ onHide, onSearch, isShows }) => {
-  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({});
+  const [filterSettings, setFilterSettings] = useState<IFilters>({});
 
   return (
     <div className={`catalog__filter filter ${isShows ? 'filter--show' : ''}`}>
@@ -68,7 +80,7 @@ export const Filter: FC<IFilterProps> = ({ onHide, onSearch, isShows }) => {
         <FilterAccordion
           rangeSliders={rangeSliders}
           controlGroups={filterGroups}
-          onChange={(data: IFilterSettings) => {
+          onChange={(data: IFilters) => {
             setFilterSettings(data);
           }}
           filterSettings={filterSettings}

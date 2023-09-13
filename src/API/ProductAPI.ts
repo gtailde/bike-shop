@@ -5,7 +5,7 @@ import type {
   ICategoryList,
   IProduct,
   IProductList,
-  IFilters,
+  IFiltersAPI,
   IFacetResult,
   ISort,
   IPerformRequestData,
@@ -66,7 +66,7 @@ class ProductAPI extends CommercetoolsAPI {
   }
 
   public async getProductProjections(
-    filters?: IFilters,
+    filters?: IFiltersAPI,
     sorting?: ISort,
     limit = 8,
     offset = 0,
@@ -74,7 +74,7 @@ class ProductAPI extends CommercetoolsAPI {
     try {
       const token = this.getToken();
       const paramsData: string[] = [];
-
+      console.log(filters);
       if (filters?.brand?.length) {
         const brandFilter = `filter=variants.attributes.Brand:${filters.brand
           .map((brand) => `"${brand}"`)
@@ -83,9 +83,9 @@ class ProductAPI extends CommercetoolsAPI {
       }
 
       if (filters?.price) {
-        const priceFilter = `filter=variants.price.centAmount:range(${filters.price.min ?? 0} to ${
-          filters.price.max ?? '*'
-        })`;
+        const priceFilter = `filter=variants.price.centAmount:range(${
+          filters.price.min ? filters.price.min * 100 : 0
+        } to ${filters.price.max ? filters.price.max * 100 : '*'})`;
         paramsData.push(priceFilter);
       }
 
@@ -96,8 +96,8 @@ class ProductAPI extends CommercetoolsAPI {
         paramsData.push(sizeFilter);
       }
 
-      if (filters?.categoryId?.length) {
-        const categoryFilter = `filter=categories.id:${filters.categoryId
+      if (filters?.category?.length) {
+        const categoryFilter = `filter=categories.id:${filters.category
           .map((id) => `subtree("${id}")`)
           .join(',')}`;
         paramsData.push(categoryFilter);

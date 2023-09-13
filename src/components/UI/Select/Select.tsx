@@ -10,8 +10,8 @@ export const Select: FC<ComponentProps<'select'>> = ({ className, ...props }) =>
         <option value="none" disabled>
           Sort by:
         </option>
-        {/* <option value="masterVariant.prices[0].value.centAmount">Price ↑</option>
-        <option value="masterVariant.prices[0].value.centAmount">Price ↓</option> */}
+        <option value="price asc">Price ↑</option>
+        <option value="price desc">Price ↓</option>
         <option value="name.en-US asc">Name ↑</option>
         <option value="name.en-US desc">Name ↓</option>
       </select>
