@@ -1,64 +1,111 @@
 import './style.scss';
 import React from 'react';
-import { type IContributor } from './types';
-import { Contributor } from './Contributor';
 import { Button } from 'components/UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
-import contributor1 from './assets/507159169e041129e1cfa2df02ca7083.png';
-import contributor2 from './assets/83f55be2ec7e698fc3859f58ddcaa02b.png';
-import contributor3 from './assets/daa12b4876966e09bda37bc5f5b28771.png';
+import { CONTRIBUTOR_LIST, TEAM_DESCRIPTION } from './const';
+import { ReactComponent as GithubIcon } from './assets/github-icon.svg';
 
-const contributorsList: IContributor[] = [
-  {
-    image: contributor1,
-    name: 'Lorem Ipsum',
-    role: 'Lorem Ipsum',
-    description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-    been the industr`,
-  },
-  {
-    image: contributor2,
-    name: 'Lorem Ipsum',
-    role: 'Lorem Ipsum',
-    description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-    been the industr`,
-  },
-  {
-    image: contributor3,
-    name: 'Lorem Ipsum',
-    role: 'Lorem Ipsum',
-    description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-    been the industr`,
-  },
-];
-
-export const About = () => {
+export const About = ({ mode }: { mode: 'short' | 'full' }) => {
   const navigate = useNavigate();
   const handleShowMore = () => {
     navigate(pagePathnames.about);
   };
 
-  return (
-    <section className="about">
-      <div className="about__container page-wrapper">
-        <h2 className="about__title">Our Team</h2>
-        <p className="about__description">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-          been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer
-          took a galley of type and scrambled it to make a type specimen book.
-        </p>
-        <ul className="about__contributors-list">
-          {contributorsList.map((data, index) => (
-            <li className="about__contributors-item" key={index}>
-              <Contributor {...data} />
-            </li>
-          ))}
-        </ul>
-        <Button accent onClick={handleShowMore}>
-          More about us
-        </Button>
-      </div>
-    </section>
-  );
+  switch (mode) {
+    case 'short':
+      return (
+        <section className="about-us about-us--short">
+          <div className="about-us__content page-wrapper">
+            <h2 className="about-us__title">Our Team</h2>
+            <ul className="about-us__contributors-list">
+              {CONTRIBUTOR_LIST.map(
+                ({ image, name, role, contribution, githubNickname, githubLink }, index) => (
+                  <li className="about-us__contributors-item" key={index}>
+                    <div className="contributor">
+                      <div className="contributor__image-container">
+                        <img className="contributor__image" src={image} alt="contributor" />
+                      </div>
+                      <p className="contributor__name">{name}</p>
+                      <p className="contributor__role">{role}</p>
+                      <ul className="contributor__contributions">
+                        {contribution.map((subitem, subindex) => (
+                          <li key={subindex} className="contributor__contribution">
+                            {subitem}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="contributor__github-overlay">
+                        <a href={githubLink} target="_blank">
+                          <GithubIcon />
+                          <span className="contributor__nickname">{githubNickname}</span>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                ),
+              )}
+            </ul>
+            <Button accent onClick={handleShowMore}>
+              More about us
+            </Button>
+          </div>
+        </section>
+      );
+    case 'full':
+      return (
+        <section className="about-us about-us--full">
+          <div className="about-us__content page-wrapper">
+            <h2 className="about-us__title">About us</h2>
+            <ul className="about-us__description-list">
+              {TEAM_DESCRIPTION.map(({ title, description, id }) => (
+                <li key={id} className="about-us__description-item">
+                  <h3 className="about-us__description-title">{title}</h3>
+                  <p className="about-us__description-text">{description}</p>
+                </li>
+              ))}
+            </ul>
+            <ul className="about-us__contributors">
+              {CONTRIBUTOR_LIST.map(
+                ({ image, name, role, contribution, bio, id, githubLink, githubNickname }) => (
+                  <li key={id} className="about-us__contributor">
+                    <div className="contributor">
+                      <div className="contributor__image-container">
+                        <img className="contributor__image" src={image} alt="person" />
+                      </div>
+                      <div className="contributor__description">
+                        <div className="contributor__heading">
+                          <p className="contributor__name">{name}</p>
+                          <p className="contributor__role">{role}</p>
+                        </div>
+                        <ul className="contributor__contributions">
+                          {contribution.map((subitem, subindex) => (
+                            <li key={subindex} className="contributor__contribution">
+                              {subitem}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="contributor__bio">
+                          {bio.map((subitem, subindex) => (
+                            <p key={subindex} className="contributor__bio-paragraph">
+                              {subitem}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="contributor__github-overlay">
+                        <a href={githubLink} target="_blank">
+                          <GithubIcon />
+                          <span className="contributor__nickname">{githubNickname}</span>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
+        </section>
+      );
+  }
 };

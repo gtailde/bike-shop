@@ -6,7 +6,7 @@ import { Main } from 'pages/main/Main';
 import { LoginPage } from 'pages/login/LoginPage';
 import { RegistrationPage } from 'pages/registration/Registration';
 import { Error } from 'pages/error/Error';
-import { About } from 'pages/about/About';
+import { AboutPage } from 'pages/about/AboutPage';
 import { CatalogPage } from 'pages/catalog/Catalog';
 import { UserProfilePage } from 'pages/user-profile/UserProfile';
 import { BasketPage } from 'pages/basket/BasketPage';
@@ -17,7 +17,7 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path={pagePathnames.main} element={<Main />} />
-      <Route path={pagePathnames.about} element={<About />} />
+      <Route path={pagePathnames.about} element={<AboutPage />} />
       <Route path={pagePathnames.catalog} element={<CatalogPage />} />
       <Route path={pagePathnames.product} element={<ProductDetailsPage />} />
       <Route

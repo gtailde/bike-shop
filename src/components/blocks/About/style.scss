@@ -1,21 +1,24 @@
-@use "../../../styles/mixins.scss" as *;
+@use '../../../styles/mixins.scss' as *;
 
-.about {
-  &__container {
+.about-us {
+  padding: 32px 0;
+
+  &__content {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  &--short &__content {
     gap: 16px;
-    padding: 32px 0;
+  }
+
+  &--full &__content {
+    gap: 24px;
   }
 
   &__title {
     @include font-title;
-  }
-
-  &__description {
-    max-width: 720px;
-    text-align: center;
   }
 
   &__contributors-list {
@@ -28,27 +31,182 @@
       grid-template-columns: repeat(3, auto);
     }
   }
+
+  &__contributors-item {
+    max-width: 320px;
+  }
+
+  &__description-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px 16px;
+    margin-bottom: 20px;
+
+    @media (min-width: 1200px) {
+      flex-direction: row;
+    }
+  }
+
+  &__description-item {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 33.33%;
+    gap: 12px;
+  }
+
+  &__description-title {
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+  }
+
+  &__contributors {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    @media (min-width: 1200px) {
+      align-items: stretch;
+      flex-direction: row;
+    }
+  }
+
+  &__contributor {
+    max-width: 450px;
+    flex-basis: 33.33%;
+  }
+
+  &--short {
+    .contributor {
+      gap: 8px;
+
+      &__image-container {
+        width: 128px;
+        height: 128px;
+      }
+
+      &__image {
+        transform: translate(-27%, -32%) scale(0.28);
+      }
+    }
+  }
+
+  &--full {
+    .contributor {
+      gap: 24px;
+
+      &__image-container {
+        width: 256px;
+        height: 256px;
+      }
+
+      &__image {
+        transform: translate(-5%, -15%) scale(0.55);
+      }
+    }
+  }
 }
 
 .contributor {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 12px 28px;
+  padding: 20px 16px;
+  height: 100%;
+  background-color: var(--main-color-4);
   border: 2px solid var(--accent-color-1-default);
   border-radius: 4px;
 
-  &__image {
-    margin-bottom: 16px;
-    width: 128px;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+  &__image-container {
+    background-color: var(--main-color-3);
+    border: 2px solid var(--accent-color-1-default);
     border-radius: 50%;
-    background-color: var(--accent-color-1-default)
+    overflow: hidden;
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
 
   &__name {
     @include font-text-accent;
+    color: var(--accent-color-1-default);
+  }
+
+  &__role {
+    color: var(--accent-color-1-default);
+  }
+
+  &__bio {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__contributions {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__contribution {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      background-color: var(--accent-color-1-default);
+    }
+  }
+
+  &__github-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.2s ease;
+    opacity: 0;
+
+    a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    svg {
+      width: 48px;
+      height: 48px;
+      fill: var(--accent-color-1-default);
+    }
+
+    span {
+      color: var(--accent-color-1-default);
+      text-decoration-style: none;
+    }
+  }
+
+  &:hover &__github-overlay {
+    opacity: 1;
   }
 }
