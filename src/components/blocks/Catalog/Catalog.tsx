@@ -16,6 +16,7 @@ import {
   type SortMethod,
   type SortType,
   type IFilters,
+  type IProduct,
 } from 'types/types';
 import productAPI from 'API/ProductAPI';
 
@@ -33,8 +34,6 @@ export const Catalog = () => {
 
   useEffect(() => {
     void (async () => {
-      console.time('with deps');
-
       const searchedProduct = (
         await productAPI.getProductProjections(
           {
@@ -48,25 +47,19 @@ export const Catalog = () => {
         )
       ).results;
 
-      const resultProduct: Array<Promise<IProductDetails>> = [];
-      searchedProduct.forEach((product) => resultProduct.push(fetchProductData(product.id)));
-
-      setSearchResults(await Promise.all(resultProduct));
-      console.timeEnd('with deps');
+      setSearchResults(await getDetailsFromReceivedProducts(searchedProduct));
     })();
   }, [debouncedSearchQuery, sortType, filterSettings]);
 
   const handleSelectCategory = async (data: ICategory) => {
-    console.time('select category');
-
     const categoryProducts = (await productAPI.filter(data.id)).results;
+    setSearchResults(await getDetailsFromReceivedProducts(categoryProducts));
+  };
 
+  const getDetailsFromReceivedProducts = async (receivedProduct: IProduct[]) => {
     const resultProduct: Array<Promise<IProductDetails>> = [];
-    categoryProducts.forEach((product) => resultProduct.push(fetchProductData(product.id)));
-
-    setSearchResults(await Promise.all(resultProduct));
-
-    console.timeEnd('select category');
+    receivedProduct.forEach((product) => resultProduct.push(fetchProductData(product.id)));
+    return await Promise.all(resultProduct);
   };
 
   const fetchProductData = async (id: string | undefined) => {
