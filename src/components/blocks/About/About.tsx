@@ -1,17 +1,11 @@
 import './style.scss';
 import React from 'react';
-import { Button } from 'components/UI/Button/Button';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { CONTRIBUTOR_LIST, TEAM_DESCRIPTION } from './const';
 import { ReactComponent as GithubIcon } from './assets/github-icon.svg';
 
 export const About = ({ mode }: { mode: 'short' | 'full' }) => {
-  const navigate = useNavigate();
-  const handleShowMore = () => {
-    navigate(pagePathnames.about);
-  };
-
   switch (mode) {
     case 'short':
       return (
@@ -46,9 +40,9 @@ export const About = ({ mode }: { mode: 'short' | 'full' }) => {
                 ),
               )}
             </ul>
-            <Button accent onClick={handleShowMore}>
+            <Link to={pagePathnames.about} className="link link--button-like link--accent">
               More about us
-            </Button>
+            </Link>
           </div>
         </section>
       );
