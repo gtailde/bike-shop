@@ -38,7 +38,10 @@ export const CONTRIBUTOR_LIST = [
     image: contributor1,
     name: 'Oleh',
     role: 'frontend-developer',
-    contribution: ['Develop Commercetools HTTP API custom integration solutions'],
+    contribution: [
+      'Develop Commercetools HTTP API custom integration solutions',
+      'Working with the repository and environment',
+    ],
     bio: [
       'Dmitry originally from a small city in north west of Russia. He went to study in the capital of the northwestern region.',
       'After graduation, he traveled around the country and settled in Yaroslavl. During this time, he fell in love with many things in digital art, such as digital illustration, 3D art, animation and motion design, and working on 2D-3D printing projects.',
