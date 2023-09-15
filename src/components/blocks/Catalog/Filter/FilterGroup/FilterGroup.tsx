@@ -2,19 +2,20 @@ import React, { type ComponentProps, forwardRef } from 'react';
 import { ControlLabel } from 'components/UI/ControlLabel/ControlLabel';
 import { RangeSlider } from '../RangeSlider/RangeSlider';
 import { ReactComponent as ArrowDownIcon } from './assets/arrow-down-icon.svg';
-import { type IFilterSettings } from '../Filter';
-import { type IFilterRangeSlider, type IFilterList } from '../types';
+import { type IFilterRangeSlider, type IFilterOption } from '../types';
+import { type IFilters } from 'types/types';
 
 export interface IFilterGroupProps extends Omit<ComponentProps<'div'>, 'onChange'> {
   title: string;
   rangeValues?: IFilterRangeSlider['rangeValues'];
-  list?: IFilterList['list'];
+  list?: IFilterOption['list'];
+  IDs?: string[]; // for categories IDs
   height?: number;
-  filterSettings: IFilterSettings;
+  filterSettings: IFilters;
   className?: string;
   isExpand?: boolean;
   onSelect?: () => void;
-  onChange: (data: IFilterSettings) => void;
+  onChange: (data: IFilters) => void;
 }
 
 export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
@@ -23,6 +24,7 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
       title,
       rangeValues,
       list,
+      IDs,
       height,
       filterSettings,
       className,
@@ -32,6 +34,23 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
     }: IFilterGroupProps,
     ref,
   ) => {
+    const onChangeCheckbox = (value: boolean, item: string) => {
+      const currentFilter = filterSettings[title as keyof Omit<IFilters, 'price'>] ?? [];
+      const filters = {
+        ...filterSettings,
+        [title]: currentFilter,
+      };
+
+      if (value) currentFilter?.push(item);
+      else
+        currentFilter?.splice(
+          currentFilter.findIndex((elem) => elem === item),
+          1,
+        );
+
+      onChange(filters);
+    };
+
     return (
       <div
         className={`${className ?? ''} ${isExpand ? 'filter__group--expanded' : ''} filter__group`}
@@ -48,23 +67,24 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
                 onChange={(value) => {
                   onChange({
                     ...filterSettings,
-                    [title]: { ...filterSettings?.[title], selectedValues: value },
+                    [title]: value,
                   });
                 }}
               />
             )}
             {list && (
               <ul className="filter__group-options-list group-options">
-                {list?.map((item) => (
+                {list?.map((item, index) => (
                   <li key={item} className="filter__group-options-item">
                     <ControlLabel
-                      checked={Boolean(filterSettings?.[title]?.[item])}
+                      checked={Boolean(
+                        filterSettings?.[title as keyof Omit<IFilters, 'price'>]?.find(
+                          (elem) => elem === (IDs?.[index] ?? item),
+                        ),
+                      )}
                       label={item}
                       onChange={(value) => {
-                        onChange({
-                          ...filterSettings,
-                          [title]: { ...filterSettings?.[title], [item]: value },
-                        });
+                        onChangeCheckbox(value, IDs?.[index] ?? item);
                       }}
                     />
                   </li>

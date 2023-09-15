@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import './style.scss';
 import React, { useEffect, useState } from 'react';
 import { ProductCard } from './ProductCard/ProductCard';
-import { Filter, type IFilterSettings } from './Filter/Filter';
+import { Filter } from './Filter/Filter';
 import { TextField } from 'components/UI/TextField/TextField';
 import { Select } from 'components/UI/Select/Select';
 import { Button } from 'components/UI/Button/Button';
@@ -14,6 +13,10 @@ import {
   type IProductVariant,
   type IProductDetails,
   type ICategory,
+  type SortMethod,
+  type SortType,
+  type IFilters,
+  type IProduct,
 } from 'types/types';
 import productAPI from 'API/ProductAPI';
 
@@ -23,43 +26,40 @@ export const Catalog = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [sortType, setSortType] = useState('name.en-US asc');
   const [searchResults, setSearchResults] = useState<IProductDetails[]>();
-  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({});
+  const [filterSettings, setFilterSettings] = useState<IFilters>({});
 
   const debouncedSearch = useDebounce((value: string) => {
     setDebouncedSearchQuery(value);
   }, 500);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const searchedProduct = (
-        await productAPI.getProductProjections({ searchText: debouncedSearchQuery })
+        await productAPI.getProductProjections(
+          {
+            ...filterSettings,
+            searchText: debouncedSearchQuery,
+          },
+          {
+            method: sortType.slice(0, sortType.indexOf(' ')) as SortMethod,
+            type: sortType.slice(sortType.indexOf(' ')) as SortType,
+          },
+        )
       ).results;
-      // const filteredProduct = await getFilteredProduct();
-      // const product = searchedProduct.filter((sp) => filteredProduct.find((fp) => fp.id === sp.id));
 
-      const resultProduct: IProductDetails[] = [];
-      for (let i = 0; i < searchedProduct.length; i++) {
-        resultProduct.push(await fetchProductData(searchedProduct[i].id));
-      }
-
-      setSearchResults(resultProduct);
-      console.log(resultProduct);
+      setSearchResults(await getDetailsFromReceivedProducts(searchedProduct));
     })();
-
-    console.log({ debouncedSearchQuery, sortType, filterSettings });
   }, [debouncedSearchQuery, sortType, filterSettings]);
-
-  // const getFilteredProduct = async () => {
-  //   return await productAPI.getProductProjections({ brand: '', color: '' }, sortType);
-  // };
 
   const handleSelectCategory = async (data: ICategory) => {
     const categoryProducts = (await productAPI.filter(data.id)).results;
-    const products: Array<Promise<IProductDetails>> = [];
-    for (let i = 0; i < categoryProducts.length; i++) {
-      products.push(fetchProductData(categoryProducts[i].id));
-    }
-    setSearchResults(await Promise.all(products));
+    setSearchResults(await getDetailsFromReceivedProducts(categoryProducts));
+  };
+
+  const getDetailsFromReceivedProducts = async (receivedProduct: IProduct[]) => {
+    const resultProduct: Array<Promise<IProductDetails>> = [];
+    receivedProduct.forEach((product) => resultProduct.push(fetchProductData(product.id)));
+    return await Promise.all(resultProduct);
   };
 
   const fetchProductData = async (id: string | undefined) => {
@@ -151,7 +151,6 @@ export const Catalog = () => {
             className="catalog__select-field"
             value={sortType}
             onChange={(evt) => {
-              console.log(evt.target.value);
               setSortType(evt.target.value);
             }}
           />

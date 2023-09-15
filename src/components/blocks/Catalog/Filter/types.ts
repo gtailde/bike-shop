@@ -1,6 +1,7 @@
-export interface IFilterList {
+export interface IFilterOption {
   title: string;
   list?: string[];
+  IDs?: string[];
 }
 
 export interface IFilterRangeSlider {

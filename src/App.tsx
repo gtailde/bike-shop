@@ -8,14 +8,12 @@ import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
-    <React.StrictMode>
-      <BrowserRouter>
-        <Header />
-        <AppRouter />
-        <ToastContainer autoClose={2000} hideProgressBar />
-        <Footer />
-      </BrowserRouter>
-    </React.StrictMode>
+    <BrowserRouter>
+      <Header />
+      <AppRouter />
+      <ToastContainer autoClose={2000} hideProgressBar />
+      <Footer />
+    </BrowserRouter>
   );
 }
 

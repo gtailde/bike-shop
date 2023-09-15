@@ -1,13 +1,13 @@
 import React, { type FC, useEffect, useRef, useState } from 'react';
-import { type IFilterSettings } from '../Filter';
 import { FilterGroup } from '../FilterGroup/FilterGroup';
-import { type IFilterRangeSlider, type IFilterList } from '../types';
+import { type IFilterRangeSlider, type IFilterOption } from '../types';
+import { type IFilters } from 'types/types';
 
 interface IFilterGroupProps {
   rangeSliders: IFilterRangeSlider[];
-  controlGroups: IFilterList[];
-  filterSettings: IFilterSettings;
-  onChange: (data: IFilterSettings) => void;
+  controlGroups: IFilterOption[];
+  filterSettings: IFilters;
+  onChange: (data: IFilters) => void;
 }
 
 export const FilterAccordion: FC<IFilterGroupProps> = ({
