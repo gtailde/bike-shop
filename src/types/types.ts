@@ -184,20 +184,17 @@ export interface IProductDetails {
 
 export interface IProductPrice {
   id: string;
-  value: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
-  };
+  value: ICentPrecisionMoney;
   discounted: {
-    value: {
-      type: string;
-      currencyCode: string;
-      centAmount: number;
-      fractionDigits: number;
-    };
+    value: ICentPrecisionMoney;
   };
+}
+
+export interface ICentPrecisionMoney {
+  type: string;
+  currencyCode: string;
+  centAmount: number;
+  fractionDigits: number;
 }
 
 export interface IProductImage {

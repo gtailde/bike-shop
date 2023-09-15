@@ -8,6 +8,7 @@
     display: flex;
     flex-direction: column;
     gap: 28px;
+    height: 100%;
   }
 
   &__title {
@@ -27,6 +28,29 @@
 
   &__checkout-button {
     align-self: center;
+  }
+
+  &__empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    margin: auto;
+
+    &-title {
+      @include font-text-accent;
+      color: var(--accent-color-1-default);
+    }
+
+    &-text {
+      text-align: center;
+    }
+
+    &-image {
+      width: 200px;
+      fill: var(--accent-color-1-default);
+      stroke: var(--accent-color-1-default);
+    }
   }
 }
 
