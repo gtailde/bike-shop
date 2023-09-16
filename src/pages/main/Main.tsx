@@ -14,7 +14,7 @@ export const Main = () => {
       <HeroSection />
       <FirstBuyOffer />
       <Promo />
-      <About />
+      <About mode="short" />
     </main>
   );
 };
