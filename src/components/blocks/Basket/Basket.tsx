@@ -158,18 +158,20 @@ export const Basket = () => {
               </Button>
             </div>
             <table className="order-summary__total">
-              <tr>
-                <td>Sub Total</td>
-                <td>$? ???.??</td>
-              </tr>
-              <tr>
-                <td>Discount</td>
-                <td>$???.??</td>
-              </tr>
-              <tr>
-                <td>Total</td>
-                <td>{getPriceFromCentAmount(cart.totalPrice, transformPriceText)}</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>Sub Total</td>
+                  <td>$? ???.??</td>
+                </tr>
+                <tr>
+                  <td>Discount</td>
+                  <td>$???.??</td>
+                </tr>
+                <tr>
+                  <td>Total</td>
+                  <td>{getPriceFromCentAmount(cart.totalPrice, transformPriceText)}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
           <Button onClick={() => handleCheckout()} accent className="cart__checkout-button">
