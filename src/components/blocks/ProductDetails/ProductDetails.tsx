@@ -9,7 +9,7 @@ import { Counter } from 'components/UI/Counter/Counter';
 import productAPI from 'API/ProductAPI';
 import { type IProductVariantData, type IProductVariant } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
-import { transformPriceText } from '../Catalog/ProductCard/helpers';
+import { transformPriceText } from '../../../helpers/formatText';
 
 interface IProductDetails {
   name: string;
@@ -104,6 +104,11 @@ export const ProductDetails = () => {
     };
   };
 
+  const handleChangeQuantity = (count: number) => {
+    console.log('change item quantity');
+    console.log('quantity: ', count);
+  };
+
   return (
     productData && (
       <section className="product-details">
@@ -128,7 +133,11 @@ export const ProductDetails = () => {
               <ProductDetailsOption key={`${option.title}_${index}`} data={option} />
             ))}
             <div className="product-details__basket-controls">
-              <Counter accent className="product-details__counter" />
+              <Counter
+                onChangeValue={handleChangeQuantity}
+                accent
+                className="product-details__counter"
+              />
               <Button accent>Add to Basket</Button>
             </div>
           </div>
