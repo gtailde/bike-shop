@@ -116,8 +116,8 @@ export const Catalog = () => {
     };
 
     const getSpecification = (obj: IProductVariantData) => {
-      const srecObj = object.masterVariant.attributes.find((att) => att.name === 'Specification');
-      return srecObj ? (typeof srecObj.value === 'string' ? srecObj.value : '') : '';
+      const specObj = object.masterVariant.attributes.find((att) => att.name === 'Specification');
+      return specObj ? (typeof specObj.value === 'string' ? specObj.value : '') : '';
     };
 
     const getOptions = (productVariants: IProductVariant[]) => {
