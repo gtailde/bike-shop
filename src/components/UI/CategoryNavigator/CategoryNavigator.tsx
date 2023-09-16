@@ -4,6 +4,7 @@ import { type ICategory } from 'types/types';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { CategorySlider } from '../CategorySlider/CategorySlider';
 import productAPI from 'API/ProductAPI';
+import { type CategoryName } from 'components/blocks/Catalog/Filter/types';
 
 const ROOT: ICategory = {
   id: 'd25845ae-547e-4f77-9637-bd16255bf874',
@@ -37,10 +38,16 @@ const ROOT: ICategory = {
   assets: [''],
 };
 
-export const CategoryNavigator = ({ onSelect }: { onSelect: (data: ICategory) => void }) => {
+export const CategoryNavigator = ({
+  onSelect,
+}: {
+  onSelect: (data: ICategory, categoryName?: CategoryName) => void;
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<ICategory>(ROOT);
   const [fetchedCategoryList, setFetchedCategoryList] = useState<ICategory[]>([]);
   const [subcategoryList, setSubcategoryList] = useState<ICategory[]>([]);
+  const [categoryName, setCategoryName] = useState<CategoryName>();
+
   useEffect(() => {
     void fetchCategoryList();
   }, []);
@@ -52,6 +59,14 @@ export const CategoryNavigator = ({ onSelect }: { onSelect: (data: ICategory) =>
     if (hasChildren) {
       const subcategories = getSubcategoryList(selectedCategory);
       setSubcategoryList(subcategories);
+      const parentCategoryName = selectedCategory.slug['en-US'];
+      setCategoryName(
+        parentCategoryName === 'bikes'
+          ? 'category'
+          : parentCategoryName === 'brand'
+          ? parentCategoryName
+          : undefined,
+      );
     }
   }, [fetchedCategoryList, selectedCategory]);
 
@@ -81,7 +96,7 @@ export const CategoryNavigator = ({ onSelect }: { onSelect: (data: ICategory) =>
   };
 
   const handleSelectCategory = async (category: ICategory) => {
-    onSelect(category);
+    onSelect(category, categoryName);
     setSelectedCategory(category);
   };
 

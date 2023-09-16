@@ -67,3 +67,8 @@
     margin: 20vh auto;
   }
 }
+
+.infinite-scroll-component__outerdiv,
+.infinite-scroll-component {
+  display: contents;
+}
