@@ -1,3 +1,4 @@
+import { number } from 'yup';
 //  customer
 
 export interface ICustomer {
@@ -254,6 +255,7 @@ export interface IAccessToken {
   scope: string;
   token_type: string;
   refresh_token?: string;
+  anonymous_id?: string;
 }
 
 export interface ITokenData {
@@ -282,13 +284,27 @@ export interface IProductList extends IList {
 
 // cart
 
+interface IAction {
+  action?: string;
+  quantity?: number;
+  variantId?: number;
+  lineItemId?: string;
+  productId?: string;
+}
+
 export interface IRequestData {
-  body?: Record<string, string | number>;
+  body?:
+    | Record<string, string | number>
+    | {
+        version: number;
+        actions: IAction[];
+      }
+    | { reference: { id: string; typeId: string } };
   queryParams?: string;
 }
 
-export interface ICart {
-  type: string;
+// Определение общих полей
+export interface ICartCommonFields {
   id: string;
   version: number;
   versionModifiedAt: string;
@@ -297,8 +313,59 @@ export interface ICart {
   lastModifiedAt: string;
   lastModifiedBy: IClientInfo;
   createdBy: IClientInfo;
-  anonymousId: string;
-  lineItems: string[]; // Заменить 'string'
+}
+
+export interface ILineItem extends ICartCommonFields {
+  addedAt: string;
+  discountedPricePerQuantity: string[]; // Заменить 'string'
+  lineItemMode: string;
+  name: Record<string, string>;
+  perMethodTaxRate: string[]; // Заменить 'string'
+  price: {
+    id: string;
+    value: {
+      type: string;
+      currencyCode: string;
+      centAmount: number;
+      fractionDigits: number;
+    };
+    discounted: string[]; // Заменить 'string'
+  };
+  priceMode: string;
+  productId: string;
+  productKey: string;
+  productSlug: Record<string, string>;
+  productType: {
+    typeId: string;
+    id: string;
+    version: number;
+  };
+  quantity: number;
+  state: string[]; // Заменить 'string'
+  taxedPricePortions: string[]; // Заменить 'string'
+  totalPrice: {
+    type: string;
+    currencyCode: string;
+    centAmount: number;
+    fractionDigits: number;
+  };
+  variant: {
+    assets: string[]; // Заменить 'string'
+    attributes: string[]; // Заменить 'string'
+    availability: {
+      availableQuantity: number;
+      id: string;
+      isOnStock: boolean;
+      version: number;
+    };
+  };
+  sku: string;
+}
+
+export interface ICart extends ICartCommonFields {
+  anonymousId?: string;
+  customerId?: string;
+  lineItems: ILineItem[];
   cartState: string;
   totalPrice: {
     type: string;
@@ -319,8 +386,5 @@ export interface ICart {
   refusedGifts: string[]; // Заменить 'string'
   origin: string;
   itemShippingAddresses: string[]; // Заменить 'string'
-}
-
-export interface ICartList extends IList {
-  results: ICart[];
+  store: IStore;
 }

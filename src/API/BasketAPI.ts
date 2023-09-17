@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import type { ICart, ICartList, IRequestData } from 'types/types';
+import type { ICart, IErrorResponse, IRequestData } from 'types/types';
 
 class BasketAPI extends CommercetoolsAPI {
   private async performRequest(
     endpoint: string,
     request: 'get' | 'post' | 'delete',
     requestData?: IRequestData,
-  ): Promise<ICart | ICartList> {
+  ): Promise<ICart | IErrorResponse> {
     try {
       const token = this.getToken();
-      let url = `${this.apiUrl}/${this.projectKey}/me/${endpoint}`;
+      let url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me/${endpoint}`;
       const headers = this.getTokenHeaders(token.access_token);
 
       let response;
@@ -24,52 +24,93 @@ class BasketAPI extends CommercetoolsAPI {
       } else if (request === 'delete') {
         response = await axios.delete(url, { headers });
       }
+
       return response?.data;
     } catch (error) {
-      console.error('An unexpected error occurred:', error);
-      throw new Error(`Error fetching ${endpoint} data`);
+      return this.handleError(error, `Failed ${endpoint} request`);
     }
   }
 
   public async getActiveCart(): Promise<ICart> {
-    return (await this.performRequest('active-cart', 'get')) as ICart;
-  }
-
-  public async createCart(): Promise<ICart> {
-    return (await this.performRequest('carts', 'post', { body: { currency: 'USD' } })) as ICart;
-  }
-
-  public async deleteCart(cartIdent?: string, type?: 'id' | 'key'): Promise<ICart> {
-    let cartI: string, cartV: number, typeI: string;
-    if (cartIdent && type) {
-      const getCart = await this.getCart(cartIdent, type);
-      [cartI, cartV, typeI] = [getCart.id, getCart.version, 'id'];
-    } else {
-      const getMyCart = (await this.performRequest('active-cart', 'get')) as ICart;
-      [cartI, cartV, typeI] = [getMyCart.id, getMyCart.version, 'id'];
+    let activeCart = await this.performRequest('active-cart', 'get');
+    if (!('id' in activeCart)) {
+      activeCart = await this.createCart();
     }
-
-    return (await this.performRequest(
-      `carts/${typeI === 'id' ? cartI : `key=${cartI}`}`,
-      'delete',
-      {
-        queryParams: `version=${cartV}`,
-      },
-    )) as ICart;
+    return activeCart as ICart;
   }
 
-  // public async updateCart(): Promise<void> {}
-
-  public async getCarts(limit = 20, offset = 0): Promise<ICartList> {
-    const queryParams = `limit=${limit}&offset=${offset}`;
-    return (await this.performRequest(`carts`, 'get', { queryParams })) as ICartList;
+  private async createCart(): Promise<ICart | IErrorResponse> {
+    return await this.performRequest('carts', 'post', { body: { currency: 'USD' } });
   }
 
-  public async getCart(cartIdent: string, type: 'id' | 'key'): Promise<ICart> {
-    return (await this.performRequest(
-      `carts/${type === 'id' ? `${cartIdent}` : `key=${cartIdent}`}`,
-      'get',
-    )) as ICart;
+  public async clearCart(): Promise<ICart | IErrorResponse> {
+    const getActiveCart = await this.getActiveCart();
+    const [cartI, cartV] = [getActiveCart.id, getActiveCart.version];
+    await this.performRequest(`carts/${cartI}`, 'delete', {
+      queryParams: `version=${cartV}`,
+    });
+    return await this.getActiveCart();
+  }
+
+  public async addToCart(
+    productId: string,
+    variantId: number,
+    quantity: number,
+  ): Promise<ICart | IErrorResponse> {
+    const getActiveCart = await this.getActiveCart();
+    const [cartI, cartV] = [getActiveCart.id, getActiveCart.version];
+
+    const body = {
+      version: cartV,
+      actions: [
+        {
+          action: 'addLineItem',
+          productId,
+          variantId,
+          quantity,
+        },
+      ],
+    };
+
+    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+  }
+
+  public async changeQuantity(
+    lineItemId: string,
+    quantity: number,
+  ): Promise<ICart | IErrorResponse> {
+    const getActiveCart = await this.getActiveCart();
+    const [cartI, cartV] = [getActiveCart.id, getActiveCart.version];
+
+    const body = {
+      version: cartV,
+      actions: [
+        {
+          action: 'changeLineItemQuantity',
+          lineItemId,
+          quantity,
+        },
+      ],
+    };
+
+    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+  }
+
+  public async removefromCart(lineItemId: string): Promise<ICart | IErrorResponse> {
+    const getActiveCart = await this.getActiveCart();
+    const [cartI, cartV] = [getActiveCart.id, getActiveCart.version];
+
+    const body = {
+      version: cartV,
+      actions: [
+        {
+          action: 'removeLineItem',
+          lineItemId,
+        },
+      ],
+    };
+
+    return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
 }
 
