@@ -112,6 +112,60 @@ class BasketAPI extends CommercetoolsAPI {
 
     return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
+
+  public async recalculate(): Promise<ICart | IErrorResponse> {
+    const getActiveCart = await this.getActiveCart();
+    const [cartI, cartV] = [getActiveCart.id, getActiveCart.version];
+
+    const body = {
+      version: cartV,
+      actions: [
+        {
+          action: 'recalculate',
+          updateProductData: true,
+        },
+      ],
+    };
+
+    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+  }
+
+  public async addDiscountCode(code: string): Promise<ICart | IErrorResponse> {
+    const getActiveCart = await this.getActiveCart();
+    const [cartI, cartV] = [getActiveCart.id, getActiveCart.version];
+
+    const body = {
+      version: cartV,
+      actions: [
+        {
+          action: 'addDiscountCode',
+          code,
+        },
+      ],
+    };
+
+    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+  }
+
+  public async removeDiscountCode(codeId: string): Promise<ICart | IErrorResponse> {
+    const getActiveCart = await this.getActiveCart();
+    const [cartI, cartV] = [getActiveCart.id, getActiveCart.version];
+
+    const body = {
+      version: cartV,
+      actions: [
+        {
+          action: 'removeDiscountCode',
+          discountCode: {
+            typeId: 'discount-code',
+            id: codeId,
+          },
+        },
+      ],
+    };
+
+    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+  }
 }
 
 const basketAPI = new BasketAPI();

@@ -283,6 +283,12 @@ export interface IProductList extends IList {
 
 // cart
 
+interface IDiscountCode {
+  id: string;
+  typeId: string;
+  state: string;
+}
+
 interface IAction {
   action?: string;
   quantity?: number;
@@ -302,7 +308,6 @@ export interface IRequestData {
   queryParams?: string;
 }
 
-// Определение общих полей
 export interface ICartCommonFields {
   id: string;
   version: number;
@@ -375,7 +380,7 @@ export interface ICart extends ICartCommonFields {
   shippingMode: string;
   shipping: string[]; // Заменить 'string'
   customLineItems: string[]; // Заменить 'string'
-  discountCodes: string[]; // Заменить 'string'
+  discountCodes: IDiscountCode[];
   directDiscounts: string[]; // Заменить 'string'
   inventoryMode: string;
   taxMode: string;
