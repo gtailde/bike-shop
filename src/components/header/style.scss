@@ -24,6 +24,11 @@
   &__link {
     text-decoration: none;
     color: var(--main-color-2-default);
+
+    &--active {
+      text-decoration: underline var(--accent-color-1-default) 2px;
+      text-underline-offset: 0.3em;
+    }
   }
 
   &__user-navigation {

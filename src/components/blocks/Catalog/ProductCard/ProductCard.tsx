@@ -4,7 +4,7 @@ import { Button } from 'components/UI/Button/Button';
 import { ReactComponent as CartIcon } from './assets/basket.svg';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
-import { transformPriceText } from './helpers';
+import { transformPriceText } from '../../../../helpers/formatText';
 import { type IProductDetails } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
 
