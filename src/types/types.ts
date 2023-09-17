@@ -279,3 +279,48 @@ export interface ICategoryList extends IList {
 export interface IProductList extends IList {
   results: IProduct[];
 }
+
+// cart
+
+export interface IRequestData {
+  body?: Record<string, string | number>;
+  queryParams?: string;
+}
+
+export interface ICart {
+  type: string;
+  id: string;
+  version: number;
+  versionModifiedAt: string;
+  lastMessageSequenceNumber: number;
+  createdAt: string;
+  lastModifiedAt: string;
+  lastModifiedBy: IClientInfo;
+  createdBy: IClientInfo;
+  anonymousId: string;
+  lineItems: string[]; // Заменить 'string'
+  cartState: string;
+  totalPrice: {
+    type: string;
+    currencyCode: string;
+    centAmount: number;
+    fractionDigits: number;
+  };
+  shippingMode: string;
+  shipping: string[]; // Заменить 'string'
+  customLineItems: string[]; // Заменить 'string'
+  discountCodes: string[]; // Заменить 'string'
+  directDiscounts: string[]; // Заменить 'string'
+  inventoryMode: string;
+  taxMode: string;
+  taxRoundingMode: string;
+  taxCalculationMode: string;
+  deleteDaysAfterLastModification: number;
+  refusedGifts: string[]; // Заменить 'string'
+  origin: string;
+  itemShippingAddresses: string[]; // Заменить 'string'
+}
+
+export interface ICartList extends IList {
+  results: ICart[];
+}
