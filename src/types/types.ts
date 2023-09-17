@@ -1,4 +1,3 @@
-import { number } from 'yup';
 //  customer
 
 export interface ICustomer {

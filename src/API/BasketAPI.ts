@@ -49,7 +49,7 @@ class BasketAPI extends CommercetoolsAPI {
     await this.performRequest(`carts/${cartI}`, 'delete', {
       queryParams: `version=${cartV}`,
     });
-    return await this.getActiveCart();
+    return await this.createCart();
   }
 
   public async addToCart(
