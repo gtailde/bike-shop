@@ -223,6 +223,7 @@ export const Catalog = () => {
           next={fetchProduct}
           hasMore={pageNumber < totalPages}
           loader={<h4>Loading...</h4>}
+          className="catalog__infinite-scroll-wrapper"
         >
           <div className="catalog__product-list">
             {loadedProduct?.map((item, index) => <ProductCard key={index} {...item} />)}
