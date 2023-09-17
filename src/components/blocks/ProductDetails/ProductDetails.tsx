@@ -32,7 +32,7 @@ export const ProductDetails = () => {
 
   const fetchProductData = async (id: string | undefined) => {
     if (id) {
-      const result = await productAPI.getProduct(id);
+      const result = await productAPI.getProduct(id, 'id');
       const productDetailObject = await getProductDetails(result.masterData.current);
       console.log(productDetailObject);
       setProductData(productDetailObject);
@@ -46,7 +46,7 @@ export const ProductDetails = () => {
 
     const getCategoryNames = async (obj: IProductVariantData) => {
       const fetchedCategories = obj.categories.map(
-        async (category) => await productAPI.getCategory(category.id),
+        async (category) => await productAPI.getCategory(category.id, 'id'),
       );
       const categories = await Promise.all(fetchedCategories);
       return categories.map((category) => category.name['en-US']).reverse();

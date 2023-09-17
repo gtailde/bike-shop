@@ -31,7 +31,9 @@ export const Catalog = () => {
 
   useEffect(() => {
     (async () => {
-      const searchedProduct = (await productAPI.searchProduct(debouncedSearchQuery)).results;
+      const searchedProduct = (
+        await productAPI.getProductProjections({ searchText: debouncedSearchQuery })
+      ).results;
       // const filteredProduct = await getFilteredProduct();
       // const product = searchedProduct.filter((sp) => filteredProduct.find((fp) => fp.id === sp.id));
 
@@ -61,7 +63,7 @@ export const Catalog = () => {
   };
 
   const fetchProductData = async (id: string | undefined) => {
-    const result = await productAPI.getProduct(id ?? '');
+    const result = await productAPI.getProduct(id ?? '', 'id');
     return await getProductDetails(result.masterData.current, result.id);
   };
 
@@ -70,7 +72,7 @@ export const Catalog = () => {
 
     const getCategoryNames = async (obj: IProductVariantData) => {
       const fetchedCategories = obj.categories.map(
-        async (category) => await productAPI.getCategory(category.id),
+        async (category) => await productAPI.getCategory(category.id, 'id'),
       );
       const categories = await Promise.all(fetchedCategories);
       return categories.map((category) => category.name['en-US']).reverse();
