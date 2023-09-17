@@ -22,3 +22,5 @@ export interface IProductData {
   oldPrice: number;
   newPrice: number;
 }
+
+export type CategoryName = 'brand' | 'category';

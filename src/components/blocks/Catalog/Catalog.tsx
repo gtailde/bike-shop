@@ -19,13 +19,18 @@ import {
   type IProduct,
 } from 'types/types';
 import productAPI from 'API/ProductAPI';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { type CategoryName } from './Filter/types';
 
 export const Catalog = () => {
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages] = useState(3);
+  const [productLoadLimit] = useState(8);
   const [isFilterShows, setIsFilterShows] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [sortType, setSortType] = useState('name.en-US asc');
-  const [searchResults, setSearchResults] = useState<IProductDetails[]>();
+  const [loadedProduct, setLoadedProduct] = useState<IProductDetails[]>([]);
   const [filterSettings, setFilterSettings] = useState<IFilters>({});
 
   const debouncedSearch = useDebounce((value: string) => {
@@ -34,26 +39,58 @@ export const Catalog = () => {
 
   useEffect(() => {
     void (async () => {
-      const searchedProduct = (
-        await productAPI.getProductProjections(
-          {
-            ...filterSettings,
-            searchText: debouncedSearchQuery,
-          },
-          {
-            method: sortType.slice(0, sortType.indexOf(' ')) as SortMethod,
-            type: sortType.slice(sortType.indexOf(' ')) as SortType,
-          },
-        )
-      ).results;
-
-      setSearchResults(await getDetailsFromReceivedProducts(searchedProduct));
+      const requestOptions = getRequestOptions(productLoadLimit * pageNumber);
+      const fetchedProduct = await getProduct(requestOptions);
+      setLoadedProduct(fetchedProduct);
     })();
   }, [debouncedSearchQuery, sortType, filterSettings]);
 
-  const handleSelectCategory = async (data: ICategory) => {
-    const categoryProducts = (await productAPI.filter(data.id)).results;
-    setSearchResults(await getDetailsFromReceivedProducts(categoryProducts));
+  const getRequestOptions = (limit = productLoadLimit, offset = 0) => {
+    const requestOptions: Parameters<typeof productAPI.getProductProjections> = [
+      {
+        ...filterSettings,
+        searchText: debouncedSearchQuery,
+      },
+      {
+        method: sortType.slice(0, sortType.indexOf(' ')) as SortMethod,
+        type: sortType.slice(sortType.indexOf(' ')) as SortType,
+      },
+      limit,
+      offset,
+    ];
+    return requestOptions;
+  };
+
+  const getProduct = async (
+    requestOptions = getRequestOptions(productLoadLimit, productLoadLimit * pageNumber),
+  ) => {
+    const searchedProduct = await getDetailsFromReceivedProducts(
+      (await productAPI.getProductProjections(...requestOptions)).results,
+    );
+    setLoadedProduct([...loadedProduct, ...searchedProduct]);
+    return searchedProduct;
+  };
+
+  const fetchProduct = async () => {
+    const searchedProduct = await getProduct();
+    setLoadedProduct([...loadedProduct, ...searchedProduct]);
+    setPageNumber(pageNumber + 1);
+  };
+
+  const handleSelectCategory = async (data: ICategory, categoryName?: CategoryName) => {
+    if (
+      categoryName &&
+      data.name['en-US'] !== 'Shop' &&
+      data.name['en-US'] !== 'Bikes' &&
+      data.name['en-US'] !== 'Brands'
+    ) {
+      setFilterSettings({
+        [categoryName]: [categoryName === 'brand' ? data.name['en-US'] : data.id],
+      });
+    } else {
+      setFilterSettings({});
+    }
+    setPageNumber(1);
   };
 
   const getDetailsFromReceivedProducts = async (receivedProduct: IProduct[]) => {
@@ -79,8 +116,8 @@ export const Catalog = () => {
     };
 
     const getSpecification = (obj: IProductVariantData) => {
-      const srecObj = object.masterVariant.attributes.find((att) => att.name === 'Specification');
-      return srecObj ? (typeof srecObj.value === 'string' ? srecObj.value : '') : '';
+      const specObj = object.masterVariant.attributes.find((att) => att.name === 'Specification');
+      return specObj ? (typeof specObj.value === 'string' ? specObj.value : '') : '';
     };
 
     const getOptions = (productVariants: IProductVariant[]) => {
@@ -165,8 +202,8 @@ export const Catalog = () => {
           </Button>
         </div>
         <CategoryNavigator
-          onSelect={async (data) => {
-            await handleSelectCategory(data);
+          onSelect={async (data, categoryName?: CategoryName) => {
+            await handleSelectCategory(data, categoryName);
           }}
         />
         {
@@ -175,18 +212,23 @@ export const Catalog = () => {
               setIsFilterShows(!isFilterShows);
             }}
             onSearch={(settings) => {
+              setPageNumber(1);
               setFilterSettings(settings);
             }}
             isShows={isFilterShows}
           />
         }
-        <div className="catalog__product-list">
-          {searchResults ? (
-            searchResults.map((item, index) => <ProductCard key={index} {...item} />)
-          ) : (
-            <div className="catalog__loading">Loading...</div>
-          )}
-        </div>
+        <InfiniteScroll
+          dataLength={loadedProduct.length}
+          next={fetchProduct}
+          hasMore={pageNumber < totalPages}
+          loader={<h4>Loading...</h4>}
+          className="catalog__infinite-scroll-wrapper"
+        >
+          <div className="catalog__product-list">
+            {loadedProduct?.map((item, index) => <ProductCard key={index} {...item} />)}
+          </div>
+        </InfiniteScroll>
       </div>
     </section>
   );

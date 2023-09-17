@@ -34,7 +34,6 @@ export const ProductDetails = () => {
     if (id) {
       const result = await productAPI.getProduct(id);
       const productDetailObject = await getProductDetails(result.masterData.current);
-      console.log(productDetailObject);
       setProductData(productDetailObject);
     } else {
       throw Error('product data not fetched');
@@ -53,8 +52,8 @@ export const ProductDetails = () => {
     };
 
     const getSpecification = (obj: IProductVariantData) => {
-      const srecObj = object.masterVariant.attributes.find((att) => att.name === 'Specification');
-      return srecObj ? (typeof srecObj.value === 'string' ? srecObj.value : '') : '';
+      const specObj = object.masterVariant.attributes.find((att) => att.name === 'Specification');
+      return specObj ? (typeof specObj.value === 'string' ? specObj.value : '') : '';
     };
 
     const getOptions = (productVariants: IProductVariant[]) => {
@@ -117,7 +116,7 @@ export const ProductDetails = () => {
             params.id ?? ''
           }`}</div>
           <h2 className="product-details__title visually-hidden">Product-details</h2>
-          <ProductSlider images={[productData.titleImage, ...productData.images]} />
+          <ProductSlider images={[...productData.images]} />
           <div className="product-details__options">
             <p className="product-details__headline">
               <span className="product-details__name">{productData.name}</span>
