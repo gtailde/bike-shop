@@ -21,6 +21,7 @@ class ProductAPI extends CommercetoolsAPI {
       const token = this.getToken();
       let url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
       if (requestData?.id) url += `/${String(requestData.id)}`;
+      if (requestData?.key) url += `/key=${String(requestData.key)}`;
       if (requestData?.limit)
         url += `?limit=${String(requestData?.limit)}&offset=${String(requestData?.offset ?? 0)}`;
       const headers = this.getTokenHeaders(token.access_token);
@@ -58,12 +59,12 @@ class ProductAPI extends CommercetoolsAPI {
     return (await this.performGetRequest('products', { limit, offset })) as IProductList;
   }
 
-  public async getCategory(CategoryId: string): Promise<ICategory> {
-    return (await this.performGetRequest('categories', { id: CategoryId })) as ICategory;
+  public async getCategory(CategoryIdent: string, type: 'id' | 'key'): Promise<ICategory> {
+    return (await this.performGetRequest('categories', { [type]: CategoryIdent })) as ICategory;
   }
 
-  public async getProduct(ProductId: string): Promise<IProduct> {
-    return (await this.performGetRequest('products', { id: ProductId })) as IProduct;
+  public async getProduct(ProductId: string, type: 'id' | 'key'): Promise<IProduct> {
+    return (await this.performGetRequest('products', { [type]: ProductId })) as IProduct;
   }
 
   public async getProductProjections(
