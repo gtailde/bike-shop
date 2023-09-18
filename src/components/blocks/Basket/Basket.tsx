@@ -95,9 +95,7 @@ export const Basket = () => {
                       </div>
                       <div className="cart-product-card__description-column">
                         <div className="cart-product-card__text">
-                          <h3 className="cart-product-card__name">
-                            {JSON.stringify(lineItem.name)}
-                          </h3>
+                          <h3 className="cart-product-card__name">{lineItem.name['en-US']}</h3>
                           <dl className="cart-product-card__product-options">
                             {options.map((option) => (
                               <span
