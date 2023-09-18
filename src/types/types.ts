@@ -324,6 +324,10 @@ export interface ICartCommonFields {
 export interface ILineItem extends ICartCommonFields {
   addedAt: string;
   discountedPricePerQuantity: string[]; // Заменить 'string'
+  discountedPrice: {
+    includedDiscounts?: Array<{ discountedAmount: ICentPrecisionMoney }>;
+    value: ICentPrecisionMoney;
+  };
   lineItemMode: string;
   name: Record<string, string>;
   perMethodTaxRate: string[]; // Заменить 'string'
