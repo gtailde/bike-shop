@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import type { ICart, IErrorResponse, IRequestData } from 'types/types';
+import type { ICart, IRequestData } from 'types/types';
+import { errorNotify } from 'Notifiers';
 
 class BasketAPI extends CommercetoolsAPI {
   private async performRequest(
     endpoint: string,
     request: 'get' | 'post' | 'delete',
     requestData?: IRequestData,
-  ): Promise<ICart | IErrorResponse> {
+  ): Promise<ICart | null> {
     try {
       const token = this.getToken();
       let url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me/${endpoint}`;
@@ -27,23 +28,26 @@ class BasketAPI extends CommercetoolsAPI {
 
       return response?.data;
     } catch (error) {
-      return this.handleError(error, `Failed ${endpoint} request`);
+      errorNotify(
+        `Something went wrong: ${this.handleError(error, `Failed ${endpoint} request`).message}`,
+      );
+      return null;
     }
   }
 
   public async getActiveCart(): Promise<ICart> {
     let activeCart = await this.performRequest('active-cart', 'get');
-    if (!('id' in activeCart)) {
+    if (!activeCart) {
       activeCart = await this.createCart();
     }
     return activeCart as ICart;
   }
 
-  private async createCart(): Promise<ICart | IErrorResponse> {
+  private async createCart(): Promise<ICart | null> {
     return await this.performRequest('carts', 'post', { body: { currency: 'USD' } });
   }
 
-  public async clearCart(): Promise<ICart | IErrorResponse> {
+  public async clearCart(): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
     await this.performRequest(`carts/${cartI}`, 'delete', {
@@ -56,7 +60,7 @@ class BasketAPI extends CommercetoolsAPI {
     productId: string,
     variantId: number,
     quantity: number,
-  ): Promise<ICart | IErrorResponse> {
+  ): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
 
@@ -75,10 +79,7 @@ class BasketAPI extends CommercetoolsAPI {
     return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
 
-  public async changeQuantity(
-    lineItemId: string,
-    quantity: number,
-  ): Promise<ICart | IErrorResponse> {
+  public async changeQuantity(lineItemId: string, quantity: number): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
 
@@ -96,7 +97,7 @@ class BasketAPI extends CommercetoolsAPI {
     return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
 
-  public async removefromCart(lineItemId: string): Promise<ICart | IErrorResponse> {
+  public async removefromCart(lineItemId: string): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
 
@@ -113,7 +114,7 @@ class BasketAPI extends CommercetoolsAPI {
     return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
 
-  public async recalculate(): Promise<ICart | IErrorResponse> {
+  public async recalculate(): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
 
@@ -130,7 +131,7 @@ class BasketAPI extends CommercetoolsAPI {
     return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
 
-  public async addDiscountCode(code: string): Promise<ICart | IErrorResponse> {
+  public async addDiscountCode(code: string): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
 
@@ -147,7 +148,7 @@ class BasketAPI extends CommercetoolsAPI {
     return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
 
-  public async removeDiscountCode(codeId: string): Promise<ICart | IErrorResponse> {
+  public async removeDiscountCode(codeId: string): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
 
