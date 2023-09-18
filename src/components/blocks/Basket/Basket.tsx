@@ -20,8 +20,9 @@ export const Basket = () => {
     (cart?.lineItems.length && cart.lineItems.length < 1) || !cart?.lineItems.length;
   const OPTIONS_TO_SHOW = ['Size', 'Color'];
 
-  const handleClearCart = () => {
-    console.log('clear cart');
+  const handleClearCart = async () => {
+    const newCart = await basketAPI.clearCart();
+    if (newCart && setCart) setCart(newCart);
   };
 
   const handleChangeQuantity = async (itemId: string, quantity: number) => {
@@ -123,7 +124,7 @@ export const Basket = () => {
                         </p>
                         <Counter
                           initValue={lineItem.quantity}
-                          onChangeValue={handleChangeQuantity.bind(null, lineItem.id)}
+                          onChangeValue={handleChangeQuantity.bind(null, lineItem.id)} // !!!FIX
                           className="cart-product-card__counter"
                         />
                         <p className="cart-product-card__total-price">
