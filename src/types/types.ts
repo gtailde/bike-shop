@@ -324,6 +324,10 @@ export interface ICartCommonFields {
 export interface ILineItem extends ICartCommonFields {
   addedAt: string;
   discountedPricePerQuantity: string[]; // Заменить 'string'
+  discountedPrice: {
+    includedDiscounts?: Array<{ discountedAmount: ICentPrecisionMoney }>;
+    value: ICentPrecisionMoney;
+  };
   lineItemMode: string;
   name: Record<string, string>;
   perMethodTaxRate: string[]; // Заменить 'string'
@@ -335,7 +339,10 @@ export interface ILineItem extends ICartCommonFields {
       centAmount: number;
       fractionDigits: number;
     };
-    discounted: string[]; // Заменить 'string'
+    discounted: {
+      discount: { id: string; typeId: string };
+      value: ICentPrecisionMoney;
+    };
   };
   priceMode: string;
   productId: string;
@@ -349,15 +356,10 @@ export interface ILineItem extends ICartCommonFields {
   quantity: number;
   state: string[]; // Заменить 'string'
   taxedPricePortions: string[]; // Заменить 'string'
-  totalPrice: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
-  };
+  totalPrice: ICentPrecisionMoney;
   variant: {
     assets: string[]; // Заменить 'string'
-    attributes: string[]; // Заменить 'string'
+    attributes: IProductAttribute[];
     availability: {
       availableQuantity: number;
       id: string;

@@ -1,38 +1,43 @@
 import './style.scss';
+import React, { useContext, useRef } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { TextField } from 'components/UI/TextField/TextField';
 import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
-import React, { useRef, useState } from 'react';
-
 import img1 from './assets/mock_photo-1.png';
 import { ReactComponent as BagIcon } from './assets/bag-icon.svg';
 import { Counter } from 'components/UI/Counter/Counter';
 import { pagePathnames } from 'router/pagePathnames';
 import { Link } from 'react-router-dom';
-import { type cartMock, cartMock as mock } from './mock';
-import { getPriceFromCentAmount } from './helpers';
+import { getPriceFromCentAmount, getSubtotal, getTotalCartDiscountAmount } from './helpers';
 import { transformPriceText } from 'helpers/formatText';
+import basketAPI from 'API/BasketAPI';
+import { UserContext } from 'App';
 
 export const Basket = () => {
-  const [cart, setCart] = useState<typeof cartMock>(mock);
+  const { cart, setCart } = useContext(UserContext);
   const couponField = useRef<HTMLInputElement>(null);
-  const isCartEmpty = cart?.lineItems.length === 1;
+  const isCartEmpty =
+    (cart?.lineItems.length && cart.lineItems.length < 1) || !cart?.lineItems.length;
   const OPTIONS_TO_SHOW = ['Size', 'Color'];
 
-  const handleClearCart = () => {
-    console.log('clear cart');
+  const handleClearCart = async () => {
+    const newCart = await basketAPI.clearCart();
+    if (newCart) setCart?.(newCart);
   };
 
-  const handleChangeQuantity = (itemId: string, count: number) => {
-    console.log(`change item [${itemId}] quantity to ${count}`);
+  const handleChangeQuantity = async (itemId: string, quantity: number) => {
+    const newCart = await basketAPI.changeQuantity(itemId, quantity);
+    if (newCart) setCart?.(newCart);
   };
 
-  const handleDeleteItem = (itemId: string) => {
-    console.log(`delete item [${itemId}]`);
+  const handleDeleteItem = async (itemId: string) => {
+    const newCart = await basketAPI.removefromCart(itemId);
+    if (newCart) setCart?.(newCart);
   };
 
-  const handleApplyCoupon = (value: string) => {
-    console.log(`check coupon value: "${value}"`);
+  const handleApplyCoupon = async (value: string) => {
+    const newCart = await basketAPI.addDiscountCode(value);
+    if (newCart) setCart?.(newCart);
   };
 
   const handleCheckout = () => {
@@ -59,7 +64,7 @@ export const Basket = () => {
       </section>
     );
   } else {
-    const totalItemsCount = cart.lineItems.reduce((acc, lineItem) => acc + lineItem.quantity, 0);
+    const totalItemsCount = cart?.lineItems.reduce((acc, lineItem) => acc + lineItem.quantity, 0);
 
     return (
       <section className="cart">
@@ -91,9 +96,7 @@ export const Basket = () => {
                       </div>
                       <div className="cart-product-card__description-column">
                         <div className="cart-product-card__text">
-                          <h3 className="cart-product-card__name">
-                            {JSON.stringify(lineItem.name)}
-                          </h3>
+                          <h3 className="cart-product-card__name">{lineItem.name['en-US']}</h3>
                           <dl className="cart-product-card__product-options">
                             {options.map((option) => (
                               <span
@@ -107,24 +110,27 @@ export const Basket = () => {
                           </dl>
                         </div>
                         <p className="cart-product-card__price">
+                          <span className="cart-product-card__discount-price">
+                            {getPriceFromCentAmount(
+                              lineItem.price.discounted.value,
+                              transformPriceText,
+                            )}
+                          </span>
                           <span className="cart-product-card__base-price">
                             {getPriceFromCentAmount(lineItem.price.value, transformPriceText)}
                             <span className="cart-product-card__count"> x {lineItem.quantity}</span>
                           </span>
-                          <span className="cart-product-card__discount-price">
-                            {JSON.stringify(lineItem.discountedPricePerQuantity)}
-                          </span>
                         </p>
                         <Counter
                           initValue={lineItem.quantity}
-                          onChangeValue={handleChangeQuantity.bind(null, lineItem.id)}
+                          onChangeValue={handleChangeQuantity.bind(null, lineItem.id)} // !!!FIX
                           className="cart-product-card__counter"
                         />
                         <p className="cart-product-card__total-price">
                           {getPriceFromCentAmount(lineItem.totalPrice, transformPriceText)}
                         </p>
                         <Button
-                          onClick={() => handleDeleteItem(lineItem.id)}
+                          onClick={async () => await handleDeleteItem(lineItem.id)}
                           className="cart-product-card__delete-button button--icon-only"
                           aria-label="Delete"
                         >
@@ -161,15 +167,19 @@ export const Basket = () => {
               <tbody>
                 <tr>
                   <td>Sub Total</td>
-                  <td>$? ???.??</td>
+                  <td>${transformPriceText(getSubtotal(cart))}</td>
                 </tr>
                 <tr>
                   <td>Discount</td>
-                  <td>$???.??</td>
+                  <td>${transformPriceText(getTotalCartDiscountAmount(cart))}</td>
                 </tr>
                 <tr>
                   <td>Total</td>
-                  <td>{getPriceFromCentAmount(cart.totalPrice, transformPriceText)}</td>
+                  <td>
+                    {cart?.totalPrice
+                      ? getPriceFromCentAmount(cart.totalPrice, transformPriceText)
+                      : ''}
+                  </td>
                 </tr>
               </tbody>
             </table>

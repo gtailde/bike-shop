@@ -127,8 +127,6 @@
     }
   }
 
-
-
   &__total-price {
     grid-row: 2;
 
@@ -138,7 +136,7 @@
   }
 
   &__discount-price {
-    display: none;
+    display: inline-block;
   }
 
   &__name {
@@ -149,7 +147,7 @@
 
     display: -webkit-box;
     -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical; 
+    -webkit-box-orient: vertical;
 
     @media (min-width: 768px) {
       gap: 24px;
@@ -182,12 +180,11 @@
     flex-direction: column;
   }
 
-  &__discount-price {
+  &__base-price {
     color: var(--main-color-2-shadow-1);
     text-decoration: line-through;
-
-    @media (min-width: 768px) {
-      display: inline-block;
+    @media (max-width: 767px) {
+      display: none;
     }
   }
 

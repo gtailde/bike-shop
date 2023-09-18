@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { useParams } from 'react-router-dom';
 import { ProductDetailsOption } from './ProductDetailsOption';
@@ -10,6 +10,8 @@ import productAPI from 'API/ProductAPI';
 import { type IProductVariantData, type IProductVariant } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
 import { transformPriceText } from '../../../helpers/formatText';
+import basketAPI from 'API/BasketAPI';
+import { UserContext } from 'App';
 
 interface IProductDetails {
   name: string;
@@ -24,7 +26,9 @@ interface IProductDetails {
 }
 
 export const ProductDetails = () => {
+  const { setCart } = useContext(UserContext);
   const [productData, setProductData] = useState<IProductDetails>();
+  const [productQuantity, setProductQuantity] = useState(1);
   const params = useParams();
   useEffect(() => {
     void fetchProductData(params.id);
@@ -103,9 +107,9 @@ export const ProductDetails = () => {
     };
   };
 
-  const handleChangeQuantity = (count: number) => {
-    console.log('change item quantity');
-    console.log('quantity: ', count);
+  const handleAddItemToCart = async () => {
+    const newCart = await basketAPI.addToCart(params.id ?? '', 1, productQuantity);
+    if (newCart) setCart?.(newCart);
   };
 
   return (
@@ -133,11 +137,13 @@ export const ProductDetails = () => {
             ))}
             <div className="product-details__basket-controls">
               <Counter
-                onChangeValue={handleChangeQuantity}
+                onChangeValue={(quantity: number) => setProductQuantity(quantity)}
                 accent
                 className="product-details__counter"
               />
-              <Button accent>Add to Basket</Button>
+              <Button accent onClick={handleAddItemToCart}>
+                Add to Basket
+              </Button>
             </div>
           </div>
           <Accordion
