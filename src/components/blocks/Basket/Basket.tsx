@@ -16,7 +16,8 @@ import { UserContext } from 'App';
 export const Basket = () => {
   const { cart, setCart } = useContext(UserContext);
   const couponField = useRef<HTMLInputElement>(null);
-  const isCartEmpty = cart?.lineItems.length === 1;
+  const isCartEmpty =
+    (cart?.lineItems.length && cart.lineItems.length < 1) || !cart?.lineItems.length;
   const OPTIONS_TO_SHOW = ['Size', 'Color'];
 
   const handleClearCart = () => {
@@ -28,8 +29,9 @@ export const Basket = () => {
     if (newCart && setCart) setCart(newCart);
   };
 
-  const handleDeleteItem = (itemId: string) => {
-    console.log(`delete item [${itemId}]`);
+  const handleDeleteItem = async (itemId: string) => {
+    const newCart = await basketAPI.removefromCart(itemId);
+    if (newCart && setCart) setCart(newCart);
   };
 
   const handleApplyCoupon = (value: string) => {
@@ -128,7 +130,7 @@ export const Basket = () => {
                           {getPriceFromCentAmount(lineItem.totalPrice, transformPriceText)}
                         </p>
                         <Button
-                          onClick={() => handleDeleteItem(lineItem.id)}
+                          onClick={async () => await handleDeleteItem(lineItem.id)}
                           className="cart-product-card__delete-button button--icon-only"
                           aria-label="Delete"
                         >
