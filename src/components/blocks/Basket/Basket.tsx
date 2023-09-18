@@ -8,7 +8,7 @@ import { ReactComponent as BagIcon } from './assets/bag-icon.svg';
 import { Counter } from 'components/UI/Counter/Counter';
 import { pagePathnames } from 'router/pagePathnames';
 import { Link } from 'react-router-dom';
-import { getPriceFromCentAmount } from './helpers';
+import { getPriceFromCentAmount, getSubtotal, getTotalCartDiscountAmount } from './helpers';
 import { transformPriceText } from 'helpers/formatText';
 import basketAPI from 'API/BasketAPI';
 import { UserContext } from 'App';
@@ -35,8 +35,9 @@ export const Basket = () => {
     if (newCart) setCart?.(newCart);
   };
 
-  const handleApplyCoupon = (value: string) => {
-    console.log(`check coupon value: "${value}"`);
+  const handleApplyCoupon = async (value: string) => {
+    const newCart = await basketAPI.addDiscountCode(value);
+    if (newCart) setCart?.(newCart);
   };
 
   const handleCheckout = () => {
@@ -168,11 +169,11 @@ export const Basket = () => {
               <tbody>
                 <tr>
                   <td>Sub Total</td>
-                  <td>$? ???.??</td>
+                  <td>${transformPriceText(getSubtotal(cart))}</td>
                 </tr>
                 <tr>
                   <td>Discount</td>
-                  <td>$???.??</td>
+                  <td>${transformPriceText(getTotalCartDiscountAmount(cart))}</td>
                 </tr>
                 <tr>
                   <td>Total</td>
