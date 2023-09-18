@@ -15,7 +15,7 @@ export const TEAM_DESCRIPTION = [
     id: 2,
     title: `Team member's contributions`,
     description: `Based on the React / TS / SASS technology stack, we started implementing a digital
-    commerce service project. Oleg (@gtailde) took on all the work with the platform
+    commerce service project. Oleh (@gtailde) took on all the work with the platform
     API. Dmitry (@Firebrand-RS) concentrated on design, content and building
     components. Rodion (@Radzivonn) worked on the integration of created components
     and services, routing and validation.`,
@@ -43,10 +43,8 @@ export const CONTRIBUTOR_LIST = [
       'Working with the repository and environment',
     ],
     bio: [
-      'Dmitry originally from a small city in north west of Russia. He went to study in the capital of the northwestern region.',
-      'After graduation, he traveled around the country and settled in Yaroslavl. During this time, he fell in love with many things in digital art, such as digital illustration, 3D art, animation and motion design, and working on 2D-3D printing projects.',
-      'Dmitry working as a technologist in an advertising agency. Build the printing process in production and cooperate with designers.',
-      'Now he also writes scripts for Photoshop and is getting ready to look for a job as a web developer.',
+      'Oleh is a 19-year-old student in his second year at the faculty of economics. He developed an interest in programming approximately a year ago, starting his journey with the Python programming language.',
+      'Currently, he is actively expanding his knowledge by learning JavaScript. Oleh has ambitious plans for the future, as he aspires to bring his creative ideas to life and establish a successful career as a developer.',
     ],
     githubNickname: '@gtailde',
     githubLink: 'https://github.com/gtailde',
@@ -63,10 +61,8 @@ export const CONTRIBUTOR_LIST = [
       'Build React components, component interaction, user interaction',
     ],
     bio: [
-      'Dmitry originally from a small city in north west of Russia. He went to study in the capital of the northwestern region.',
-      'After graduation, he traveled around the country and settled in Yaroslavl. During this time, he fell in love with many things in digital art, such as digital illustration, 3D art, animation and motion design, and working on 2D-3D printing projects.',
-      'Dmitry working as a technologist in an advertising agency. Build the printing process in production and cooperate with designers.',
-      'Now he also writes scripts for Photoshop and is getting ready to look for a job as a web developer.',
+      'Rodion is an Electrical Engineering major at LMN College. He has a strong background in coding and programming and has worked on coding projects.',
+      'He aims to be at the forefront of technology advancement and is determined to contribute her skills to the development of web technology.',
     ],
     githubNickname: '@Radzivonn',
     githubLink: 'https://github.com/Radzivonn',
@@ -83,9 +79,8 @@ export const CONTRIBUTOR_LIST = [
       'Build React components, component interaction, user interaction',
     ],
     bio: [
-      'Dmitry originally from a small city in north west of Russia. He went to study in the capital of the northwestern region.',
-      'After graduation, he traveled around the country and settled in Yaroslavl. During this time, he fell in love with many things in digital art, such as digital illustration, 3D art, animation and motion design, and working on 2D-3D printing projects.',
-      'Dmitry working as a technologist in an advertising agency. Build the printing process in production and cooperate with designers.',
+      'After graduating, Dmitry traveled around the country. During this time, he fell in love with many things in digital art, such as digital illustration, 3D art, animation and motion design, and working on 2D-3D printing projects.',
+      'He works as a technologist in an advertising agency. Build the printing process in production and cooperate with designers.',
       'Now he also writes scripts for Photoshop and is getting ready to look for a job as a web developer.',
     ],
     githubNickname: '@Firebrand-RS',
