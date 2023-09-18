@@ -47,7 +47,6 @@ export interface IBaseAddress {
 
 // product
 
-
 export interface IFiltersAPI {
   brand?: string[];
   size?: string[];
@@ -58,7 +57,6 @@ export interface IFiltersAPI {
   };
   searchText?: string;
 }
-
 
 export type IFilters = Omit<IFiltersAPI, 'searchText'>;
 
