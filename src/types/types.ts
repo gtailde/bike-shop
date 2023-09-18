@@ -366,6 +366,7 @@ export interface ILineItem extends ICartCommonFields {
       isOnStock: boolean;
       version: number;
     };
+    images: Array<{ url: string }>;
   };
   sku: string;
 }

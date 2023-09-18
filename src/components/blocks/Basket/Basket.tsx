@@ -3,7 +3,7 @@ import React, { useContext, useRef } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { TextField } from 'components/UI/TextField/TextField';
 import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
-import img1 from './assets/mock_photo-1.png';
+import noImagePlaceholder from './assets/no-image-placeholder.png';
 import { ReactComponent as BagIcon } from './assets/bag-icon.svg';
 import { Counter } from 'components/UI/Counter/Counter';
 import { pagePathnames } from 'router/pagePathnames';
@@ -92,7 +92,7 @@ export const Basket = () => {
                   <li key={lineItem.id} className="cart__product-item">
                     <div className="cart__cart-product-card cart-product-card">
                       <div className="cart-product-card__image-column">
-                        <img src={img1} alt="" />
+                        <img src={lineItem.variant.images[0]?.url ?? noImagePlaceholder} alt="" />
                       </div>
                       <div className="cart-product-card__description-column">
                         <div className="cart-product-card__text">
