@@ -1,9 +1,8 @@
 import './style.scss';
+import React, { useContext, useRef } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { TextField } from 'components/UI/TextField/TextField';
 import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
-import React, { useContext, useRef } from 'react';
-
 import img1 from './assets/mock_photo-1.png';
 import { ReactComponent as BagIcon } from './assets/bag-icon.svg';
 import { Counter } from 'components/UI/Counter/Counter';
@@ -23,8 +22,8 @@ export const Basket = () => {
     console.log('clear cart');
   };
 
-  const handleChangeQuantity = (itemId: string, count: number) => {
-    console.log(`change item [${itemId}] quantity to ${count}`);
+  const handleChangeQuantity = async (itemId: string, quantity: number) => {
+    console.log(`change item [${itemId}] quantity to ${quantity}`);
   };
 
   const handleDeleteItem = (itemId: string) => {
@@ -107,12 +106,15 @@ export const Basket = () => {
                           </dl>
                         </div>
                         <p className="cart-product-card__price">
+                          <span className="cart-product-card__discount-price">
+                            {getPriceFromCentAmount(
+                              lineItem.price.discounted.value,
+                              transformPriceText,
+                            )}
+                          </span>
                           <span className="cart-product-card__base-price">
                             {getPriceFromCentAmount(lineItem.price.value, transformPriceText)}
                             <span className="cart-product-card__count"> x {lineItem.quantity}</span>
-                          </span>
-                          <span className="cart-product-card__discount-price">
-                            {JSON.stringify(lineItem.discountedPricePerQuantity)}
                           </span>
                         </p>
                         <Counter

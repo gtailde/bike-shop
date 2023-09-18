@@ -335,7 +335,10 @@ export interface ILineItem extends ICartCommonFields {
       centAmount: number;
       fractionDigits: number;
     };
-    discounted: string[]; // Заменить 'string'
+    discounted: {
+      discount: { id: string; typeId: string };
+      value: ICentPrecisionMoney;
+    };
   };
   priceMode: string;
   productId: string;
