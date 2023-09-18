@@ -10,10 +10,11 @@ import { pagePathnames } from 'router/pagePathnames';
 import { Link } from 'react-router-dom';
 import { getPriceFromCentAmount } from './helpers';
 import { transformPriceText } from 'helpers/formatText';
+import basketAPI from 'API/BasketAPI';
 import { UserContext } from 'App';
 
 export const Basket = () => {
-  const { cart } = useContext(UserContext);
+  const { cart, setCart } = useContext(UserContext);
   const couponField = useRef<HTMLInputElement>(null);
   const isCartEmpty = cart?.lineItems.length === 1;
   const OPTIONS_TO_SHOW = ['Size', 'Color'];
@@ -23,7 +24,8 @@ export const Basket = () => {
   };
 
   const handleChangeQuantity = async (itemId: string, quantity: number) => {
-    console.log(`change item [${itemId}] quantity to ${quantity}`);
+    const newCart = await basketAPI.changeQuantity(itemId, quantity);
+    if (newCart && setCart) setCart(newCart);
   };
 
   const handleDeleteItem = (itemId: string) => {
