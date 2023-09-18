@@ -349,15 +349,10 @@ export interface ILineItem extends ICartCommonFields {
   quantity: number;
   state: string[]; // Заменить 'string'
   taxedPricePortions: string[]; // Заменить 'string'
-  totalPrice: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
-  };
+  totalPrice: ICentPrecisionMoney;
   variant: {
     assets: string[]; // Заменить 'string'
-    attributes: string[]; // Заменить 'string'
+    attributes: IProductAttribute[];
     availability: {
       availableQuantity: number;
       id: string;

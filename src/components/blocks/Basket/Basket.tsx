@@ -2,19 +2,19 @@ import './style.scss';
 import { Button } from 'components/UI/Button/Button';
 import { TextField } from 'components/UI/TextField/TextField';
 import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 
 import img1 from './assets/mock_photo-1.png';
 import { ReactComponent as BagIcon } from './assets/bag-icon.svg';
 import { Counter } from 'components/UI/Counter/Counter';
 import { pagePathnames } from 'router/pagePathnames';
 import { Link } from 'react-router-dom';
-import { type cartMock, cartMock as mock } from './mock';
 import { getPriceFromCentAmount } from './helpers';
 import { transformPriceText } from 'helpers/formatText';
+import { UserContext } from 'App';
 
 export const Basket = () => {
-  const [cart, setCart] = useState<typeof cartMock>(mock);
+  const { cart } = useContext(UserContext);
   const couponField = useRef<HTMLInputElement>(null);
   const isCartEmpty = cart?.lineItems.length === 1;
   const OPTIONS_TO_SHOW = ['Size', 'Color'];
@@ -59,7 +59,7 @@ export const Basket = () => {
       </section>
     );
   } else {
-    const totalItemsCount = cart.lineItems.reduce((acc, lineItem) => acc + lineItem.quantity, 0);
+    const totalItemsCount = cart?.lineItems.reduce((acc, lineItem) => acc + lineItem.quantity, 0);
 
     return (
       <section className="cart">
@@ -169,7 +169,11 @@ export const Basket = () => {
                 </tr>
                 <tr>
                   <td>Total</td>
-                  <td>{getPriceFromCentAmount(cart.totalPrice, transformPriceText)}</td>
+                  <td>
+                    {cart?.totalPrice
+                      ? getPriceFromCentAmount(cart.totalPrice, transformPriceText)
+                      : ''}
+                  </td>
                 </tr>
               </tbody>
             </table>
