@@ -22,17 +22,17 @@ export const Basket = () => {
 
   const handleClearCart = async () => {
     const newCart = await basketAPI.clearCart();
-    if (newCart && setCart) setCart(newCart);
+    if (newCart) setCart?.(newCart);
   };
 
   const handleChangeQuantity = async (itemId: string, quantity: number) => {
     const newCart = await basketAPI.changeQuantity(itemId, quantity);
-    if (newCart && setCart) setCart(newCart);
+    if (newCart) setCart?.(newCart);
   };
 
   const handleDeleteItem = async (itemId: string) => {
     const newCart = await basketAPI.removefromCart(itemId);
-    if (newCart && setCart) setCart(newCart);
+    if (newCart) setCart?.(newCart);
   };
 
   const handleApplyCoupon = (value: string) => {

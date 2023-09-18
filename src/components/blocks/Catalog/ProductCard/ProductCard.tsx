@@ -51,8 +51,8 @@ export const ProductCard = ({
           className="product-card__cart-button button--w-icon"
           onClick={async (evt) => {
             evt.stopPropagation();
-            await basketAPI.addToCart(id, 1, 1);
-            setCart?.(await basketAPI.getActiveCart());
+            const newCart = await basketAPI.addToCart(id, 1, 1);
+            if (newCart) setCart?.(newCart);
           }}
         >
           <CartIcon />
