@@ -1,6 +1,7 @@
-export interface IFilterList {
+export interface IFilterOption {
   title: string;
   list?: string[];
+  IDs?: string[];
 }
 
 export interface IFilterRangeSlider {
@@ -21,3 +22,5 @@ export interface IProductData {
   oldPrice: number;
   newPrice: number;
 }
+
+export type CategoryName = 'brand' | 'category';

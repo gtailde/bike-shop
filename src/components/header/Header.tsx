@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './style.scss';
 import { ReactComponent as UserIcon } from './assets/user-icon.svg';
 import { ReactComponent as BasketIcon } from './assets/basket.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
 import { NavPopup } from 'components/popup/NavPopup';
 import { Logo } from 'components/UI/Logo/Logo';
@@ -48,12 +48,26 @@ export const Header = () => {
           <Link to={pagePathnames.main}>
             <Logo className="page-header__logo"></Logo>
           </Link>
-          <Link to={pagePathnames.catalog} className="link page-header__link">
+          <NavLink
+            to={pagePathnames.catalog}
+            className={({ isActive }) =>
+              isActive
+                ? 'link page-header__link page-header__link--active'
+                : 'link page-header__link'
+            }
+          >
             shop
-          </Link>
-          <Link to={pagePathnames.about} className="link page-header__link">
+          </NavLink>
+          <NavLink
+            to={pagePathnames.about}
+            className={({ isActive }) =>
+              isActive
+                ? 'link page-header__link page-header__link--active'
+                : 'link page-header__link'
+            }
+          >
             about
-          </Link>
+          </NavLink>
         </nav>
         <div className="page-header__user-navigation">
           <span className="page-header__user-navigation-item user" onClick={openPopup}>

@@ -47,10 +47,11 @@ export interface IBaseAddress {
 
 // product
 
-export interface IFilters {
+
+export interface IFiltersAPI {
   brand?: string[];
   size?: string[];
-  categoryId?: string[];
+  category?: string[];
   price?: {
     min?: number;
     max?: number;
@@ -58,9 +59,15 @@ export interface IFilters {
   searchText?: string;
 }
 
+
+export type IFilters = Omit<IFiltersAPI, 'searchText'>;
+
+export type SortMethod = 'price' | 'name.en-US';
+export type SortType = 'asc' | 'desc';
+
 export interface ISort {
-  method?: 'price' | 'name.en-US';
-  type?: 'asc' | 'desc';
+  method?: SortMethod;
+  type?: SortType;
 }
 
 export interface IPerformRequestData {
@@ -180,20 +187,17 @@ export interface IProductDetails {
 
 export interface IProductPrice {
   id: string;
-  value: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
-  };
+  value: ICentPrecisionMoney;
   discounted: {
-    value: {
-      type: string;
-      currencyCode: string;
-      centAmount: number;
-      fractionDigits: number;
-    };
+    value: ICentPrecisionMoney;
   };
+}
+
+export interface ICentPrecisionMoney {
+  type: string;
+  currencyCode: string;
+  centAmount: number;
+  fractionDigits: number;
 }
 
 export interface IProductImage {

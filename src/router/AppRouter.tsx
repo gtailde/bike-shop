@@ -6,10 +6,10 @@ import { Main } from 'pages/main/Main';
 import { LoginPage } from 'pages/login/LoginPage';
 import { RegistrationPage } from 'pages/registration/Registration';
 import { Error } from 'pages/error/Error';
-import { About } from 'pages/about/About';
+import { AboutPage } from 'pages/about/AboutPage';
 import { CatalogPage } from 'pages/catalog/Catalog';
 import { UserProfilePage } from 'pages/user-profile/UserProfile';
-import { Basket } from 'pages/basket/Basket';
+import { BasketPage } from 'pages/basket/BasketPage';
 import { ProductDetailsPage } from 'pages/ProductDetails/ProductDetailsPage';
 import { RequireAuth } from 'hocs/RequireAuth';
 
@@ -17,7 +17,7 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path={pagePathnames.main} element={<Main />} />
-      <Route path={pagePathnames.about} element={<About />} />
+      <Route path={pagePathnames.about} element={<AboutPage />} />
       <Route path={pagePathnames.catalog} element={<CatalogPage />} />
       <Route path={pagePathnames.product} element={<ProductDetailsPage />} />
       <Route
@@ -44,7 +44,7 @@ const AppRouter = () => {
           </RequireAuth>
         }
       />
-      <Route path={pagePathnames.basket} element={<Basket />} />
+      <Route path={pagePathnames.basket} element={<BasketPage />} />
       <Route path={pagePathnames.error} element={<Error />} />
       <Route path="/*" element={<Navigate to={pagePathnames.error} />} />
     </Routes>

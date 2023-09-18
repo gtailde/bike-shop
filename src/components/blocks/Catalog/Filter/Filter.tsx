@@ -1,43 +1,17 @@
 import './style.scss';
-import React, { type FC, useState } from 'react';
+import React, { type FC, useState, useEffect } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { FilterAccordion } from './FilterAccordion/FilterAccordion';
-import { type IFilterRangeSlider, type IFilterList } from './types';
-
-// FETCH CATALOG DATA
-const filterGroups: IFilterList[] = [
-  // CALC FILTER CATEGORIES
-  {
-    title: 'Size',
-    list: ['S', 'M', 'L', 'XL'],
-  },
-  {
-    title: 'Category',
-    list: [
-      'Road Bikes',
-      'Hybrid Bikes',
-      'Mountain Bikes',
-      'Gravel Bikes',
-      "Kids' Bikes",
-      'Touring Bikes',
-      'Electric Bikes',
-      'Folding Bikes',
-      'BMX Bikes',
-    ],
-  },
-  {
-    title: 'Brand',
-    list: ['BMC', 'Burgtec', 'Cannondale', 'Castelli', 'Cervelo'],
-  },
-];
+import { type IFilterRangeSlider, type IFilterOption } from './types';
+import { type IFilters } from 'types/types';
+import productAPI from 'API/ProductAPI';
 
 const rangeSliders: IFilterRangeSlider[] = [
-  // CALC FILTER PRICE RANGE
   {
-    title: 'Price',
+    title: 'price',
     rangeValues: {
-      minLimit: 3540,
-      maxLimit: 9870,
+      minLimit: 200,
+      maxLimit: 5000,
     },
   },
 ];
@@ -49,12 +23,39 @@ export type IFilterSettings = Record<
 
 interface IFilterProps {
   onHide: () => void;
-  onSearch: (data: IFilterSettings) => void;
+  onSearch: (data: IFilters) => void;
   isShows: boolean;
 }
 
 export const Filter: FC<IFilterProps> = ({ onHide, onSearch, isShows }) => {
-  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({});
+  const [filterSettings, setFilterSettings] = useState<IFilters>({});
+  const [filterGroups, setFilterGroups] = useState<IFilterOption[]>([
+    {
+      title: 'size',
+      list: ['XS', 'S', 'M', 'L', 'XL'],
+    },
+  ]);
+
+  useEffect(() => {
+    void (async () => {
+      const response = await productAPI.getCategories();
+      const bikeCategories = response.results;
+      setFilterGroups((prev) => [
+        ...prev,
+        {
+          title: 'category',
+          list: [...bikeCategories.slice(0, 8).map((category) => category.name['en-US'])],
+          IDs: [...bikeCategories.slice(0, 8).map((category) => category.id)],
+        },
+        {
+          title: 'brand',
+          list: [...bikeCategories.slice(8, 20).map((category) => category.name['en-US'])].filter(
+            (category) => !['Brands', 'Bikes'].includes(category),
+          ),
+        },
+      ]);
+    })();
+  }, []);
 
   return (
     <div className={`catalog__filter filter ${isShows ? 'filter--show' : ''}`}>
@@ -68,7 +69,7 @@ export const Filter: FC<IFilterProps> = ({ onHide, onSearch, isShows }) => {
         <FilterAccordion
           rangeSliders={rangeSliders}
           controlGroups={filterGroups}
-          onChange={(data: IFilterSettings) => {
+          onChange={(data: IFilters) => {
             setFilterSettings(data);
           }}
           filterSettings={filterSettings}

@@ -54,6 +54,7 @@
     "@typescript-eslint/no-confusing-void-expression": "off",
     "react/display-name": "off",
     "react/jsx-no-target-blank": "off",
+    "react-hooks/exhaustive-deps": "off",
     "require-jsdoc": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-types": "off",
