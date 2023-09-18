@@ -1,5 +1,5 @@
 import './style.scss';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { ReactComponent as CartIcon } from './assets/basket.svg';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,8 @@ import { pagePathnames } from 'router/pagePathnames';
 import { transformPriceText } from '../../../../helpers/formatText';
 import { type IProductDetails } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
+import basketAPI from 'API/BasketAPI';
+import { UserContext } from 'App';
 
 export const ProductCard = ({
   id,
@@ -17,6 +19,8 @@ export const ProductCard = ({
   discountPrice,
 }: IProductDetails) => {
   const navigate = useNavigate();
+
+  const { setCart } = useContext(UserContext);
 
   return (
     <article
@@ -45,8 +49,10 @@ export const ProductCard = ({
         <Button
           accent
           className="product-card__cart-button button--w-icon"
-          onClick={(evt) => {
+          onClick={async (evt) => {
             evt.stopPropagation();
+            await basketAPI.addToCart(id, 1, 1);
+            setCart?.(await basketAPI.getActiveCart());
           }}
         >
           <CartIcon />

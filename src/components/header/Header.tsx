@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './style.scss';
 import { ReactComponent as UserIcon } from './assets/user-icon.svg';
 import { ReactComponent as BasketIcon } from './assets/basket.svg';
@@ -7,29 +7,16 @@ import { pagePathnames } from 'router/pagePathnames';
 import { NavPopup } from 'components/popup/NavPopup';
 import { Logo } from 'components/UI/Logo/Logo';
 import { customersApi } from 'API/CustomersAPI';
-import { type ICustomer } from 'types/types';
+import { UserContext } from 'App';
 
 export const Header = () => {
-  const [profileInfo, setProfileInfo] = useState<ICustomer & { dateOfBirth: string }>();
+  const { profileInfo, cart } = useContext(UserContext);
   const [isNavPopupActive, setIsNavPopupActive] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    void getCustomerData();
-  }, []);
-
-  const getCustomerData = async () => {
-    try {
-      const customer = await customersApi.getCustomer();
-      if ('id' in customer) setProfileInfo(customer);
-    } catch (error) {
-      console.log('Anonymous session started');
-    }
-  };
-
   const openPopup = () => {
     setIsNavPopupActive(true);
-    void getCustomerData();
+    // void getCustomerData();
   };
 
   const closePopup = () => {
@@ -76,35 +63,47 @@ export const Header = () => {
           </span>
           <NavPopup isOpened={isNavPopupActive} onClose={closePopup}>
             {profileInfo?.id && (
-              <Link
-                to={`${pagePathnames.users}/${profileInfo.id}`}
-                className="nav-popup__link"
-                onClick={closePopup}
-              >
-                Profile
-              </Link>
+              <>
+                <Link
+                  to={`${pagePathnames.users}/${profileInfo?.id}`}
+                  className="nav-popup__link"
+                  onClick={closePopup}
+                >
+                  Profile
+                </Link>
+                <Link
+                  to={pagePathnames.login}
+                  className="nav-popup__link"
+                  onClick={async () => {
+                    closePopup();
+                    await logout('access_token');
+                  }}
+                >
+                  Log out
+                </Link>
+              </>
             )}
-            <Link to={pagePathnames.login} className="nav-popup__link" onClick={closePopup}>
-              Log in
-            </Link>
-            <Link
-              to={pagePathnames.login}
-              className="nav-popup__link"
-              onClick={async () => {
-                closePopup();
-                await logout('access_token');
-              }}
-            >
-              Log out
-            </Link>
-            <Link to={pagePathnames.registration} className="nav-popup__link" onClick={closePopup}>
-              Sign up
-            </Link>
+            {profileInfo?.id ? null : (
+              <>
+                <Link to={pagePathnames.login} className="nav-popup__link" onClick={closePopup}>
+                  Log in
+                </Link>
+                <Link
+                  to={pagePathnames.registration}
+                  className="nav-popup__link"
+                  onClick={closePopup}
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </NavPopup>
           <Link to={pagePathnames.basket} className="page-header__user-navigation-item">
             <span className="basket">
               <BasketIcon className="basket__icon" />
-              <span className="basket__barge">99</span>
+              {cart?.totalLineItemQuantity && (
+                <span className="basket__barge">{cart?.totalLineItemQuantity}</span>
+              )}
             </span>
           </Link>
         </div>
