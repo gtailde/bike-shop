@@ -393,4 +393,5 @@ export interface ICart extends ICartCommonFields {
   origin: string;
   itemShippingAddresses: string[]; // Заменить 'string'
   store: IStore;
+  totalLineItemQuantity: number;
 }
