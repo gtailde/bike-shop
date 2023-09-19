@@ -1,18 +1,21 @@
 import './style.scss';
-import React, { useState, type ComponentProps } from 'react';
+import React, { useState, type ComponentProps, useEffect } from 'react';
 
 export const Counter = ({
   className,
   accent,
   initValue,
   onChangeValue,
+  limit,
   ...props
 }: ComponentProps<'div'> & {
   accent?: boolean;
   initValue?: number;
   onChangeValue: (count: number) => void;
+  limit?: number;
 }) => {
   const [value, setValue] = useState(initValue ?? 1);
+
   return (
     <div className={`counter ${className ?? ''} ${accent ? 'counter--accent' : ''}`} {...props}>
       <button

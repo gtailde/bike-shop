@@ -7,7 +7,7 @@ import { ProductSlider } from './ProductSlider';
 import { Accordion } from 'components/UI/Accordion/Accordion';
 import { Counter } from 'components/UI/Counter/Counter';
 import productAPI from 'API/ProductAPI';
-import { type IProductVariantData, type IProductVariant } from 'types/types';
+import { type IProductVariantData, type IProductVariant, type IProduct } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
 import { transformPriceText } from '../../../helpers/formatText';
 import basketAPI from 'API/BasketAPI';
@@ -29,6 +29,10 @@ export const ProductDetails = () => {
   const { cart, setCart } = useContext(UserContext);
   const [productData, setProductData] = useState<IProductDetails>();
   const [productQuantity, setProductQuantity] = useState(1);
+  const [commersetoolsProductData, setCommersetoolsProductData] = useState<IProduct>();
+  const [selectedOptions] = useState<Map<string, string>>(new Map<string, string>());
+  const [enabledOptions, setEnabledOptions] = useState<Record<string, string[]>>();
+  const [selectedVariant, setSelectedVariant] = useState<IProductVariant>();
   const [isProductInCart, setIsProductInCart] = useState(false);
   const params = useParams();
 
@@ -45,6 +49,7 @@ export const ProductDetails = () => {
   const fetchProductData = async (id: string | undefined) => {
     if (id) {
       const result = await productAPI.getProduct(id, 'id');
+      setCommersetoolsProductData(result);
       const productDetailObject = await getProductDetails(result.masterData.current);
       setProductData(productDetailObject);
     } else {
@@ -116,8 +121,77 @@ export const ProductDetails = () => {
   };
 
   const handleAddItemToCart = async () => {
-    const newCart = await basketAPI.addToCart(params.id ?? '', 1, productQuantity);
+    if (!commersetoolsProductData) {
+      return;
+    }
+
+    const productVariantId = selectedVariant?.id;
+
+    const newCart = await basketAPI.addToCart(
+      params.id ?? '',
+      productVariantId ?? 1,
+      productQuantity,
+    );
     if (newCart) setCart?.(newCart);
+  };
+
+  const handleOptionSelect = (evt: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    if (!commersetoolsProductData) {
+      return;
+    }
+
+    const radioButton = evt.currentTarget;
+    if (selectedOptions.get(radioButton.name) === radioButton.value) {
+      radioButton.checked = false;
+      selectedOptions.delete(radioButton.name);
+    } else {
+      selectedOptions.set(radioButton.name, radioButton.value);
+    }
+
+    const enabledOptionsList: Record<string, string[]> = {};
+    const productVatiants = [
+      commersetoolsProductData.masterData.current.masterVariant,
+      ...commersetoolsProductData.masterData.current.variants,
+    ];
+
+    const matchedVariant = Array.from(selectedOptions.keys()).reduce((result, option) => {
+      return result.filter((variant) =>
+        variant.attributes.some((att) => {
+          const value = typeof att.value === 'object' ? att.value.label : att.value;
+          return att.name === option && value === selectedOptions.get(option);
+        }),
+      );
+    }, productVatiants)[0];
+
+    setSelectedVariant(matchedVariant);
+
+    Array.from(selectedOptions.keys()).forEach((key) => {
+      const optionValue = selectedOptions.get(key);
+      const matchedProductVariants = productVatiants.filter((variant) => {
+        return variant.attributes.some((att) => {
+          if (att.name === key) {
+            const value = typeof att.value === 'object' ? att.value.label : att.value;
+            return value === optionValue;
+          }
+          return false;
+        });
+      });
+
+      matchedProductVariants.forEach((variant) => {
+        variant.attributes.forEach((att) => {
+          if (att.name !== key) {
+            if (!enabledOptionsList[att.name]) {
+              enabledOptionsList[att.name] = [];
+            }
+            const value = typeof att.value === 'object' ? att.value.label : att.value;
+            !enabledOptionsList[att.name].includes(value) &&
+              enabledOptionsList[att.name].push(value);
+          }
+        });
+      });
+    });
+
+    setEnabledOptions(enabledOptionsList);
   };
 
   const handleDeleteItem = async () => {
@@ -146,11 +220,17 @@ export const ProductDetails = () => {
               formatter={transformPriceText}
             />
             {productData.options.map((option, index) => (
-              <ProductDetailsOption key={`${option.title}_${index}`} data={option} />
+              <ProductDetailsOption
+                key={`${option.title}_${index}`}
+                data={option}
+                onSelect={handleOptionSelect}
+                enabledOptions={enabledOptions}
+              />
             ))}
             <div className="product-details__basket-controls">
               <Counter
                 onChangeValue={(quantity: number) => setProductQuantity(quantity)}
+                limit={selectedVariant?.availability.availableQuantity}
                 accent
                 className="product-details__counter"
               />
