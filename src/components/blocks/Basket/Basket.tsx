@@ -31,7 +31,7 @@ export const Basket = () => {
   };
 
   const handleDeleteItem = async (itemId: string) => {
-    const newCart = await basketAPI.removefromCart(itemId);
+    const newCart = await basketAPI.removeFromCart(itemId);
     if (newCart) setCart?.(newCart);
   };
 

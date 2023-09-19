@@ -26,18 +26,25 @@ interface IProductDetails {
 }
 
 export const ProductDetails = () => {
-  const { setCart } = useContext(UserContext);
+  const { cart, setCart } = useContext(UserContext);
   const [productData, setProductData] = useState<IProductDetails>();
   const [productQuantity, setProductQuantity] = useState(1);
   const [commersetoolsProductData, setCommersetoolsProductData] = useState<IProduct>();
   const [selectedOptions] = useState<Map<string, string>>(new Map<string, string>());
   const [enabledOptions, setEnabledOptions] = useState<Record<string, string[]>>();
   const [selectedVariant, setSelectedVariant] = useState<IProductVariant>();
-
+  const [isProductInCart, setIsProductInCart] = useState(false);
   const params = useParams();
+
   useEffect(() => {
     void fetchProductData(params.id);
   }, [params.id]);
+
+  useEffect(() => {
+    setIsProductInCart(!!checkProductInCart());
+  }, [cart]);
+
+  const checkProductInCart = () => cart?.lineItems.find((item) => item.productId === params.id);
 
   const fetchProductData = async (id: string | undefined) => {
     if (id) {
@@ -187,6 +194,11 @@ export const ProductDetails = () => {
     setEnabledOptions(enabledOptionsList);
   };
 
+  const handleDeleteItem = async () => {
+    const newCart = await basketAPI.removeFromCart(checkProductInCart()?.id ?? '');
+    if (newCart) setCart?.(newCart);
+  };
+
   return (
     productData && (
       <section className="product-details">
@@ -222,9 +234,15 @@ export const ProductDetails = () => {
                 accent
                 className="product-details__counter"
               />
-              <Button accent onClick={handleAddItemToCart}>
-                Add to Basket
-              </Button>
+              {isProductInCart ? (
+                <Button accent onClick={handleDeleteItem}>
+                  Remove from Basket
+                </Button>
+              ) : (
+                <Button accent onClick={handleAddItemToCart}>
+                  Add to Basket
+                </Button>
+              )}
             </div>
           </div>
           <Accordion

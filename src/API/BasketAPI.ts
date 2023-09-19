@@ -97,7 +97,7 @@ class BasketAPI extends CommercetoolsAPI {
     return await this.performRequest(`carts/${cartI}`, 'post', { body });
   }
 
-  public async removefromCart(lineItemId: string): Promise<ICart | null> {
+  public async removeFromCart(lineItemId: string): Promise<ICart | null> {
     const activeCart = await this.getActiveCart();
     const [cartI, cartV] = [activeCart.id, activeCart.version];
 

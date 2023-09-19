@@ -3,7 +3,7 @@
 .product-details {
   flex-grow: 1;
   padding: 32px 0;
-  
+
   &__content {
     position: relative;
     display: grid;
@@ -62,6 +62,10 @@
   &__basket-controls {
     display: flex;
     justify-content: space-between;
+    button {
+      max-width: 195px;
+      max-height: 54px;
+    }
   }
 
   &__accordion {
