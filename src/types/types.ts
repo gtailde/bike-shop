@@ -160,13 +160,15 @@ export interface IProductVariantData {
 }
 
 export interface IProductVariant {
-  id: string;
+  id: number;
   sku: string;
   prices: IProductPrice[];
   images: IProductImage[];
   attributes: IProductAttribute[];
   availability: {
+    id: string;
     channels: Record<string, IProductAvailability>;
+    availableQuantity: number;
   };
 }
 
