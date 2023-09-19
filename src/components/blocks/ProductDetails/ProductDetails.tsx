@@ -121,7 +121,7 @@ export const ProductDetails = () => {
   };
 
   const handleDeleteItem = async () => {
-    const newCart = await basketAPI.removefromCart(checkProductInCart()?.id ?? '');
+    const newCart = await basketAPI.removeFromCart(checkProductInCart()?.id ?? '');
     if (newCart) setCart?.(newCart);
   };
 
