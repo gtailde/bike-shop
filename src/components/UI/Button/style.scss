@@ -1,4 +1,4 @@
-@use "../../../styles/mixins.scss" as *;
+@use '../../../styles/mixins.scss' as *;
 
 .button {
   display: flex;
@@ -69,6 +69,20 @@
     &:active {
       background-color: transparent;
       color: var(--accent-color-1-shadow-1);
+    }
+  }
+
+  &:disabled {
+    cursor: default;
+    color: var(--main-color-2-shadow-1);
+    border-color: var(--main-color-2-shadow-1);
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    &:active {
+      background-color: transparent;
     }
   }
 }
