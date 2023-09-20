@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { ReactComponent as CartIcon } from './assets/basket.svg';
 import { useNavigate } from 'react-router-dom';
@@ -18,9 +18,16 @@ export const ProductCard = ({
   price,
   discountPrice,
 }: IProductDetails) => {
+  const [isProductInCart, setIsProductInCart] = useState(false);
+  const { cart, setCart } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const { setCart } = useContext(UserContext);
+  useEffect(() => {
+    setIsProductInCart(!!checkProductAvailabilityInCart());
+  }, [cart]);
+
+  const checkProductAvailabilityInCart = () =>
+    cart?.lineItems.find((item) => item.productId === id);
 
   return (
     <article
@@ -47,7 +54,8 @@ export const ProductCard = ({
           formatter={transformPriceText}
         />
         <Button
-          accent
+          accent={!isProductInCart}
+          disabled={isProductInCart}
           className="product-card__cart-button button--w-icon"
           onClick={async (evt) => {
             evt.stopPropagation();
