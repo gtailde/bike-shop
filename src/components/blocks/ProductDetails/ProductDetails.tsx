@@ -41,10 +41,11 @@ export const ProductDetails = () => {
   }, [params.id]);
 
   useEffect(() => {
-    setIsProductInCart(!!checkProductInCart());
+    setIsProductInCart(!!checkProductAvailabilityInCart());
   }, [cart]);
 
-  const checkProductInCart = () => cart?.lineItems.find((item) => item.productId === params.id);
+  const checkProductAvailabilityInCart = () =>
+    cart?.lineItems.find((item) => item.productId === params.id);
 
   const fetchProductData = async (id: string | undefined) => {
     if (id) {
@@ -195,7 +196,7 @@ export const ProductDetails = () => {
   };
 
   const handleDeleteItem = async () => {
-    const newCart = await basketAPI.removeFromCart(checkProductInCart()?.id ?? '');
+    const newCart = await basketAPI.removeFromCart(checkProductAvailabilityInCart()?.id ?? '');
     if (newCart) setCart?.(newCart);
   };
 
