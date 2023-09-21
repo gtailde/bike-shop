@@ -1,13 +1,22 @@
 import './style.scss';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
+import { UserContext } from 'App';
+import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
 
 export const HeroSection = () => {
+  const { isUserLoggedIn, setIsUserLoggedIn } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogIn = () => {
+    navigate(pagePathnames.login);
+  };
+
+  const handleLogOut = async () => {
+    await updateCustomersAPI.logoutCustomer('access_token');
+    setIsUserLoggedIn?.(false);
     navigate(pagePathnames.login);
   };
 
@@ -24,14 +33,20 @@ export const HeroSection = () => {
           Unbeatable choice and great value from the world&apos;s best bike brands. Get the latest
           news, and exclusive offers.
         </p>
-        <div className="hero-section__buttons-container">
-          <Button accent onClick={handleLogIn}>
-            Log In
+        {isUserLoggedIn ? (
+          <Button accent onClick={handleLogOut}>
+            Log out
           </Button>
-          <Button accent onClick={handleSignUp}>
-            Sign Up
-          </Button>
-        </div>
+        ) : (
+          <div className="hero-section__buttons-container">
+            <Button accent onClick={handleLogIn}>
+              Log In
+            </Button>
+            <Button accent onClick={handleSignUp}>
+              Sign Up
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
