@@ -3,7 +3,6 @@ import React, { useContext } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { ReactComponent as CartIcon } from './assets/basket.svg';
 import { useNavigate } from 'react-router-dom';
-import { pagePathnames } from 'router/pagePathnames';
 import { transformPriceText } from '../../../../helpers/formatText';
 import { type IProductDetails } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
@@ -26,7 +25,7 @@ export const ProductCard = ({
     <article
       className="product-card"
       onClick={() => {
-        navigate(`${pagePathnames.catalog}/${id}`);
+        navigate(`${id}`);
       }}
     >
       <div className="product-card__slider slider">
