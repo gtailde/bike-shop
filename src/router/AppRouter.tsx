@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, Outlet } from 'react-router-dom';
 import { CheckAuth } from 'hocs/CheckAuth';
 import { pagePathnames } from 'router/pagePathnames';
 import { Main } from 'pages/main/Main';
@@ -23,21 +23,15 @@ const AppRouter = () => {
         <Route path={pagePathnames.catalog} element={<CatalogPage />} />
         <Route path={pagePathnames.product} element={<ProductDetailsPage />} />
         <Route
-          path={pagePathnames.login}
           element={
             <CheckAuth>
-              <LoginPage />
+              <Outlet />
             </CheckAuth>
           }
-        />
-        <Route
-          path={pagePathnames.registration}
-          element={
-            <CheckAuth>
-              <RegistrationPage />
-            </CheckAuth>
-          }
-        />
+        >
+          <Route path={pagePathnames.login} element={<LoginPage />} />
+          <Route path={pagePathnames.registration} element={<RegistrationPage />} />
+        </Route>
         <Route
           path={`${pagePathnames.users}/:id`}
           element={
