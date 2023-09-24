@@ -21,7 +21,6 @@ function App() {
 
   useEffect(() => {
     void getCustomerData();
-    console.log('App effect');
   }, [isUserLoggedIn]);
 
   const getCustomerData = async () => {
@@ -32,7 +31,6 @@ function App() {
       if ('id' in customer) {
         setProfileInfo(customer);
         setIsUserLoggedIn(true);
-        console.log('there is user');
         setCart(await basketAPI.getActiveCart());
       }
     } catch (error) {
