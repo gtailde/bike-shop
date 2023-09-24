@@ -10,13 +10,12 @@ import { customersApi } from 'API/CustomersAPI';
 import { UserContext } from 'App';
 
 export const Header = () => {
-  const { profileInfo, cart } = useContext(UserContext);
+  const { profileInfo, isUserLoggedIn, setIsUserLoggedIn, cart } = useContext(UserContext);
   const [isNavPopupActive, setIsNavPopupActive] = useState(false);
   const navigate = useNavigate();
 
   const openPopup = () => {
     setIsNavPopupActive(true);
-    // void getCustomerData();
   };
 
   const closePopup = () => {
@@ -25,6 +24,7 @@ export const Header = () => {
 
   const logout = async (tokenType: 'access_token') => {
     await customersApi.logoutCustomer(tokenType);
+    setIsUserLoggedIn?.(false);
     navigate(pagePathnames.login);
   };
 
@@ -59,10 +59,10 @@ export const Header = () => {
         <div className="page-header__user-navigation">
           <span className="page-header__user-navigation-item user" onClick={openPopup}>
             <UserIcon className="user__icon" />
-            <span className="user__name"> {profileInfo?.firstName}</span>
+            <span className="user__name"> {isUserLoggedIn ? profileInfo?.firstName : 'Guest'}</span>
           </span>
           <NavPopup isOpened={isNavPopupActive} onClose={closePopup}>
-            {profileInfo?.id && (
+            {isUserLoggedIn && profileInfo?.id && (
               <>
                 <Link
                   to={`${pagePathnames.users}/${profileInfo?.id}`}
@@ -83,7 +83,7 @@ export const Header = () => {
                 </Link>
               </>
             )}
-            {profileInfo?.id ? null : (
+            {!isUserLoggedIn && !profileInfo?.id && (
               <>
                 <Link to={pagePathnames.login} className="nav-popup__link" onClick={closePopup}>
                   Log in

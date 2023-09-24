@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'components/UI/Button/Button';
 import { Form } from 'components/UI/Form/Form';
@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { formFields } from './formFields';
 import { customersApi } from 'API/CustomersAPI';
+import { UserContext } from 'App';
 
 const schema = yup.object({
   email: emailSchema,
@@ -24,6 +25,7 @@ export const Login = () => {
     mode: 'all',
   });
 
+  const { setIsUserLoggedIn } = useContext(UserContext);
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
   const [isRemember, setIsRemember] = useState(false);
@@ -35,7 +37,10 @@ export const Login = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     const response = await customersApi.loginCustomer(data.email, data.password);
-    if ('id' in response) navigate(pagePathnames.main, { replace: true });
+    if ('id' in response) {
+      setIsUserLoggedIn?.(true);
+      navigate(pagePathnames.main, { replace: true });
+    }
   });
 
   return (

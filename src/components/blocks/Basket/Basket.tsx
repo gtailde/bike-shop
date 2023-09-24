@@ -40,10 +40,6 @@ export const Basket = () => {
     if (newCart) setCart?.(newCart);
   };
 
-  const handleCheckout = () => {
-    console.log('checkout');
-  };
-
   if (isCartEmpty) {
     return (
       <section className="cart">
@@ -184,7 +180,7 @@ export const Basket = () => {
               </tbody>
             </table>
           </div>
-          <Button onClick={() => handleCheckout()} accent className="cart__checkout-button">
+          <Button accent className="cart__checkout-button">
             Checkout
           </Button>
         </div>
