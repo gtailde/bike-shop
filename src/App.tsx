@@ -26,12 +26,12 @@ function App() {
   const getCustomerData = async () => {
     try {
       setProfileInfo(undefined);
-      setCart(undefined);
+      setCart((await basketAPI.getActiveCart()) ?? undefined);
+
       const customer = await customersApi.getCustomer();
       if ('id' in customer) {
         setProfileInfo(customer);
         setIsUserLoggedIn(true);
-        setCart(await basketAPI.getActiveCart());
       }
     } catch (error) {
       console.log('Anonymous session started');
