@@ -45,7 +45,7 @@ class BasketAPI extends CommercetoolsAPI {
     }
   }
 
-  public async getActiveCart(): Promise<ICart> {
+  public async getActiveCart(): Promise<ICart | null> {
     let activeCart = await this.performRequest('active-cart', 'get');
 
     if (!activeCart) {
@@ -53,7 +53,7 @@ class BasketAPI extends CommercetoolsAPI {
     }
     this.setActiveCartData(activeCart?.id, activeCart?.version);
 
-    return activeCart as ICart;
+    return activeCart;
   }
 
   private async createCart(): Promise<ICart | null> {
