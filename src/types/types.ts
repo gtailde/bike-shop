@@ -229,6 +229,8 @@ export interface IFacetResult {
 
 // common
 
+export type requestMethod = 'get' | 'post' | 'delete';
+
 export type IAddressUpdateAction =
   | 'addBillingAddressId'
   | 'addShippingAddressId'
@@ -309,7 +311,7 @@ export interface IRequestData {
         actions: IAction[];
       }
     | { reference: { id: string; typeId: string } };
-  queryParams?: string;
+  queryParams?: Record<string, string>;
 }
 
 export interface ICartCommonFields {

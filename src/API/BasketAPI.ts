@@ -1,30 +1,40 @@
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
-import type { ICart, IRequestData } from 'types/types';
+import type { ICart, IRequestData, requestMethod } from 'types/types';
 import { errorNotify } from 'Notifiers';
 
 class BasketAPI extends CommercetoolsAPI {
+  cartId: string | null;
+  cartVersion: number | null;
+
+  constructor() {
+    super();
+    this.cartId = null;
+    this.cartVersion = null;
+  }
+
+  private setActiveCartData(id?: string, version?: number) {
+    this.cartId = id ?? null;
+    this.cartVersion = version ?? null;
+  }
+
   private async performRequest(
     endpoint: string,
-    request: 'get' | 'post' | 'delete',
+    method: requestMethod,
     requestData?: IRequestData,
   ): Promise<ICart | null> {
     try {
       const token = this.getToken();
-      let url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me/${endpoint}`;
+      const url = `${this.apiUrl}/${this.projectKey}/in-store/key=${this.storeKey}/me/${endpoint}`;
       const headers = this.getTokenHeaders(token.access_token);
 
-      let response;
-
-      if (requestData?.queryParams) url += `?${requestData.queryParams}`;
-
-      if (request === 'get') {
-        response = await axios.get(url, { headers });
-      } else if (request === 'post' && requestData?.body) {
-        response = await axios.post(url, requestData.body, { headers });
-      } else if (request === 'delete') {
-        response = await axios.delete(url, { headers });
-      }
+      const response = await axios({
+        url,
+        method,
+        headers,
+        data: requestData?.body,
+        params: requestData?.queryParams,
+      });
 
       return response?.data;
     } catch (error) {
@@ -37,9 +47,12 @@ class BasketAPI extends CommercetoolsAPI {
 
   public async getActiveCart(): Promise<ICart> {
     let activeCart = await this.performRequest('active-cart', 'get');
+
     if (!activeCart) {
       activeCart = await this.createCart();
     }
+    this.setActiveCartData(activeCart?.id, activeCart?.version);
+
     return activeCart as ICart;
   }
 
@@ -48,12 +61,16 @@ class BasketAPI extends CommercetoolsAPI {
   }
 
   public async clearCart(): Promise<ICart | null> {
-    const activeCart = await this.getActiveCart();
-    const [cartI, cartV] = [activeCart.id, activeCart.version];
-    await this.performRequest(`carts/${cartI}`, 'delete', {
-      queryParams: `version=${cartV}`,
+    await this.performRequest(`carts/${this.cartId ?? ''}`, 'delete', {
+      queryParams: {
+        version: String(this.cartVersion ?? 0),
+      },
     });
-    return await this.createCart();
+
+    const response = await this.createCart();
+    this.setActiveCartData(response?.id, response?.version);
+
+    return response;
   }
 
   public async addToCart(
@@ -61,11 +78,8 @@ class BasketAPI extends CommercetoolsAPI {
     variantId: number,
     quantity: number,
   ): Promise<ICart | null> {
-    const activeCart = await this.getActiveCart();
-    const [cartI, cartV] = [activeCart.id, activeCart.version];
-
     const body = {
-      version: cartV,
+      version: this.cartVersion ?? 0,
       actions: [
         {
           action: 'addLineItem',
@@ -76,15 +90,15 @@ class BasketAPI extends CommercetoolsAPI {
       ],
     };
 
-    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+    const response = await this.performRequest(`carts/${this.cartId ?? ''}`, 'post', { body });
+    this.setActiveCartData(response?.id, response?.version);
+
+    return response;
   }
 
   public async changeQuantity(lineItemId: string, quantity: number): Promise<ICart | null> {
-    const activeCart = await this.getActiveCart();
-    const [cartI, cartV] = [activeCart.id, activeCart.version];
-
     const body = {
-      version: cartV,
+      version: this.cartVersion ?? 0,
       actions: [
         {
           action: 'changeLineItemQuantity',
@@ -94,15 +108,15 @@ class BasketAPI extends CommercetoolsAPI {
       ],
     };
 
-    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+    const response = await this.performRequest(`carts/${this.cartId ?? ''}`, 'post', { body });
+    this.setActiveCartData(response?.id, response?.version);
+
+    return response;
   }
 
   public async removeFromCart(lineItemId: string): Promise<ICart | null> {
-    const activeCart = await this.getActiveCart();
-    const [cartI, cartV] = [activeCart.id, activeCart.version];
-
     const body = {
-      version: cartV,
+      version: this.cartVersion ?? 0,
       actions: [
         {
           action: 'removeLineItem',
@@ -111,15 +125,15 @@ class BasketAPI extends CommercetoolsAPI {
       ],
     };
 
-    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+    const response = await this.performRequest(`carts/${this.cartId ?? ''}`, 'post', { body });
+    this.setActiveCartData(response?.id, response?.version);
+
+    return response;
   }
 
   public async recalculate(): Promise<ICart | null> {
-    const activeCart = await this.getActiveCart();
-    const [cartI, cartV] = [activeCart.id, activeCart.version];
-
     const body = {
-      version: cartV,
+      version: this.cartVersion ?? 0,
       actions: [
         {
           action: 'recalculate',
@@ -128,15 +142,15 @@ class BasketAPI extends CommercetoolsAPI {
       ],
     };
 
-    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+    const response = await this.performRequest(`carts/${this.cartId ?? ''}`, 'post', { body });
+    this.setActiveCartData(response?.id, response?.version);
+
+    return response;
   }
 
   public async addDiscountCode(code: string): Promise<ICart | null> {
-    const activeCart = await this.getActiveCart();
-    const [cartI, cartV] = [activeCart.id, activeCart.version];
-
     const body = {
-      version: cartV,
+      version: this.cartVersion ?? 0,
       actions: [
         {
           action: 'addDiscountCode',
@@ -145,15 +159,15 @@ class BasketAPI extends CommercetoolsAPI {
       ],
     };
 
-    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+    const response = await this.performRequest(`carts/${this.cartId ?? ''}`, 'post', { body });
+    this.setActiveCartData(response?.id, response?.version);
+
+    return response;
   }
 
   public async removeDiscountCode(codeId: string): Promise<ICart | null> {
-    const activeCart = await this.getActiveCart();
-    const [cartI, cartV] = [activeCart.id, activeCart.version];
-
     const body = {
-      version: cartV,
+      version: this.cartVersion ?? 0,
       actions: [
         {
           action: 'removeDiscountCode',
@@ -165,7 +179,10 @@ class BasketAPI extends CommercetoolsAPI {
       ],
     };
 
-    return await this.performRequest(`carts/${cartI}`, 'post', { body });
+    const response = await this.performRequest(`carts/${this.cartId ?? ''}`, 'post', { body });
+    this.setActiveCartData(response?.id, response?.version);
+
+    return response;
   }
 }
 
