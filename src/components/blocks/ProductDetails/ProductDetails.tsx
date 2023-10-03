@@ -11,7 +11,7 @@ import { type IProductVariantData, type IProductVariant, type IProduct } from 't
 import { Price } from 'components/UI/Price/Price';
 import { transformPriceText } from '../../../helpers/formatText';
 import basketAPI from 'API/BasketAPI';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 
 interface IProductDetails {
   name: string;

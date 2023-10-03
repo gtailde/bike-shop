@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import { emailSchema, passwordSchema } from 'validations/validationSchemes';
 import { formFields } from './formFields';
 import { customersApi } from 'API/CustomersAPI';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 
 const schema = yup.object({
   email: emailSchema,

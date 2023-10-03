@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { getPriceFromCentAmount, getSubtotal, getTotalCartDiscountAmount } from './helpers';
 import { transformPriceText } from 'helpers/formatText';
 import basketAPI from 'API/BasketAPI';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 
 export const Basket = () => {
   const { cart, setCart } = useContext(UserContext);

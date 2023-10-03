@@ -7,7 +7,7 @@ import { transformPriceText } from '../../../../helpers/formatText';
 import { type IProductDetails } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
 import basketAPI from 'API/BasketAPI';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 
 export const ProductCard = ({
   id,

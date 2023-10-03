@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { pagePathnames } from 'router/pagePathnames';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 import { updateCustomersAPI } from 'API/UpdateCustomerAPI';
 
 export const HeroSection = () => {
