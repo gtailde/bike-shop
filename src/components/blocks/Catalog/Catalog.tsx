@@ -76,7 +76,7 @@ export const Catalog = () => {
     setPageNumber(pageNumber + 1);
   };
 
-  const handleSelectCategory = async (data: ICategory, categoryName?: CategoryName) => {
+  const handleSelectCategory = (data: ICategory, categoryName?: CategoryName) => {
     if (
       categoryName &&
       data.name['en-US'] !== 'Shop' &&
@@ -95,7 +95,7 @@ export const Catalog = () => {
   const getDetailsFromReceivedProducts = async (receivedProduct: IProduct[]) => {
     const resultProduct: Array<Promise<IProductDetails>> = [];
     receivedProduct.forEach((product) => resultProduct.push(fetchProductData(product.id)));
-    return await Promise.all(resultProduct);
+    return Promise.all(resultProduct);
   };
 
   const fetchProductData = async (id: string | undefined) => {
@@ -200,11 +200,7 @@ export const Catalog = () => {
             filter
           </Button>
         </div>
-        <CategoryNavigator
-          onSelect={(data, categoryName?: CategoryName) => {
-            void handleSelectCategory(data, categoryName);
-          }}
-        />
+        <CategoryNavigator onSelect={handleSelectCategory} />
         {
           <Filter
             onHide={() => {
