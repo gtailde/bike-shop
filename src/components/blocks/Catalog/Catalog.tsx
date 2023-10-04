@@ -30,7 +30,7 @@ export const Catalog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [sortType, setSortType] = useState('name.en-US asc');
-  const [loadedProduct, setLoadedProduct] = useState<IProductDetails[]>([]);
+  const [products, setProducts] = useState<IProductDetails[]>([]);
   const [filterSettings, setFilterSettings] = useState<IFilters>({});
 
   const debouncedSearch = useDebounce((value: string) => {
@@ -41,7 +41,7 @@ export const Catalog = () => {
     void (async () => {
       const requestOptions = getRequestOptions(productLoadLimit * pageNumber);
       const fetchedProduct = await getProduct(requestOptions);
-      setLoadedProduct(fetchedProduct);
+      setProducts(fetchedProduct);
     })();
   }, [debouncedSearchQuery, sortType, filterSettings]);
 
@@ -64,16 +64,15 @@ export const Catalog = () => {
   const getProduct = async (
     requestOptions = getRequestOptions(productLoadLimit, productLoadLimit * pageNumber),
   ) => {
-    const searchedProduct = await getDetailsFromReceivedProducts(
-      (await productAPI.getProductProjections(...requestOptions)).results,
-    );
-    setLoadedProduct([...loadedProduct, ...searchedProduct]);
+    const productProjections = (await productAPI.getProductProjections(...requestOptions)).results;
+    const searchedProduct = await getDetailsFromReceivedProducts(productProjections);
+    setProducts((prevProducts) => [...prevProducts, ...searchedProduct]);
     return searchedProduct;
   };
 
   const fetchProduct = async () => {
     const searchedProduct = await getProduct();
-    setLoadedProduct([...loadedProduct, ...searchedProduct]);
+    setProducts([...products, ...searchedProduct]);
     setPageNumber(pageNumber + 1);
   };
 
@@ -202,8 +201,8 @@ export const Catalog = () => {
           </Button>
         </div>
         <CategoryNavigator
-          onSelect={async (data, categoryName?: CategoryName) => {
-            await handleSelectCategory(data, categoryName);
+          onSelect={(data, categoryName?: CategoryName) => {
+            void handleSelectCategory(data, categoryName);
           }}
         />
         {
@@ -219,14 +218,14 @@ export const Catalog = () => {
           />
         }
         <InfiniteScroll
-          dataLength={loadedProduct.length}
+          dataLength={products.length}
           next={fetchProduct}
           hasMore={pageNumber < totalPages}
           loader={<h4>Loading...</h4>}
           className="catalog__infinite-scroll-wrapper"
         >
           <div className="catalog__product-list">
-            {loadedProduct?.map((item, index) => <ProductCard key={index} {...item} />)}
+            {products?.map((item) => <ProductCard key={item.id} {...item} />)}
           </div>
         </InfiniteScroll>
       </div>

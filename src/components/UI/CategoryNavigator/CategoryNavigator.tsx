@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState } from 'react';
 import { type ICategory } from 'types/types';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { CategorySlider } from '../CategorySlider/CategorySlider';
@@ -38,11 +38,11 @@ const ROOT: ICategory = {
   assets: [''],
 };
 
-export const CategoryNavigator = ({
-  onSelect,
-}: {
+interface CategoryNavigatorProps {
   onSelect: (data: ICategory, categoryName?: CategoryName) => void;
-}) => {
+}
+
+export const CategoryNavigator: FC<CategoryNavigatorProps> = ({ onSelect }) => {
   const [selectedCategory, setSelectedCategory] = useState<ICategory>(ROOT);
   const [fetchedCategoryList, setFetchedCategoryList] = useState<ICategory[]>([]);
   const [subcategoryList, setSubcategoryList] = useState<ICategory[]>([]);

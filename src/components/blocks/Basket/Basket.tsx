@@ -16,8 +16,7 @@ import { UserContext } from 'store/userContext';
 export const Basket = () => {
   const { cart, setCart } = useContext(UserContext);
   const couponField = useRef<HTMLInputElement>(null);
-  const isCartEmpty =
-    (cart?.lineItems.length && cart.lineItems.length < 1) || !cart?.lineItems.length;
+  const isCartEmpty = !cart?.lineItems.length;
   const OPTIONS_TO_SHOW = ['Size', 'Color'];
 
   const handleClearCart = async () => {
@@ -35,9 +34,12 @@ export const Basket = () => {
     if (newCart) setCart?.(newCart);
   };
 
-  const handleApplyCoupon = async (value: string) => {
-    const newCart = await basketAPI.addDiscountCode(value);
-    if (newCart) setCart?.(newCart);
+  const handleApplyCoupon = async () => {
+    if (couponField.current) {
+      const newCart = await basketAPI.addDiscountCode(couponField.current.value);
+      if (newCart) setCart?.(newCart);
+      couponField.current.value = '';
+    }
   };
 
   if (isCartEmpty) {
@@ -126,7 +128,9 @@ export const Basket = () => {
                           {getPriceFromCentAmount(lineItem.totalPrice, transformPriceText)}
                         </p>
                         <Button
-                          onClick={async () => await handleDeleteItem(lineItem.id)}
+                          onClick={() => {
+                            void handleDeleteItem(lineItem.id);
+                          }}
                           className="cart-product-card__delete-button button--icon-only"
                           aria-label="Delete"
                         >
@@ -148,16 +152,7 @@ export const Basket = () => {
                 label={'Enter promo code'}
                 name={'promo-code'}
               />
-              <Button
-                onClick={() => {
-                  if (couponField.current) {
-                    handleApplyCoupon(couponField.current.value ?? '');
-                    couponField.current.value = '';
-                  }
-                }}
-              >
-                Apply
-              </Button>
+              <Button onClick={handleApplyCoupon}>Apply</Button>
             </div>
             <table className="order-summary__total">
               <tbody>
