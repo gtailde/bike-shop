@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Button } from 'components/UI/Button/Button';
 import { TextField } from 'components/UI/TextField/TextField';
 import { ReactComponent as DeleteIcon } from './assets/delete-icon.svg';
@@ -16,6 +16,7 @@ import { UserContext } from 'store/userContext';
 export const Basket = () => {
   const { cart, setCart } = useContext(UserContext);
   const couponField = useRef<HTMLInputElement>(null);
+  const [isCouponFieldEmpty, setIsCouponFieldEmpty] = useState(true);
   const isCartEmpty = !cart?.lineItems.length;
   const OPTIONS_TO_SHOW = ['Size', 'Color'];
 
@@ -39,8 +40,11 @@ export const Basket = () => {
       const newCart = await basketAPI.addDiscountCode(couponField.current.value);
       if (newCart) setCart?.(newCart);
       couponField.current.value = '';
+      setIsCouponFieldEmpty(true);
     }
   };
+
+  const onCouponFieldChange = () => setIsCouponFieldEmpty(!couponField.current?.value);
 
   if (isCartEmpty) {
     return (
@@ -148,11 +152,14 @@ export const Basket = () => {
             <div className="order-summary__promo-code">
               <TextField
                 ref={couponField}
+                onChange={onCouponFieldChange}
                 className="order-summary__code-input"
                 label={'Enter promo code'}
                 name={'promo-code'}
               />
-              <Button onClick={handleApplyCoupon}>Apply</Button>
+              <Button onClick={handleApplyCoupon} disabled={isCouponFieldEmpty}>
+                Apply
+              </Button>
             </div>
             <table className="order-summary__total">
               <tbody>
