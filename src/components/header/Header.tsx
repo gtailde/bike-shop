@@ -7,7 +7,7 @@ import { pagePathnames } from 'router/pagePathnames';
 import { NavPopup } from 'components/popup/NavPopup';
 import { Logo } from 'components/UI/Logo/Logo';
 import { customersApi } from 'API/CustomersAPI';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 
 export const Header = () => {
   const { profileInfo, isUserLoggedIn, setIsUserLoggedIn, cart } = useContext(UserContext);

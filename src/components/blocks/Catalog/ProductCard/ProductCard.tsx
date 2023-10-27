@@ -7,7 +7,7 @@ import { transformPriceText } from '../../../../helpers/formatText';
 import { type IProductDetails } from 'types/types';
 import { Price } from 'components/UI/Price/Price';
 import basketAPI from 'API/BasketAPI';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 
 export const ProductCard = ({
   id,
@@ -17,6 +17,8 @@ export const ProductCard = ({
   price,
   discountPrice,
 }: IProductDetails) => {
+  const DEFAULT_VARIANT_ID = 1;
+  const DEFAULT_PRODUCT_QUANTITY = 1;
   const [isProductInCart, setIsProductInCart] = useState(false);
   const { cart, setCart } = useContext(UserContext);
   const navigate = useNavigate();
@@ -27,6 +29,12 @@ export const ProductCard = ({
 
   const checkProductAvailabilityInCart = () =>
     cart?.lineItems.find((item) => item.productId === id);
+
+  const onCartClick = async (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    evt.stopPropagation();
+    const newCart = await basketAPI.addToCart(id, DEFAULT_VARIANT_ID, DEFAULT_PRODUCT_QUANTITY);
+    if (newCart) setCart?.(newCart);
+  };
 
   return (
     <article
@@ -56,11 +64,7 @@ export const ProductCard = ({
           accent={!isProductInCart}
           disabled={isProductInCart}
           className="product-card__cart-button button--w-icon"
-          onClick={async (evt) => {
-            evt.stopPropagation();
-            const newCart = await basketAPI.addToCart(id, 1, 1);
-            if (newCart) setCart?.(newCart);
-          }}
+          onClick={onCartClick}
         >
           <CartIcon />
         </Button>

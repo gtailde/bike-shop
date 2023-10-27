@@ -34,7 +34,7 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
     }: IFilterGroupProps,
     ref,
   ) => {
-    const onChangeCheckbox = (value: boolean, item: string) => {
+    const onChangeFilter = (value: boolean, item: string) => {
       const currentFilter = filterSettings[title as keyof Omit<IFilters, 'price'>] ?? [];
       const filters = {
         ...filterSettings,
@@ -84,7 +84,7 @@ export const FilterGroup = forwardRef<HTMLDivElement, IFilterGroupProps>(
                       )}
                       label={item}
                       onChange={(value) => {
-                        onChangeCheckbox(value, IDs?.[index] ?? item);
+                        onChangeFilter(value, IDs?.[index] ?? item);
                       }}
                     />
                   </li>

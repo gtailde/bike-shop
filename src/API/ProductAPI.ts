@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios from 'axios';
 import { CommercetoolsAPI } from './CommercetoolsAPI';
 import type {
@@ -19,13 +18,17 @@ class ProductAPI extends CommercetoolsAPI {
   ): Promise<ICategoryList | IProductList | ICategory | IProduct> {
     try {
       const token = this.getToken();
-      let url = `${this.apiUrl}/${this.projectKey}/${endpoint}`;
-      if (requestData?.id) url += `/${String(requestData.id)}`;
-      if (requestData?.key) url += `/key=${String(requestData.key)}`;
-      if (requestData?.limit)
-        url += `?limit=${String(requestData?.limit)}&offset=${String(requestData?.offset ?? 0)}`;
+
+      const url = `${this.apiUrl}/${this.projectKey}/${endpoint}/${requestData?.id ?? ''}/${
+        requestData?.key ? 'key=' + requestData.key : ''
+      }`;
+      const params = {
+        limit: requestData?.limit,
+        offset: requestData?.offset ?? 0,
+      };
       const headers = this.getTokenHeaders(token.access_token);
-      const response = await axios.get(url, { headers });
+
+      const response = await axios.get(url, { headers, params });
       return response.data;
     } catch (error) {
       console.error('An unexpected error occurred:', error);

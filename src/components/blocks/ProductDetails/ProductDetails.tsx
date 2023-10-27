@@ -11,7 +11,7 @@ import { type IProductVariantData, type IProductVariant, type IProduct } from 't
 import { Price } from 'components/UI/Price/Price';
 import { transformPriceText } from '../../../helpers/formatText';
 import basketAPI from 'API/BasketAPI';
-import { UserContext } from 'App';
+import { UserContext } from 'store/userContext';
 
 interface IProductDetails {
   name: string;
@@ -30,7 +30,7 @@ export const ProductDetails = () => {
   const [productData, setProductData] = useState<IProductDetails>();
   const [productQuantity, setProductQuantity] = useState(1);
   const [commersetoolsProductData, setCommersetoolsProductData] = useState<IProduct>();
-  const [selectedOptions] = useState<Map<string, string>>(new Map<string, string>());
+  const selectedOptions = new Map<string, string>();
   const [enabledOptions, setEnabledOptions] = useState<Record<string, string[]>>();
   const [selectedVariant, setSelectedVariant] = useState<IProductVariant>();
   const [isProductInCart, setIsProductInCart] = useState(false);
@@ -208,7 +208,7 @@ export const ProductDetails = () => {
             params.id ?? ''
           }`}</div>
           <h2 className="product-details__title visually-hidden">Product-details</h2>
-          <ProductSlider images={[...productData.images]} />
+          <ProductSlider images={productData.images} />
           <div className="product-details__options">
             <p className="product-details__headline">
               <span className="product-details__name">{productData.name}</span>
@@ -222,7 +222,7 @@ export const ProductDetails = () => {
             />
             {productData.options.map((option, index) => (
               <ProductDetailsOption
-                key={`${option.title}_${index}`}
+                key={option.title}
                 data={option}
                 onSelect={handleOptionSelect}
                 enabledOptions={enabledOptions}
@@ -230,7 +230,7 @@ export const ProductDetails = () => {
             ))}
             <div className="product-details__basket-controls">
               <Counter
-                onChangeValue={(quantity: number) => setProductQuantity(quantity)}
+                onChangeValue={setProductQuantity}
                 limit={selectedVariant?.availability.availableQuantity}
                 accent
                 className="product-details__counter"
