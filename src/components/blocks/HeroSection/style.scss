@@ -1,0 +1,40 @@
+@use "../../../styles/mixins.scss" as *;
+
+.hero-section {
+  background-color: black;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 160px 0px 45px 0px;
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.00) 75%), 
+        linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.00) 25%, rgba(0, 0, 0, 0.00) 75%, rgba(0, 0, 0, 1) 100%),
+        url("./assets/ORCA_AERO_M10iTEAM-1.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat
+  }
+
+  &__title {
+    @include font-title
+  }
+
+  &__descrption {
+    text-align: center;
+    color: var(--main-color-1);
+  }
+
+  &__buttons-container {
+    display: grid;
+    justify-items: flex-start;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    & button:first-child {
+      justify-self: flex-end;
+    }
+  }
+}

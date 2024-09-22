@@ -1,0 +1,66 @@
+@use '../../styles/mixins.scss' as *;
+
+.page-header {
+  width: 100%;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 12px 0;
+  }
+
+  &__site-navigation {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    @include font-text-regular;
+    text-transform: uppercase;
+  }
+
+  &__logo {
+    margin-right: 4px;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: var(--main-color-2-default);
+  }
+
+  &__user-navigation {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__user-navigation-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .basket {
+      display: flex;
+      position: relative;
+
+      &__barge {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        right: 0;
+        width: 16px;
+        aspect-ratio: 1 / 1;
+        background-color: var(--accent-color-1-default);
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 100%;
+        color: var(--main-color-3);
+        transform: translate(25%, -25%);
+      }
+    }
+  }
+
+  &--main-page {
+    position: absolute;
+  }
+}

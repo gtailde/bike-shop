@@ -1,0 +1,13 @@
+.swiper-pagination {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  background-color: var(--main-color-3);
+  bottom: 0px !important;
+}
+
+.swiper-pagination-bullet {
+  width: 16px !important;
+  height: 16px !important;
+  background-color: var(--accent-color-1-default) !important;
+}

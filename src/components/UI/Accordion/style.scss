@@ -1,0 +1,47 @@
+@use '../../../styles/mixins.scss' as *;
+
+.accordion {
+  border-top: 1px solid var(--accent-color-1-default);
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--accent-color-1-default);
+  }
+  
+  &__expand-icon {
+    color: var(--accent-color-1-default);
+  }
+  
+  &__group--expanded &__expand-icon {
+    transition: 0.2s transform ease;
+    transform: rotate(180deg);
+  }
+  
+  &__group-wrapper {
+    position: relative;
+    height: 0px;
+    overflow: hidden;
+    width: 100%;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+  }
+  
+  &__group-content {
+    position: absolute;
+    padding-top: 16px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    white-space: pre-wrap;
+  }
+  
+  &__group-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @include font-text-accent;
+  }
+}
+

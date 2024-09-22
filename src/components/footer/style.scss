@@ -1,0 +1,61 @@
+.page-footer {
+  background-color: var(--accent-color-1-default);
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+  }
+
+  &__github-links,
+  &__resource-links {
+    display: flex;
+    gap: 12px;
+    a {
+      display: flex;
+      svg {
+        transition: all 0.2s ease 0s;
+        &:hover {
+          fill: var(--accent-color-1-shadow-2);
+        }
+        &:active {
+          fill: var(--accent-color-1-shadow-1);
+        }
+      }
+    }
+  }
+
+  &__github-links {
+    a {
+      position: relative;
+      &:after {
+        content: attr(data-title);
+        display: none;
+      }
+      &:hover:after {
+        display: block;
+        position: absolute;
+        top: -20px;
+        right: 0;
+        width: auto;
+        height: 20px;
+        background-color: var(--main-color-2-default);
+        border-radius: 5px;
+        border: 2px solid var(--accent-color-1-default);
+        padding: 0px 3px 3px 3px;
+        color: var(--main-color-3);
+      }
+    }
+  }
+
+  &__year {
+    font-family: 'Teko', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 100%;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--main-color-3);
+  }
+}

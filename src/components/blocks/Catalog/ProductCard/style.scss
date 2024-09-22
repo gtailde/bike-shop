@@ -1,0 +1,100 @@
+@use "../../../../styles/mixins.scss" as *;
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 12px;
+  background-color: var(--main-color-4);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &__name {
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+  }
+
+  &__text-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  &__name, &__description {
+    grid-column: 1 / 3;
+  }
+
+  &__description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical; 
+  }
+
+  &__price {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0px;
+  }
+
+  &__new-price {
+    @include font-title-mobile;
+    color: var(--accent-color-1-default);
+  }
+
+  &__old-price {
+    font-family: "Teko", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-decoration: line-through;
+    color: var(--main-color-2-shadow-1);
+  }
+
+  &__cart-button {
+    align-self: start;
+  }
+
+  &:hover {
+    background-color: var(--main-color-2-shadow-2);
+  }
+
+}
+
+.slider {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: white;
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  &__dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+  &__dot {
+    width: 16px;
+    background-color: var(--accent-color-1-default);
+
+    &--current {
+      background-color: var(--accent-color-1-light);
+    }
+  }
+}

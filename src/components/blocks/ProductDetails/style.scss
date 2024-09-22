@@ -1,0 +1,183 @@
+@use '../../../styles/mixins.scss' as *;
+
+.product-details {
+  flex-grow: 1;
+  padding: 32px 0;
+  
+  &__content {
+    position: relative;
+    display: grid;
+    gap: 40px 16px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 350px;
+    }
+  }
+
+  &__price {
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__headline {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+    font-size: 22px;
+  }
+
+  &__category {
+    @include font-text-regular;
+    color: var(--accent-color-1-default);
+  }
+
+  &__option {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    user-select: none;
+  }
+
+  &__option-title {
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+  }
+
+  &__option-variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__basket-controls {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__accordion {
+    grid-column: 1 / -1;
+  }
+}
+
+.radio-button {
+  cursor: pointer;
+
+  &__input {
+    display: none;
+  }
+
+  &__input:checked ~ &__label {
+    background-color: var(--accent-color-1-default);
+    color: var(--main-color-3);
+  }
+
+  &__label {
+    display: inline-block;
+    padding: 15px 22px;
+    border: 1px solid var(--accent-color-1-default);
+    border-radius: 4px;
+    @include font-text-accent;
+    color: var(--accent-color-1-default);
+  }
+
+  &:hover {
+    background: var(--accent-color-1-shadow-3);
+  }
+
+  &:active {
+    background: var(--accent-color-1-shadow-2);
+  }
+}
+
+.image-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+
+  &__slide-line {
+    width: 100%;
+    height: 400px;
+
+    .swiper-slide {
+      width: auto;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+
+  &__select-thumbs {
+    min-width: 0;
+    width: 100%;
+    height: 100px;
+
+    .swiper-slide {
+      width: auto;
+    }
+
+    img {
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  &__popup {
+    display: none;
+    position: fixed;
+    padding: 6vh 5vw;
+    inset: 0;
+    z-index: 1;
+    background-color: rgba($color: #000000, $alpha: 0.7);
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+
+    &--show {
+      display: flex;
+    }
+  }
+
+  &__popup-slide-line {
+    width: 100%;
+    height: 100%;
+
+    .swiper-slide {
+      width: auto;
+
+      img {
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+
+  &__close-button {
+    z-index: 2;
+    position: absolute;
+    top: 2vh;
+    right: 5vw;
+
+    @media (min-width: 768px) {
+      right: 5vw;
+    }
+  }
+}
